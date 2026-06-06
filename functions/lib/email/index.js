@@ -17,12 +17,13 @@ export async function sendNotification(env, payload, meta) {
 }
 
 export async function sendAutoReply(env, payload) {
-  assertEnv(env, ['AUTO_REPLY_FROM_EMAIL']);
+  const from = env.AUTO_REPLY_FROM_EMAIL || env.CONTACT_FROM_EMAIL;
+  if (!from) throw new Error('Missing AUTO_REPLY_FROM_EMAIL or CONTACT_FROM_EMAIL');
 
   return sendEmail(env, {
-    from: env.AUTO_REPLY_FROM_EMAIL,
+    from,
     to: [payload.email],
-    replyTo: env.CONTACT_TO_EMAIL || env.AUTO_REPLY_FROM_EMAIL,
+    replyTo: env.CONTACT_TO_EMAIL || from,
     subject: env.AUTO_REPLY_SUBJECT || 'Thanks for reaching out',
     text: renderAutoReplyText(payload),
     html: renderAutoReplyHtml(payload),

@@ -65,7 +65,8 @@ export async function onRequestPost(context) {
   }
 
   let autoReplySent = false;
-  if (String(env.AUTO_REPLY_ENABLED || '').trim().toLowerCase() === 'true') {
+  const autoReplyEnabled = String(env.AUTO_REPLY_ENABLED || 'true').trim().toLowerCase() !== 'false';
+  if (autoReplyEnabled) {
     try {
       await sendAutoReply(env, payload);
       autoReplySent = true;

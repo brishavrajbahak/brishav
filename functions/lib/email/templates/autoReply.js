@@ -4,21 +4,24 @@ export function renderAutoReplyText(payload) {
   return [
     `Hi ${payload.name},`,
     '',
-    'Thanks for reaching out. I received your message and will reply as soon as I can.',
+    'Thank you for contacting me through my portfolio website. I’ve received your message and will review it shortly. You can expect a personal reply within 24 hours.',
     '',
-    'Your message:',
-    payload.message,
-    '',
+    'Best regards,',
     'Brishav Rajbahak',
+    'Portfolio: https://brishavrajbahak.com.np',
+    'For direct replies: contact@brishavrajbahak.com.np',
   ].join('\n');
 }
 
 export function renderAutoReplyHtml(payload) {
   return `
     <p>Hi ${escapeHtml(payload.name)},</p>
-    <p>Thanks for reaching out. I received your message and will reply as soon as I can.</p>
-    <p><strong>Your message:</strong></p>
-    <blockquote>${escapeHtml(payload.message).replace(/\n/g, '<br>')}</blockquote>
-    <p>Brishav Rajbahak</p>
+    <p>Thank you for contacting me through my portfolio website. I’ve received your message and will review it shortly. You can expect a personal reply within 24 hours.</p>
+    <p>
+      Best regards,<br>
+      Brishav Rajbahak<br>
+      Portfolio: <a href="https://brishavrajbahak.com.np">brishavrajbahak.com.np</a><br>
+      For direct replies: <a href="mailto:contact@brishavrajbahak.com.np">contact@brishavrajbahak.com.np</a>
+    </p>
   `;
 }

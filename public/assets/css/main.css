@@ -2994,6 +2994,13 @@
       --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
     }
 
+    html.mobile-mode #loading-screen {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     @media (max-width: 768px) {
       html.mobile-mode .hero-terminal,
       html.mobile-mode .terminal-header,
@@ -3015,10 +3022,6 @@
         visibility: hidden !important;
         opacity: 0 !important;
         pointer-events: none !important;
-      }
-
-      html.mobile-mode #loading-screen {
-        display: none !important;
       }
 
       html.mobile-mode body,

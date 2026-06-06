@@ -1,11 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
     (() => {
       const breakpoint = 768;
       const root = document.documentElement;
-      const initialMobile = window.innerWidth <= breakpoint;
+      const viewportWidth = window.visualViewport?.width || window.innerWidth || screen.width;
+      const initialMobile = viewportWidth <= breakpoint;
       root.classList.add(initialMobile ? 'mobile-mode' : 'desktop-mode');
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('reduced-motion');
 
@@ -13,13 +16,12 @@
       window.addEventListener('resize', () => {
         window.clearTimeout(resizeTimer);
         resizeTimer = window.setTimeout(() => {
-          if ((window.innerWidth <= breakpoint) !== initialMobile) window.location.reload();
+          const currentWidth = window.visualViewport?.width || window.innerWidth || screen.width;
+          if ((currentWidth <= breakpoint) !== initialMobile) window.location.reload();
         }, 300);
       }, { passive: true });
     })();
   </script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brishav Rajbahak — Data Scientist & ML Engineer</title>
   <!-- SEO & Open Graph -->
   <meta name="description" content="Brishav Rajbahak — Data Scientist & Machine Learning Engineer from Kathmandu, Nepal. Unlocking insights and building predictive systems.">
@@ -42,7 +44,7 @@
   <meta name="twitter:description" content="Data Scientist & Machine Learning Engineer from Kathmandu. Architect of precise predictive models and real-time ML pipelines.">
   <meta name="twitter:image" content="https://brishavrajbahak.com.np/Brishav.jpg">
   <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="assets/css/main.css?v=2">
+  <link rel="stylesheet" href="assets/css/main.css?v=3">
 </head>
 <body>
   <!-- ── Translucent Background System ── -->
@@ -826,7 +828,17 @@ class Net(nn.Module):
       });
 
       if (mobile) {
-        loadScript('assets/js/mobile-core.js?v=2');
+        const revealMobilePage = () => {
+          document.getElementById('loading-screen')?.classList.add('hidden');
+          document.body.classList.add('page-loaded');
+          document.getElementById('home')?.classList.add('hero-revealed');
+        };
+
+        revealMobilePage();
+        loadScript('assets/js/mobile-core.js?v=3').catch(error => {
+          console.error('Mobile core failed to load.', error);
+          revealMobilePage();
+        });
       } else {
         const fonts = document.createElement('link');
         fonts.rel = 'stylesheet';

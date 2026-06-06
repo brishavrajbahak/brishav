@@ -1,6 +1,23 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (() => {
+      const breakpoint = 768;
+      const root = document.documentElement;
+      const initialMobile = window.innerWidth <= breakpoint;
+      root.classList.add(initialMobile ? 'mobile-mode' : 'desktop-mode');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('reduced-motion');
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          if ((window.innerWidth <= breakpoint) !== initialMobile) window.location.reload();
+        }, 300);
+      }, { passive: true });
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Brishav Rajbahak — Data Scientist & ML Engineer</title>
@@ -12,13 +29,10 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://brishavrajbahak.com.np">
   <link rel="canonical" href="https://brishavrajbahak.com.np">
-  <link rel="preload" href="Brishav.jpg" as="image">
+  <link rel="preload" href="assets/images/Brishav-480.webp?v=2" as="image" type="image/webp" media="(max-width: 768px)">
+  <link rel="preload" href="Brishav.jpg?v=2" as="image" media="(min-width: 769px)">
   <!-- Connection Pooling & Prefetch -->
-  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
 
@@ -27,12 +41,8 @@
   <meta name="twitter:title" content="Brishav Rajbahak — Data Scientist & ML Engineer">
   <meta name="twitter:description" content="Data Scientist & Machine Learning Engineer from Kathmandu. Architect of precise predictive models and real-time ML pipelines.">
   <meta name="twitter:image" content="https://brishavrajbahak.com.np/Brishav.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" crossorigin>
-  <!-- Syntax Highlighting (Deferred) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" media="print" onload="this.media='all'">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
   <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/main.css?v=2">
 </head>
 <body>
   <!-- ── Translucent Background System ── -->
@@ -209,7 +219,7 @@
             </a>
           </div>
           <!-- Interactive Terminal -->
-          <div class="hero-terminal fade-up" id="heroTerminal">
+          <div class="hero-terminal fade-up" id="heroTerminal" aria-hidden="false">
             <div class="terminal-header">
               <div class="terminal-dots">
                 <div class="terminal-dot red"></div>
@@ -233,6 +243,7 @@
               <span class="terminal-cursor" id="terminalCursor"></span>
             </div>
           </div>
+          <p class="mobile-terminal-note">Desktop mode recommended for the full terminal experience.</p>
           <div class="hero-stats fade-up" aria-label="Stats">
             <div class="stat-item">
               <span class="stat-number cyan">3+</span>
@@ -255,12 +266,18 @@
           <div class="profile-ring"></div>
           <div class="profile-ring-2"></div>
           <div class="profile-img-wrap">
-            <img src="Brishav.jpg" alt="Brishav Rajbahak"
-                 width="280" height="280"
-                 loading="eager"
-                 decoding="async"
-                 fetchpriority="high"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <picture>
+              <source
+                type="image/webp"
+                srcset="assets/images/Brishav-480.webp?v=2 480w, assets/images/Brishav-768.webp?v=2 768w"
+                sizes="(max-width: 768px) 220px, 280px">
+              <img src="Brishav.jpg?v=2" alt="Brishav Rajbahak"
+                   width="280" height="280"
+                   loading="eager"
+                   decoding="async"
+                   fetchpriority="high"
+                   onerror="this.style.display='none'; this.closest('picture').nextElementSibling.style.display='flex';">
+            </picture>
             <div class="profile-img-fallback" style="display:none;" aria-hidden="true">BR</div>
           </div>
           <div class="hero-tag hero-tag-1">
@@ -795,8 +812,38 @@ class Net(nn.Module):
   <!-- ── Translucent Panel System: Canvas Animations + Parallax ── -->
   
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-  <script src="assets/js/config.public.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
-  <script src="assets/js/contact-client.js" defer></script>
+  <script src="assets/js/config.public.js?v=2" defer></script>
+  <script>
+    (() => {
+      const mobile = document.documentElement.classList.contains('mobile-mode');
+      const loadScript = source => new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = source;
+        script.async = false;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      });
+
+      if (mobile) {
+        loadScript('assets/js/mobile-core.js?v=2');
+      } else {
+        const fonts = document.createElement('link');
+        fonts.rel = 'stylesheet';
+        fonts.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap';
+        fonts.crossOrigin = 'anonymous';
+        document.head.appendChild(fonts);
+
+        const stylesheet = document.createElement('link');
+        stylesheet.rel = 'stylesheet';
+        stylesheet.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css';
+        document.head.appendChild(stylesheet);
+        loadScript('assets/js/main.js?v=2');
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js')
+          .then(() => window.hljs?.highlightAll());
+      }
+    })();
+  </script>
+  <script src="assets/js/contact-client.js?v=2" defer></script>
 </body>
 </html>

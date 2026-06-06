@@ -928,6 +928,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg) translateZ(10px); } }
     .profile-img-wrap { position: absolute; inset: 5px; border-radius: 50%; overflow: hidden; background: var(--bg-2); transform: translateZ(0); transform-style: preserve-3d; box-shadow: 0 0 24px rgba(200,17,31,0.10), inset 0 0 12px rgba(0,0,0,0.08); }
+    .profile-img-wrap picture { display: block; width: 100%; height: 100%; }
     .profile-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     .profile-img-fallback {
       width: 100%; height: 100%;
@@ -2979,4 +2980,215 @@
     .form-submit[disabled] {
       opacity: 0.62;
       cursor: wait;
+    }
+
+    /* Mobile performance path */
+    .mobile-terminal-note {
+      display: none;
+    }
+
+    html.mobile-mode {
+      scroll-behavior: smooth;
+      --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    @media (max-width: 768px) {
+      html.mobile-mode .hero-terminal,
+      html.mobile-mode .terminal-header,
+      html.mobile-mode .terminal-output,
+      html.mobile-mode .terminal-input-row,
+      html.mobile-mode .terminal-sound-controls,
+      html.mobile-mode .terminal-cursor,
+      html.mobile-mode #bg-canvas,
+      html.mobile-mode #particles-canvas,
+      html.mobile-mode #glassy-panels,
+      html.mobile-mode #node-grid-layer,
+      html.mobile-mode #accent-glow-orb,
+      html.mobile-mode .grid-bg,
+      html.mobile-mode .orb,
+      html.mobile-mode #cursor-dot,
+      html.mobile-mode #cursor-spotlight,
+      html.mobile-mode #ambientAudio {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      html.mobile-mode #loading-screen {
+        display: none !important;
+      }
+
+      html.mobile-mode body,
+      html.mobile-mode nav,
+      html.mobile-mode .mobile-nav,
+      html.mobile-mode .mobile-bottom-nav,
+      html.mobile-mode .project-card-inner,
+      html.mobile-mode .contact-link-item,
+      html.mobile-mode .contact-form {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        filter: none !important;
+      }
+
+      html.mobile-mode * {
+        will-change: auto !important;
+      }
+
+      html.mobile-mode #home {
+        min-height: auto;
+        padding-top: 76px;
+      }
+
+      html.mobile-mode .hero-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 20px 0 36px;
+      }
+
+      html.mobile-mode .hero-visual {
+        order: -1;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+      }
+
+      html.mobile-mode .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+
+      html.mobile-mode .hero-eyebrow {
+        align-self: center;
+      }
+
+      html.mobile-mode .hero-title {
+        font-size: clamp(2.35rem, 13vw, 4rem);
+        line-height: 0.95;
+        text-wrap: balance;
+      }
+
+      html.mobile-mode .hero-role {
+        min-height: 1.5em;
+        font-size: clamp(1rem, 4.8vw, 1.3rem);
+      }
+
+      html.mobile-mode .hero-description {
+        max-width: 38rem;
+        margin-inline: auto;
+        font-size: clamp(0.98rem, 4vw, 1.08rem);
+        line-height: 1.75;
+      }
+
+      html.mobile-mode .hero-actions {
+        justify-content: center;
+        gap: 12px;
+      }
+
+      html.mobile-mode .mobile-terminal-note {
+        display: block;
+        max-width: 32rem;
+        margin: 14px auto 0;
+        color: var(--text-3);
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        line-height: 1.5;
+        text-align: center;
+        opacity: 0.62;
+      }
+
+      html.mobile-mode .hero-stats {
+        justify-content: center;
+        margin-top: 24px;
+      }
+
+      html.mobile-mode .availability-widget {
+        justify-content: center;
+        margin-inline: auto;
+      }
+
+      html.mobile-mode section:not(#home) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 720px;
+        padding-block: 64px;
+      }
+
+      html.mobile-mode .radar-container {
+        display: none;
+      }
+
+      html.mobile-mode pre {
+        max-width: 100%;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        white-space: pre;
+        word-break: normal;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      html.mobile-mode code {
+        font-size: clamp(0.72rem, 3vw, 0.86rem);
+        overflow-wrap: anywhere;
+      }
+
+      html.mobile-mode a,
+      html.mobile-mode button,
+      html.mobile-mode input,
+      html.mobile-mode textarea,
+      html.mobile-mode .social-btn {
+        min-height: 44px;
+      }
+
+      html.mobile-mode .mobile-bottom-nav a {
+        min-width: 58px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      html.mobile-mode .profile-img-wrap,
+      html.mobile-mode .profile-img-wrap picture,
+      html.mobile-mode .profile-img-wrap img {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1;
+      }
+
+      html.mobile-mode .profile-img-wrap img {
+        object-fit: cover;
+      }
+    }
+
+    @media (max-width: 480px) {
+      html.mobile-mode .hero-inner {
+        padding-top: 12px;
+      }
+
+      html.mobile-mode .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      html.mobile-mode .hero-actions a {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html.mobile-mode {
+        scroll-behavior: auto;
+      }
+    }
+
+    @media (forced-colors: active) {
+      .mobile-terminal-note {
+        opacity: 1;
+      }
     }

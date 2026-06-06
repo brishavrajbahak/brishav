@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://brishavrajbahak.com.np/schemas/contact-api.v1.schema.json",
+  "title": "Portfolio Contact API v1",
+  "type": "object",
+  "required": ["version", "turnstileToken", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "turnstileToken": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "required": ["name", "email", "message", "website"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "subject": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "message": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 4000
+        },
+        "website": {
+          "type": "string",
+          "maxLength": 0,
+          "description": "Honeypot field. Must stay empty."
+        }
+      }
+    }
+  }
+}

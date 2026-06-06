@@ -1,0 +1,10 @@
+EMAIL_PROVIDER=resend
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxx
+CONTACT_TO_EMAIL=contact@brishavrajbahak.com.np
+CONTACT_FROM_EMAIL="Portfolio Contact <noreply@brishavrajbahak.com.np>"
+AUTO_REPLY_FROM_EMAIL="Brishav Rajbahak <noreply@brishavrajbahak.com.np>"
+TURNSTILE_SECRET_KEY=0x0000000000000000000000000000000000000000
+AUTO_REPLY_ENABLED=true
+AUTO_REPLY_SUBJECT=Thanks for reaching out
+ALLOWED_ORIGINS=https://brishavrajbahak.com.np,http://localhost:8788
+SKIP_TURNSTILE_LOCAL=false

@@ -728,23 +728,23 @@ class Net(nn.Module):
           <div class="form-row">
             <div class="form-field">
               <label for="from_name">Your Name</label>
-              <input type="text" id="from_name" name="from_name" placeholder="What do they call you?" required autocomplete="name">
-              <div class="form-error-message">Please enter your name</div>
+              <input type="text" id="from_name" name="from_name" placeholder="What do they call you?" required minlength="2" maxlength="120" autocomplete="name">
+              <div class="form-error-message">Name must be 2–120 characters</div>
             </div>
             <div class="form-field">
               <label for="from_email">Your Email</label>
-              <input type="email" id="from_email" name="from_email" placeholder="Where should I reply?" required autocomplete="email">
+              <input type="email" id="from_email" name="from_email" placeholder="Where should I reply?" required maxlength="254" autocomplete="email">
               <div class="form-error-message">Please enter a valid email address</div>
             </div>
           </div>
           <div class="form-field">
             <label for="subject">Subject</label>
-            <input type="text" id="subject" name="subject" placeholder="Sum it up in a line...">
+            <input type="text" id="subject" name="subject" placeholder="Sum it up in a line..." maxlength="160">
           </div>
           <div class="form-field">
             <label for="message">Message</label>
-            <textarea rows="5" id="message" name="message" placeholder="Tell me everything. The weirder the idea, the better." required></textarea>
-            <div class="form-error-message">Please enter a message</div>
+            <textarea rows="5" id="message" name="message" placeholder="Tell me everything. The weirder the idea, the better." required minlength="10" maxlength="4000"></textarea>
+            <div class="form-error-message">Message must be 10–4000 characters</div>
           </div>
           <div class="turnstile-wrap" id="contactTurnstile" aria-label="Contact form verification"></div>
           <button type="submit" class="form-submit" id="submitBtn">

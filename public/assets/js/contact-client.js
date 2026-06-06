@@ -58,6 +58,10 @@
       valid = false;
     } else if (field.type === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       valid = false;
+    } else if (field.minLength > 0 && value.length < field.minLength) {
+      valid = false;
+    } else if (field.maxLength > 0 && value.length > field.maxLength) {
+      valid = false;
     }
 
     setFieldValidity(field, valid);
@@ -149,7 +153,7 @@
       const data = await response.json().catch(() => ({}));
       if (!response.ok || !data.ok) {
         const messages = {
-          VALIDATION_ERROR: 'Check the form fields and try again.',
+          VALIDATION_ERROR: data.errors?.[0] || 'Check the form fields and try again.',
           BOT_FAILED: 'Verification failed. Refresh and try again.',
           RATE_LIMITED: 'Too many attempts. Try again in a minute.',
           SERVER_ERROR: 'Signal failed on the server. Try again later.',

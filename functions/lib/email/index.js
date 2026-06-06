@@ -19,12 +19,15 @@ export async function sendNotification(env, payload, meta) {
 export async function sendAutoReply(env, payload) {
   const from = env.AUTO_REPLY_FROM_EMAIL || env.CONTACT_FROM_EMAIL;
   if (!from) throw new Error('Missing AUTO_REPLY_FROM_EMAIL or CONTACT_FROM_EMAIL');
+  const subject = String(env.AUTO_REPLY_SUBJECT || 'Thanks for reaching out')
+    .replace(/[\r\n]+/g, ' ')
+    .trim();
 
   return sendEmail(env, {
     from,
     to: [payload.email],
     replyTo: env.CONTACT_TO_EMAIL || from,
-    subject: env.AUTO_REPLY_SUBJECT || 'Thanks for reaching out',
+    subject,
     text: renderAutoReplyText(payload),
     html: renderAutoReplyHtml(payload),
   });

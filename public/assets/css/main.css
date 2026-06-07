@@ -3001,6 +3001,36 @@
       pointer-events: none !important;
     }
 
+    html.mobile-mode body > nav[aria-label="Main navigation"] {
+      width: calc(100% - 32px);
+      max-width: none;
+      padding: 0 14px 0 20px;
+      gap: 0;
+    }
+
+    html.mobile-mode body > nav[aria-label="Main navigation"].scrolled {
+      width: calc(100% - 32px);
+      max-width: none;
+    }
+
+    html.mobile-mode body > nav[aria-label="Main navigation"] .nav-links,
+    html.mobile-mode body > nav[aria-label="Main navigation"] .nav-slider-pill {
+      display: none !important;
+    }
+
+    html.mobile-mode body > nav[aria-label="Main navigation"] .nav-hamburger {
+      display: flex !important;
+      margin-left: auto;
+    }
+
+    html.mobile-mode .mobile-bottom-nav,
+    html.mobile-mode a[title="Download Resume"],
+    html.mobile-mode .resume-overlay {
+      display: none !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
     @media (max-width: 768px) {
       html.mobile-mode .hero-terminal,
       html.mobile-mode .terminal-header,

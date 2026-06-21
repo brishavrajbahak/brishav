@@ -1,6 +1,6 @@
-# Brishav Rajbahak Portfolio
+﻿# Brishav Rajbahak Portfolio
 
-Personal portfolio website for Brishav Rajbahak, focused on data science, machine learning, data engineering, and production-ready web experiences.
+Personal portfolio website for Brishav Rajbahak, focused on data analysis, business intelligence, dashboards, reporting, and early-stage data science portfolio work.
 
 **Live website:** [brishavrajbahak.com.np](https://brishavrajbahak.com.np)
 

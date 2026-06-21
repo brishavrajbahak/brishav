@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   'use strict';
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -83,6 +83,22 @@
     });
   });
 
+  const openProjectCard = card => {
+    const url = card.dataset.projectUrl;
+    if (!url) return;
+    window.open(url, '_blank', 'noopener');
+  };
+  document.querySelectorAll('.project-card[data-project-url]').forEach(card => {
+    card.addEventListener('click', event => {
+      if (event.target.closest('a, button')) return;
+      openProjectCard(card);
+    });
+    card.addEventListener('keydown', event => {
+      if ((event.key !== 'Enter' && event.key !== ' ') || event.target.closest('a, button')) return;
+      event.preventDefault();
+      openProjectCard(card);
+    });
+  });
   const observed = document.querySelectorAll('.fade-up, .stat-item, .section-header, section[id]');
   if ('IntersectionObserver' in window && !reduceMotion) {
     const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -109,7 +125,7 @@
     element.dataset.animated = 'true';
   });
   const role = document.getElementById('role-text');
-  if (role) role.textContent = 'Data Scientist';
+  if (role) role.textContent = 'Data Analyst Aspirant';
 
   function updateClock() {
     const time = document.getElementById('navTime');

@@ -645,6 +645,22 @@
       document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
       document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-click'));
     }
+    const openProjectCard = card => {
+      const url = card.dataset.projectUrl;
+      if (!url) return;
+      window.open(url, '_blank', 'noopener');
+    };
+    document.querySelectorAll('.project-card[data-project-url]').forEach(card => {
+      card.addEventListener('click', event => {
+        if (event.target.closest('a, button')) return;
+        openProjectCard(card);
+      });
+      card.addEventListener('keydown', event => {
+        if ((event.key !== 'Enter' && event.key !== ' ') || event.target.closest('a, button')) return;
+        event.preventDefault();
+        openProjectCard(card);
+      });
+    });
     /* ── 3D Card Tilt (GPU-only, skips while scrolling) ── */
     if (sitePerf.magneticEffects) document.querySelectorAll('.project-card').forEach(card => {
       const inner = card.querySelector('.project-card-inner');
@@ -780,7 +796,7 @@
       requestAnimationFrame(draw);
     })();
     /* ── Typewriter ── */
-    const roles  = ['Data Scientist', 'Machine Learning Engineer', 'Deep Learning Researcher', 'Data Pipeline Architect', 'Predictive Systems Builder'];
+    const roles  = ['Data Analyst', 'Data Science Aspirant', 'Aspiring BI Analyst', 'SQL & Python Learner', 'Analytics Portfolio Builder'];
     let ri = 0, ci = 0, deleting = false;
     const roleEl = document.getElementById('role-text');
     function type() {
@@ -972,12 +988,12 @@
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalCursor = document.getElementById('terminalCursor');
     const commands = {
-      whoami: "Brishav Rajbahak | Data Scientist & Machine Learning Engineer from Kathmandu, Nepal.",
-      skills: `Machine Learning: PyTorch, TensorFlow, Scikit-Learn, XGBoost, Keras\nData Engineering: SQL, Spark, Kafka, Airflow, ETL, Hadoop\nCloud & MLOps: AWS, Google Cloud, Docker, MLflow, Kubernetes\nStatistics & Viz: Pandas, NumPy, Matplotlib, Seaborn, Tableau, R\nNLP & Computer Vision: Transformers, BERT, GPT, HuggingFace, OpenCV, YOLO`,
-      projects: `• Everest Analytics Engine - Spark-powered Himalayan climate predictions.\n• Lhotse Object Classifier - Mobile PyTorch topological analysis CNN.\n• Kathmandu Traffic Forecaster - Congestion forecasting XGBoost API.\nType 'github' to view all active repositories.`,
-      contact: `Email: hello@brishavrajbahak.com\nGitHub: github.com/brishavrajbahak\nLinkedIn: linkedin.com/in/brishav-rajbahak\nInstagram: @razzbahakbrishav`,
+      whoami: "Brishav Rajbahak | Aspiring Data Analyst and Data Science Aspirant from Kathmandu, Nepal.",
+      skills: `Analytics: SQL, Excel, Python, Pandas, NumPy\nVisualization: Tableau, Power BI, Matplotlib, Seaborn\nAnalysis: Data cleaning, EDA, reporting, KPI tracking\nPredictive Work: Scikit-Learn, XGBoost, regression, classification\nLearning Focus: Forecasting, dashboards, and practical data science projects`,
+      projects: `• Loan Default Analysis - Portfolio project exploring borrower behavior and default risk analysis.\n• Lhotse Object Classifier - Practice project in image classification and model evaluation.\n• Kathmandu Traffic Forecaster - Traffic trend analysis and prediction workflow.\nType 'github' to view all active repositories.`,
+      contact: `Email: contact@brishavrajbahak.com.np\nGitHub: github.com/brishavrajbahak\nLinkedIn: linkedin.com/in/brishav-rajbahak\nInstagram: @razzbahakbrishav`,
       github: "Opening https://github.com/brishavrajbahak ...",
-      help: `whoami    - Digital profile details\nskills    - Tech stack inventory\nprojects  - Active codebase deployments\ncontact   - Communication channels\ngithub    - Load GitHub profile\nplot      - Output Cartesian regression plot\ntrain     - Run simulated model training loop\nclear     - Reset terminal display\nsudo      - Elevate security privileges\nmatrix    - Enter the digital grid\ncoffee    - Synthesize caffeine`,
+      help: `whoami    - Candidate summary\nskills    - Analytics and data science toolkit\nprojects  - Portfolio and practice work\ncontact   - Communication channels\ngithub    - Load GitHub profile\nplot      - Output Cartesian regression plot\ntrain     - Run simulated model training loop\nclear     - Reset terminal display\nsudo      - Elevate security privileges\nmatrix    - Enter the digital grid\ncoffee    - Synthesize caffeine`,
       sudo: "Error: User is not in the sudoers file. This incident will be reported.",
       matrix: null,
       plot: null,
@@ -2078,8 +2094,8 @@
         await addLine('<span class="r-label">  Name     :</span> <span class="r-value">Brishav Rajbahak</span>', 350);
         await addLine('<span class="r-label">  Alias    :</span> <span class="r-value">@brishavrajbahak</span>', 300);
         await addLine('<span class="r-label">  Origin   :</span> <span class="r-value">Kathmandu, Nepal 🇳🇵</span>', 300);
-        await addLine('<span class="r-label">  Class    :</span> <span class="r-value">Data Scientist / ML Engineer</span>', 300);
-        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">● OPEN TO WORK</span>', 300);
+        await addLine('<span class="r-label">  Class    :</span> <span class="r-value">Data Analyst / Data Science Aspirant</span>', 300);
+        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">● OPEN TO INTERNSHIPS & ENTRY ROLES</span>', 300);
         await addLine('', 200);
 
         status.textContent = 'ANALYZING';
@@ -2172,7 +2188,7 @@
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
             <polyline points="22 4 12 14.01 9 11.01"/>
           </svg>
-          <span class="resume-complete-text">DOSSIER COMPILED — Access granted. Contact to request full credentials.</span>
+          <span class="resume-complete-text">PROFILE SUMMARY READY — Contact me for my CV and project details.</span>
         `;
         body.appendChild(badge);
         body.scrollTop = body.scrollHeight;
@@ -2208,28 +2224,28 @@
         1: {
           tag: '▲ SUMMIT',
           timeline: '2024 — PRESENT',
-          role: 'Senior Data Scientist',
-          company: 'Nexus AI Lab · Kathmandu',
-          desc: 'Architecting distributed machine learning models and predictive pipelines. Leading a team of 4 ML engineers to optimize NLP and computer vision deployments.',
-          skills: ['Python', 'TensorFlow', 'PyTorch', 'Docker', 'Kubernetes', 'MLOps'],
+          role: 'Data Analyst Aspirant',
+          company: 'Independent Portfolio Work · Kathmandu',
+          desc: 'Building portfolio projects in SQL, Python, dashboards, and forecasting while strengthening data storytelling and reporting skills.',
+          skills: ['SQL', 'Python', 'Pandas', 'Excel', 'Tableau', 'Statistics'],
           borderColor: 'var(--cyan)'
         },
         2: {
           tag: '▲ CAMP II',
           timeline: '2022 — 2024',
-          role: 'Machine Learning Engineer',
-          company: 'Quantum Analytics · Remote',
-          desc: 'Developed scalable predictive models and deep learning pipelines. Integrated advanced data processing and reduced model inference time by 30%.',
-          skills: ['Python', 'Scikit-Learn', 'Pandas', 'AWS', 'Spark', 'SQL'],
+          role: 'Analytics Project Builder',
+          company: 'Independent Practice · Remote',
+          desc: 'Working through hands-on case studies in data cleaning, querying, visualization, and predictive analysis.',
+          skills: ['SQL', 'Pandas', 'Scikit-Learn', 'EDA', 'Dashboards', 'Reporting'],
           borderColor: 'var(--pink)'
         },
         3: {
           tag: '▲ BASE CAMP',
           timeline: '2021 — 2022',
-          role: 'Data Analyst',
-          company: 'Everest Data Insights · Kathmandu',
-          desc: 'Performed exploratory data analysis, built interactive dashboards, and collaborated with stakeholders to drive data-informed decision-making.',
-          skills: ['Python', 'SQL', 'Tableau', 'Excel', 'Statistics', 'R'],
+          role: 'Computer Science Student',
+          company: 'Academic Foundation · Kathmandu',
+          desc: 'Developing fundamentals in programming, databases, and structured problem solving with a growing interest in BI and data science.',
+          skills: ['Python', 'SQL', 'Excel', 'Statistics', 'R', 'Communication'],
           borderColor: 'rgba(59,130,246,0.8)'
         }
       };

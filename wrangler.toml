@@ -1,3 +1,22 @@
 name = "brishav-portfolio"
 compatibility_date = "2026-05-25"
 pages_build_output_dir = "public"
+
+# Non-secret Pages configuration. Keep secrets out of this file.
+# Required secrets via Cloudflare Pages or .dev.vars:
+# - RESEND_API_KEY
+# - TURNSTILE_SECRET_KEY
+[vars]
+EMAIL_PROVIDER = "resend"
+CONTACT_TO_EMAIL = "contact@brishavrajbahak.com.np"
+CONTACT_FROM_EMAIL = "Portfolio Contact <noreply@brishavrajbahak.com.np>"
+AUTO_REPLY_FROM_EMAIL = "Brishav Rajbahak <noreply@brishavrajbahak.com.np>"
+AUTO_REPLY_ENABLED = "true"
+AUTO_REPLY_SUBJECT = "Thanks for reaching out"
+ALLOWED_ORIGINS = "https://brishavrajbahak.com.np"
+SKIP_TURNSTILE_LOCAL = "false"
+
+[[durable_objects.bindings]]
+name = "CONTACT_RATE_LIMITER"
+class_name = "ContactRateLimiter"
+script_name = "brishav-contact-rate-limiter"

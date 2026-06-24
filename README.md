@@ -13,7 +13,7 @@ Personal portfolio website for Brishav Rajbahak, focused on data analysis, busin
 - Cloudflare Pages hosting and Pages Functions backend
 - Contact form protected by Cloudflare Turnstile
 - Email delivery and automatic replies through Resend
-- Server-side validation, honeypot protection, origin checks, and rate limiting
+- Server-side validation, honeypot protection, origin checks, and Durable Object rate limiting
 - Versioned static assets and production cache headers
 
 ## Technology
@@ -41,6 +41,7 @@ Personal portfolio website for Brishav Rajbahak, focused on data analysis, busin
 |   |-- api/v1/contact.js
 |   `-- lib/email/
 |-- shared/                  # Contact API schema
+|-- workers/                 # Standalone Worker for shared Durable Objects
 |-- docs/                    # Deployment and API documentation
 |-- .dev.vars.example        # Environment variable template
 `-- wrangler.toml            # Cloudflare Pages configuration
@@ -79,7 +80,13 @@ Replace the placeholder values in `.dev.vars`. This file is ignored by Git.
 Run the complete site with Pages Functions:
 
 ```bash
-npx wrangler pages dev public
+npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
+```
+
+In a second terminal:
+
+```bash
+npx wrangler pages dev public --do CONTACT_RATE_LIMITER=ContactRateLimiter@brishav-contact-rate-limiter
 ```
 
 Open:
@@ -98,7 +105,9 @@ Never enable this setting in production.
 
 ## Environment Variables
 
-Configure these in the Cloudflare Pages project:
+Non-secret configuration lives in `wrangler.toml` under `[vars]`.
+
+The Pages project expects these plain-text values:
 
 ```text
 EMAIL_PROVIDER=resend
@@ -111,14 +120,14 @@ ALLOWED_ORIGINS=https://brishavrajbahak.com.np
 SKIP_TURNSTILE_LOCAL=false
 ```
 
-Add these as encrypted secrets:
+Add these as encrypted secrets in Cloudflare Pages:
 
 ```text
 RESEND_API_KEY
 TURNSTILE_SECRET_KEY
 ```
 
-The Turnstile site key is public and is configured in:
+The Turnstile site key is public by design and is configured in:
 
 ```text
 public/assets/js/config.public.js
@@ -148,6 +157,12 @@ Deploy the current production files:
 npx wrangler pages deploy public \
   --project-name=brishav-portfolio \
   --branch=main
+
+Deploy the rate-limit Durable Object Worker before preview or production deploys:
+
+```bash
+npx wrangler deploy --config workers/contact-rate-limiter/wrangler.toml
+```
 ```
 
 The custom production domain is:

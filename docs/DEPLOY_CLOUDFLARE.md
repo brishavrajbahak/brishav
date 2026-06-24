@@ -9,10 +9,18 @@
 5. Keep the root directory as `/`.
 6. Attach `brishavrajbahak.com.np` as the custom domain.
 
+## Contact Rate Limiter Worker
+
+Deploy the shared Durable Object Worker before preview or production Pages deploys:
+
+```powershell
+npx wrangler deploy --config workers/contact-rate-limiter/wrangler.toml
+```
+
 ## Turnstile
 
 1. Create a Turnstile widget for `brishavrajbahak.com.np`.
-2. Put the public site key in `public/assets/js/config.public.js`.
+2. Put the public site key in `public/assets/js/config.public.js`. The site key is safe to expose publicly.
 3. Put the secret key in Cloudflare Pages environment variables as `TURNSTILE_SECRET_KEY`.
 
 ## Resend
@@ -26,17 +34,13 @@
 
 Use `.dev.vars.example` as the template. Do not commit `.dev.vars`.
 
-Required production values:
+Plain-text values are defined in `wrangler.toml` under `[vars]`.
+
+Required production secrets:
 
 ```text
-EMAIL_PROVIDER=resend
-RESEND_API_KEY=...
-CONTACT_TO_EMAIL=contact@brishavrajbahak.com.np
-CONTACT_FROM_EMAIL="Portfolio Contact <noreply@brishavrajbahak.com.np>"
-AUTO_REPLY_FROM_EMAIL="Brishav Rajbahak <noreply@brishavrajbahak.com.np>"
 TURNSTILE_SECRET_KEY=...
-AUTO_REPLY_ENABLED=true
-ALLOWED_ORIGINS=https://brishavrajbahak.com.np
+RESEND_API_KEY=...
 ```
 
 ## Local Dev

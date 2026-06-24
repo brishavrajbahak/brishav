@@ -13,6 +13,7 @@ Personal portfolio website for Brishav Rajbahak, focused on data analysis, busin
 - Cloudflare Pages hosting and Pages Functions backend
 - Contact form protected by Cloudflare Turnstile
 - Email delivery and automatic replies through Resend
+- Optional MailChannels delivery fallback for contact email
 - Server-side validation, honeypot protection, origin checks, and rate limiting
 - Versioned static assets and production cache headers
 
@@ -25,6 +26,7 @@ Personal portfolio website for Brishav Rajbahak, focused on data analysis, busin
 - Cloudflare Pages Functions
 - Cloudflare Turnstile
 - Resend
+- MailChannels
 
 ## Project Structure
 
@@ -40,8 +42,10 @@ Personal portfolio website for Brishav Rajbahak, focused on data analysis, busin
 |-- functions/               # Cloudflare Pages Functions
 |   |-- api/v1/contact.js
 |   `-- lib/email/
+|-- workers/                 # Standalone Workers used by the Pages project
 |-- shared/                  # Contact API schema
 |-- docs/                    # Deployment and API documentation
+|-- scripts/                 # Lightweight validation checks
 |-- .dev.vars.example        # Environment variable template
 `-- wrangler.toml            # Cloudflare Pages configuration
 ```
@@ -80,6 +84,18 @@ Run the complete site with Pages Functions:
 
 ```bash
 npx wrangler pages dev public
+```
+
+To run the external Durable Object locally in a separate terminal:
+
+```bash
+npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
+```
+
+To bind that local Durable Object into Pages dev:
+
+```bash
+npx wrangler pages dev public --do CONTACT_RATE_LIMITER=ContactRateLimiter@brishav-contact-rate-limiter
 ```
 
 Open:
@@ -124,12 +140,20 @@ The Turnstile site key is public and is configured in:
 public/assets/js/config.public.js
 ```
 
+If you want to use MailChannels instead of Resend:
+
+```text
+EMAIL_PROVIDER=mailchannels
+```
+
+MailChannels uses the same `CONTACT_*` and `AUTO_REPLY_*` environment variables but does not require `RESEND_API_KEY`.
+
 ## Contact Flow
 
 1. The visitor completes the contact form and Turnstile challenge.
 2. The browser submits JSON to `POST /api/v1/contact`.
 3. The Pages Function validates the request, origin, honeypot, rate limit, and Turnstile token.
-4. Resend delivers the notification to `contact@brishavrajbahak.com.np`.
+4. Resend or MailChannels delivers the notification to `contact@brishavrajbahak.com.np`.
 5. A neutral receipt confirmation is sent to the visitor without echoing their submitted message.
 
 See [docs/CONTACT_API.md](docs/CONTACT_API.md) for the API contract.
@@ -148,6 +172,18 @@ Deploy the current production files:
 npx wrangler pages deploy public \
   --project-name=brishav-portfolio \
   --branch=main
+```
+
+Deploy the Durable Object worker once before the first Pages deployment that depends on it:
+
+```bash
+npx wrangler deploy --config workers/contact-rate-limiter/wrangler.toml
+```
+
+Deploy a preview from the current feature branch:
+
+```bash
+npx wrangler pages deploy public --project-name=brishav-portfolio --commit-dirty=true
 ```
 
 The custom production domain is:

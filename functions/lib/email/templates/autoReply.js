@@ -4,7 +4,7 @@ export function renderAutoReplyText(payload) {
   return [
     `Hi ${payload.name},`,
     '',
-    'Thank you for contacting me through my portfolio website. I’ve received your message and will review it shortly. You can expect a personal reply within 24 hours.',
+    "Thank you for contacting me through my portfolio website. I've received your message and will review it shortly. You can expect a personal reply within 24 hours.",
     '',
     'Best regards,',
     'Brishav Rajbahak',
@@ -16,7 +16,7 @@ export function renderAutoReplyText(payload) {
 export function renderAutoReplyHtml(payload) {
   return `
     <p>Hi ${escapeHtml(payload.name)},</p>
-    <p>Thank you for contacting me through my portfolio website. I’ve received your message and will review it shortly. You can expect a personal reply within 24 hours.</p>
+    <p>Thank you for contacting me through my portfolio website. I've received your message and will review it shortly. You can expect a personal reply within 24 hours.</p>
     <p>
       Best regards,<br>
       Brishav Rajbahak<br>

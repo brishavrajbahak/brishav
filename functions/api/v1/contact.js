@@ -2,17 +2,23 @@ import { sendAutoReply, sendNotification } from '../../lib/email/index.js';
 
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 5;
-const rateLimit = globalThis.__CONTACT_RATE_LIMIT__ ||= new Map();
+const ALLOW_METHODS = 'POST, OPTIONS';
+const DEFAULT_ALLOWED_ORIGIN = 'https://brishavrajbahak.com.np';
 
 export async function onRequestOptions(context) {
   return new Response(null, {
     status: 204,
-    headers: corsHeaders(context.request, context.env),
+    headers: {
+      Allow: ALLOW_METHODS,
+      ...corsHeaders(context.request, context.env),
+    },
   });
 }
 
 export async function onRequestGet(context) {
-  return json(context.request, context.env, { ok: false, code: 'METHOD_NOT_ALLOWED' }, 405);
+  return json(context.request, context.env, { ok: false, code: 'METHOD_NOT_ALLOWED' }, 405, {
+    Allow: ALLOW_METHODS,
+  });
 }
 
 export async function onRequestPost(context) {
@@ -23,8 +29,20 @@ export async function onRequestPost(context) {
   }
 
   const ip = request.headers.get('CF-Connecting-IP') || request.headers.get('x-forwarded-for') || 'unknown';
-  if (!checkRateLimit(ip)) {
-    return json(request, env, { ok: false, code: 'RATE_LIMITED' }, 429);
+  const clientIp = normalizeClientIp(ip);
+  const rateLimit = await checkRateLimit(env, clientIp);
+  if (!rateLimit.ok) {
+    if (rateLimit.code === 'RATE_LIMITED') {
+      return json(request, env, { ok: false, code: 'RATE_LIMITED' }, 429, {
+        'Retry-After': String(rateLimit.retryAfter || Math.ceil(WINDOW_MS / 1000)),
+      });
+    }
+
+    console.error('Rate limiter unavailable for contact request.', {
+      ip: clientIp,
+      detail: rateLimit.detail || 'unknown',
+    });
+    return json(request, env, { ok: false, code: 'SERVER_ERROR' }, 500);
   }
 
   let body;
@@ -48,7 +66,7 @@ export async function onRequestPost(context) {
     return json(request, env, { ok: false, code: 'BOT_FAILED' }, 403);
   }
 
-  const turnstile = await verifyTurnstile(body.turnstileToken, env, ip);
+  const turnstile = await verifyTurnstile(body.turnstileToken, env, clientIp);
   if (!turnstile.ok) {
     return json(request, env, { ok: false, code: 'BOT_FAILED' }, 403);
   }
@@ -101,18 +119,41 @@ function validatePayload(payload) {
   return errors;
 }
 
-function checkRateLimit(ip) {
-  const now = Date.now();
-  const bucket = rateLimit.get(ip) || { count: 0, resetAt: now + WINDOW_MS };
-
-  if (now > bucket.resetAt) {
-    bucket.count = 0;
-    bucket.resetAt = now + WINDOW_MS;
+async function checkRateLimit(env, ip) {
+  if (!env.CONTACT_RATE_LIMITER) {
+    return { ok: false, code: 'SERVER_ERROR', detail: 'Missing CONTACT_RATE_LIMITER binding.' };
   }
 
-  bucket.count += 1;
-  rateLimit.set(ip, bucket);
-  return bucket.count <= MAX_REQUESTS_PER_WINDOW;
+  const stub = env.CONTACT_RATE_LIMITER.getByName(ip || 'unknown');
+
+  try {
+    const response = await stub.fetch('https://contact-rate-limiter.internal/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        key: ip || 'unknown',
+        limit: MAX_REQUESTS_PER_WINDOW,
+        windowMs: WINDOW_MS,
+      }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      return { ok: false, code: 'SERVER_ERROR', detail: data.error || `Limiter returned ${response.status}.` };
+    }
+
+    return {
+      ok: Boolean(data.allowed),
+      code: data.allowed ? 'OK' : 'RATE_LIMITED',
+      retryAfter: data.retryAfter,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      code: 'SERVER_ERROR',
+      detail: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 async function verifyTurnstile(token, env, ip) {
@@ -136,10 +177,7 @@ function isAllowedOrigin(request, env) {
   const origin = request.headers.get('origin');
   if (!origin) return true;
 
-  const allowed = (env.ALLOWED_ORIGINS || '')
-    .split(',')
-    .map(value => value.trim())
-    .filter(Boolean);
+  const allowed = getAllowedOrigins(env);
 
   if (!allowed.length) return true;
   return allowed.includes(origin);
@@ -147,22 +185,38 @@ function isAllowedOrigin(request, env) {
 
 function corsHeaders(request, env) {
   const origin = request.headers.get('origin');
-  const allowedOrigin = isAllowedOrigin(request, env) && origin ? origin : 'https://brishavrajbahak.com.np';
+  const allowedOrigins = getAllowedOrigins(env);
+  const fallbackOrigin = allowedOrigins[0] || DEFAULT_ALLOWED_ORIGIN;
+  const allowedOrigin = isAllowedOrigin(request, env) && origin ? origin : fallbackOrigin;
 
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': ALLOW_METHODS,
     'Access-Control-Allow-Headers': 'Content-Type',
     'Vary': 'Origin',
   };
 }
 
-function json(request, env, body, status = 200) {
+function getAllowedOrigins(env) {
+  return (env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+}
+
+function normalizeClientIp(value) {
+  return String(value || 'unknown')
+    .split(',')[0]
+    .trim() || 'unknown';
+}
+
+function json(request, env, body, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       ...corsHeaders(request, env),
+      ...extraHeaders,
     },
   });
 }

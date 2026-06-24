@@ -22,6 +22,8 @@ The browser sends JSON only. The frontend never sends email directly and never c
 
 `website` is a honeypot field and must be empty.
 
+`subject` is optional. An empty subject is accepted and falls back to the existing server-side notification subject default.
+
 ## Responses
 
 | Status | Code | Meaning |

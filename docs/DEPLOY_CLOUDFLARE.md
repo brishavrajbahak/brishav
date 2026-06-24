@@ -9,6 +9,18 @@
 5. Keep the root directory as `/`.
 6. Attach `brishavrajbahak.com.np` as the custom domain.
 
+## Contact Rate Limiter Worker
+
+This Pages project binds to a separate Durable Object Worker for production-safe rate limiting.
+
+Deploy it before deploying Pages:
+
+```bash
+npx wrangler deploy --config workers/contact-rate-limiter/wrangler.toml
+```
+
+The Pages project Wrangler file binds `CONTACT_RATE_LIMITER` to the Worker named `brishav-contact-rate-limiter`.
+
 ## Turnstile
 
 1. Create a Turnstile widget for `brishavrajbahak.com.np`.
@@ -21,6 +33,14 @@
 2. Verify the sending domain `brishavrajbahak.com.np` in Resend.
 3. Add the DKIM/SPF DNS records Resend gives you in Cloudflare DNS.
 4. Add `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, and `AUTO_REPLY_FROM_EMAIL` in Cloudflare Pages environment variables.
+
+## MailChannels (optional)
+
+If you prefer MailChannels over Resend:
+
+1. Set `EMAIL_PROVIDER=mailchannels`.
+2. Keep `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`, and `AUTO_REPLY_FROM_EMAIL`.
+3. Do not set `RESEND_API_KEY` for that provider path.
 
 ## Environment Variables
 
@@ -45,6 +65,20 @@ Run:
 
 ```powershell
 npx wrangler pages dev public
+```
+
+For local development with the external Durable Object:
+
+1. Start the Durable Object Worker in one terminal:
+
+```powershell
+npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
+```
+
+2. Start Pages dev in another terminal and bind the local Durable Object:
+
+```powershell
+npx wrangler pages dev public --do CONTACT_RATE_LIMITER=ContactRateLimiter@brishav-contact-rate-limiter
 ```
 
 For local API testing without Turnstile, set `SKIP_TURNSTILE_LOCAL=true` in `.dev.vars`. Keep it `false` in production.

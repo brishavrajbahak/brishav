@@ -1,0 +1,11 @@
+{
+  "name": "brishav-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "npm run check:syntax && npm run check:json && npm run check:config",
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "check:json": "node scripts/check-json.mjs",
+    "check:config": "node scripts/check-config.mjs"
+  }
+}

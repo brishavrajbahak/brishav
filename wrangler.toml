@@ -1,3 +1,10 @@
+"$schema" = "./node_modules/wrangler/config-schema.json"
+
 name = "brishav-portfolio"
 compatibility_date = "2026-05-25"
 pages_build_output_dir = "public"
+
+[[durable_objects.bindings]]
+name = "CONTACT_RATE_LIMITER"
+class_name = "ContactRateLimiter"
+script_name = "brishav-contact-rate-limiter"

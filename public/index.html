@@ -3,25 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    (() => {
-      const breakpoint = 768;
-      const root = document.documentElement;
-      const viewportWidth = window.visualViewport?.width || window.innerWidth || screen.width;
-      const initialMobile = viewportWidth <= breakpoint;
-      root.classList.add(initialMobile ? 'mobile-mode' : 'desktop-mode');
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('reduced-motion');
-
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(() => {
-          const currentWidth = window.visualViewport?.width || window.innerWidth || screen.width;
-          if ((currentWidth <= breakpoint) !== initialMobile) window.location.reload();
-        }, 300);
-      }, { passive: true });
-    })();
-  </script>
+  <script src="assets/js/bootstrap.js?v=1"></script>
   <title>Brishav Rajbahak — Data Analyst | Data Science Aspirant</title>
   <!-- SEO & Open Graph -->
   <meta name="description" content="Brishav Rajbahak — aspiring data analyst from Kathmandu, Nepal, building skills in SQL, Python, dashboards, reporting, and data science projects.">
@@ -784,47 +766,7 @@ class Net(nn.Module):
   
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   <script src="assets/js/config.public.js?v=2" defer></script>
-  <script>
-    (() => {
-      const mobile = document.documentElement.classList.contains('mobile-mode');
-      const loadScript = source => new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = source;
-        script.async = false;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-
-      if (mobile) {
-        const revealMobilePage = () => {
-          document.getElementById('loading-screen')?.classList.add('hidden');
-          document.body.classList.add('page-loaded');
-          document.getElementById('home')?.classList.add('hero-revealed');
-        };
-
-        revealMobilePage();
-        loadScript('assets/js/mobile-core.js?v=5').catch(error => {
-          console.error('Mobile core failed to load.', error);
-          revealMobilePage();
-        });
-      } else {
-        const fonts = document.createElement('link');
-        fonts.rel = 'stylesheet';
-        fonts.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap';
-        fonts.crossOrigin = 'anonymous';
-        document.head.appendChild(fonts);
-
-        const stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css';
-        document.head.appendChild(stylesheet);
-        loadScript('assets/js/main.js?v=4');
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js')
-          .then(() => window.hljs?.highlightAll());
-      }
-    })();
-  </script>
-  <script src="assets/js/contact-client.js?v=2" defer></script>
+  <script src="assets/js/runtime-loader.js?v=1" defer></script>
+  <script src="assets/js/contact-client.js?v=3" defer></script>
 </body>
 </html>

@@ -27,7 +27,7 @@
     const toastIcon = document.getElementById('toastIcon');
     const toastMessage = document.getElementById('toastMsg');
     if (toast && toastIcon && toastMessage) {
-      toastIcon.textContent = type === 'error' ? '✕' : '✓';
+      toastIcon.textContent = type === 'error' ? 'X' : 'OK';
       toastMessage.textContent = message;
       toast.className = `toast ${type === 'error' ? 'toast-error' : 'toast-success'} show`;
       window.setTimeout(() => toast.classList.remove('show'), 5000);

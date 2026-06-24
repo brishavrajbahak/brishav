@@ -1,0 +1,13 @@
+"$schema" = "../../node_modules/wrangler/config-schema.json"
+
+name = "brishav-contact-rate-limiter"
+main = "src/index.js"
+compatibility_date = "2026-06-24"
+
+[[durable_objects.bindings]]
+name = "CONTACT_RATE_LIMITER"
+class_name = "ContactRateLimiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = [ "ContactRateLimiter" ]

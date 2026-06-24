@@ -990,7 +990,7 @@
     const commands = {
       whoami: "Brishav Rajbahak | Aspiring Data Analyst and Data Science Aspirant from Kathmandu, Nepal.",
       skills: `Analytics: SQL, Excel, Python, Pandas, NumPy\nVisualization: Tableau, Power BI, Matplotlib, Seaborn\nAnalysis: Data cleaning, EDA, reporting, KPI tracking\nPredictive Work: Scikit-Learn, XGBoost, regression, classification\nLearning Focus: Forecasting, dashboards, and practical data science projects`,
-      projects: `• Loan Default Analysis - Portfolio project exploring borrower behavior and default risk analysis.\n• Lhotse Object Classifier - Practice project in image classification and model evaluation.\n• Kathmandu Traffic Forecaster - Traffic trend analysis and prediction workflow.\nType 'github' to view all active repositories.`,
+      projects: `• Loan Default Analysis - Portfolio project exploring borrower behavior and default risk analysis.\n• Financial Inclusion Gap Analysis - In-progress project focused on inclusion gaps and reporting workflows.\nType 'github' to view all active repositories.`,
       contact: `Email: contact@brishavrajbahak.com.np\nGitHub: github.com/brishavrajbahak\nLinkedIn: linkedin.com/in/brishav-rajbahak\nInstagram: @razzbahakbrishav`,
       github: "Opening https://github.com/brishavrajbahak ...",
       help: `whoami    - Candidate summary\nskills    - Analytics and data science toolkit\nprojects  - Portfolio and practice work\ncontact   - Communication channels\ngithub    - Load GitHub profile\nplot      - Output Cartesian regression plot\ntrain     - Run simulated model training loop\nclear     - Reset terminal display\nsudo      - Elevate security privileges\nmatrix    - Enter the digital grid\ncoffee    - Synthesize caffeine`,

@@ -1,0 +1,18 @@
+{
+  "id": "loan-risk",
+  "label": "Loan Risk Signal Demo",
+  "theme": "Loan Risk",
+  "description": "Illustrative borrower-level risk markers for repayment and default pressure analysis.",
+  "records": [
+    { "segment": "Salaried", "province": "Bagmati", "loan_amount_npr": 420000, "monthly_income_npr": 78000, "delinquency_days": 8, "defaulted": "No" },
+    { "segment": "Microbusiness", "province": "Bagmati", "loan_amount_npr": 610000, "monthly_income_npr": 52000, "delinquency_days": 41, "defaulted": "Yes" },
+    { "segment": "Agriculture", "province": "Lumbini", "loan_amount_npr": 290000, "monthly_income_npr": 36000, "delinquency_days": 19, "defaulted": "No" },
+    { "segment": "Microbusiness", "province": "Gandaki", "loan_amount_npr": 560000, "monthly_income_npr": 47000, "delinquency_days": 52, "defaulted": "Yes" },
+    { "segment": "Salaried", "province": "Koshi", "loan_amount_npr": 350000, "monthly_income_npr": 69000, "delinquency_days": 5, "defaulted": "No" },
+    { "segment": "Informal", "province": "Madhesh", "loan_amount_npr": 250000, "monthly_income_npr": 28000, "delinquency_days": 63, "defaulted": "Yes" },
+    { "segment": "Agriculture", "province": "Karnali", "loan_amount_npr": 180000, "monthly_income_npr": 22000, "delinquency_days": 37, "defaulted": "Yes" },
+    { "segment": "Salaried", "province": "Bagmati", "loan_amount_npr": 480000, "monthly_income_npr": 82000, "delinquency_days": 12, "defaulted": "No" },
+    { "segment": "Microbusiness", "province": "Lumbini", "loan_amount_npr": 530000, "monthly_income_npr": 49000, "delinquency_days": 29, "defaulted": "No" },
+    { "segment": "Informal", "province": "Sudurpashchim", "loan_amount_npr": 210000, "monthly_income_npr": 24000, "delinquency_days": 58, "defaulted": "Yes" }
+  ]
+}

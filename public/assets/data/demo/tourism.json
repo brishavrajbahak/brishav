@@ -1,0 +1,18 @@
+{
+  "id": "tourism",
+  "label": "Tourism Recovery Outlook",
+  "theme": "Tourism",
+  "description": "Illustrative provincial tourism indicators covering arrivals, average stay, and spend per visitor.",
+  "records": [
+    { "province": "Bagmati", "quarter": "Q1", "arrivals": 12400, "avg_stay_days": 3.6, "spend_usd": 742, "hotel_occupancy_pct": 62 },
+    { "province": "Bagmati", "quarter": "Q2", "arrivals": 13800, "avg_stay_days": 3.8, "spend_usd": 774, "hotel_occupancy_pct": 66 },
+    { "province": "Gandaki", "quarter": "Q1", "arrivals": 9800, "avg_stay_days": 4.4, "spend_usd": 688, "hotel_occupancy_pct": 58 },
+    { "province": "Gandaki", "quarter": "Q2", "arrivals": 11500, "avg_stay_days": 4.6, "spend_usd": 731, "hotel_occupancy_pct": 63 },
+    { "province": "Lumbini", "quarter": "Q1", "arrivals": 7600, "avg_stay_days": 2.9, "spend_usd": 412, "hotel_occupancy_pct": 49 },
+    { "province": "Lumbini", "quarter": "Q2", "arrivals": 8600, "avg_stay_days": 3.1, "spend_usd": 438, "hotel_occupancy_pct": 54 },
+    { "province": "Koshi", "quarter": "Q1", "arrivals": 5100, "avg_stay_days": 2.4, "spend_usd": 356, "hotel_occupancy_pct": 43 },
+    { "province": "Koshi", "quarter": "Q2", "arrivals": 6200, "avg_stay_days": 2.6, "spend_usd": 381, "hotel_occupancy_pct": 47 },
+    { "province": "Sudurpashchim", "quarter": "Q1", "arrivals": 2900, "avg_stay_days": 2.1, "spend_usd": 244, "hotel_occupancy_pct": 34 },
+    { "province": "Sudurpashchim", "quarter": "Q2", "arrivals": 3600, "avg_stay_days": 2.4, "spend_usd": 267, "hotel_occupancy_pct": 39 }
+  ]
+}

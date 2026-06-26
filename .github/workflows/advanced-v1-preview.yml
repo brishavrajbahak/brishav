@@ -1,0 +1,42 @@
+name: Advanced V1 Preview
+
+on:
+  push:
+    branches:
+      - feature/advanced-v1
+  pull_request:
+    branches:
+      - main
+      - feature/portfolio-v2-review-fixes
+  workflow_dispatch:
+
+jobs:
+  build-and-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Validate Pages Functions bundle
+        run: npx wrangler pages functions build functions --outfile .wrangler/tmp/pages-functions-advanced.js
+
+      - name: Deploy preview
+        if: ${{ github.event_name != 'pull_request' && secrets.CLOUDFLARE_API_TOKEN != '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx wrangler pages deploy public --project-name=brishav-portfolio --branch=feature/advanced-v1

@@ -1,185 +1,203 @@
-﻿# Brishav Rajbahak Portfolio
+# Brishav Rajbahak Portfolio
 
-Personal portfolio website for Brishav Rajbahak, focused on data analysis, business intelligence, dashboards, reporting, and early-stage data science portfolio work.
+Interactive portfolio website for Brishav Rajbahak, centered on data analysis, reporting, curated demos, and practical business-facing storytelling.
 
 **Live website:** [brishavrajbahak.com.np](https://brishavrajbahak.com.np)
+
+## Advanced V1
+
+This branch introduces the Advanced V1 layer:
+
+- enhanced desktop terminal with command registry
+- SVG-based mandala visualization across skills, terminal, and playground
+- curated playground with three Nepal-themed demo datasets
+- privacy-friendly interaction events for terminal and playground usage
+- build pipeline using `esbuild`
 
 ## Highlights
 
 - Responsive portfolio with dedicated desktop and mobile experiences
-- Interactive desktop terminal and data-themed canvas effects
-- Lightweight mobile bundle with expensive desktop effects disabled
-- Responsive WebP portrait images
+- Interactive desktop terminal plus mobile Demo Mode card
+- Signal mandala for skills, tools, and domain connections
+- Curated playground demos: Tourism, Loan Risk, Remittance
 - Cloudflare Pages hosting and Pages Functions backend
 - Contact form protected by Cloudflare Turnstile
-- Email delivery and automatic replies through Resend
-- Server-side validation, honeypot protection, origin checks, and Durable Object rate limiting
-- Versioned static assets and production cache headers
+- Resend email delivery with Durable Object-backed contact rate limiting
+- Versioned built assets and preview-branch badge support
 
 ## Technology
 
 - HTML5
 - CSS3
 - Vanilla JavaScript
+- esbuild
 - Cloudflare Pages
 - Cloudflare Pages Functions
 - Cloudflare Turnstile
+- Cloudflare Web Analytics beacon (optional public token)
 - Resend
 
 ## Project Structure
 
 ```text
 .
-|-- public/                  # Deployable website
+|-- public/
 |   |-- assets/
 |   |   |-- css/
-|   |   |-- images/
+|   |   |-- data/
+|   |   |   |-- demo/
+|   |   |   `-- mandala-config.json
 |   |   `-- js/
+|   |       |-- modules/
+|   |       |-- advanced.js
+|   |       |-- mobile-advanced.js
+|   |       `-- build-meta.js
 |   |-- index.html
 |   `-- _headers
-|-- functions/               # Cloudflare Pages Functions
-|   |-- api/v1/contact.js
-|   `-- lib/email/
-|-- shared/                  # Contact API schema
-|-- workers/                 # Standalone Worker for shared Durable Objects
-|-- docs/                    # Deployment and API documentation
-|-- .dev.vars.example        # Environment variable template
-`-- wrangler.toml            # Cloudflare Pages configuration
+|-- functions/
+|   |-- api/v1/
+|   |   |-- analytics/
+|   |   |-- contact.js
+|   |   `-- playground/
+|   `-- lib/
+|-- workers/
+|-- docs/
+|-- build.js
+|-- CHANGELOG.md
+|-- package.json
+`-- wrangler.toml
 ```
-
-## Mobile Performance
-
-The site detects viewports of `768px` or less before first paint and loads a dedicated mobile script.
-
-The mobile version:
-
-- Does not download or initialize the interactive terminal
-- Disables canvas animations, particles, audio, parallax, and magnetic effects
-- Uses system fonts instead of downloading Google Fonts
-- Loads syntax highlighting only when code approaches the viewport
-- Uses optimized `480w` and `768w` WebP images
-- Skips the simulated desktop loading sequence
-- Preserves navigation, contact form, Turnstile, and accessibility behavior
 
 ## Local Development
 
 ### Requirements
 
 - Node.js
-- Wrangler CLI
-- A Cloudflare account for Functions and Turnstile testing
+- Wrangler CLI via `npx`
+- A Cloudflare account for Pages Functions and Turnstile testing
 
-Install or invoke Wrangler through `npx`, then create a local secrets file:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create local secrets:
 
 ```bash
 cp .dev.vars.example .dev.vars
 ```
 
-Replace the placeholder values in `.dev.vars`. This file is ignored by Git.
-
-Run the complete site with Pages Functions:
+Run the Durable Object worker in one terminal:
 
 ```bash
 npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
 ```
 
-In a second terminal:
+Run the site in a second terminal:
 
 ```bash
-npx wrangler pages dev public --do CONTACT_RATE_LIMITER=ContactRateLimiter@brishav-contact-rate-limiter
+npm run dev
 ```
 
-Open:
+That script builds the advanced JS bundles and starts:
 
 ```text
 http://localhost:8788
 ```
 
-For local API testing without Turnstile, use:
+## Build Scripts
 
-```text
-SKIP_TURNSTILE_LOCAL=true
+```bash
+npm run build
+npm run lint
+npm run preview
 ```
 
-Never enable this setting in production.
+- `build` generates `advanced.js`, `mobile-advanced.js`, and `build-meta.js`
+- `lint` validates the new modules, Functions routes, and build files
+- `preview` builds and deploys the current branch to Cloudflare Pages
 
-## Environment Variables
+## Environment and Public Config
 
-Non-secret configuration lives in `wrangler.toml` under `[vars]`.
+Non-secret Pages values remain in [wrangler.toml](/D:/tr/wrangler.toml).
 
-The Pages project expects these plain-text values:
-
-```text
-EMAIL_PROVIDER=resend
-CONTACT_TO_EMAIL=contact@brishavrajbahak.com.np
-CONTACT_FROM_EMAIL=Portfolio Contact <noreply@brishavrajbahak.com.np>
-AUTO_REPLY_FROM_EMAIL=Brishav Rajbahak <noreply@brishavrajbahak.com.np>
-AUTO_REPLY_ENABLED=true
-AUTO_REPLY_SUBJECT=Thanks for reaching out
-ALLOWED_ORIGINS=https://brishavrajbahak.com.np
-SKIP_TURNSTILE_LOCAL=false
-```
-
-Add these as encrypted secrets in Cloudflare Pages:
+Encrypted Cloudflare Pages secrets still include:
 
 ```text
 RESEND_API_KEY
 TURNSTILE_SECRET_KEY
 ```
 
-The Turnstile site key is public by design and is configured in:
+Public frontend config lives in:
 
-```text
-public/assets/js/config.public.js
-```
+[`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js)
 
-## Contact Flow
+It currently contains:
 
-1. The visitor completes the contact form and Turnstile challenge.
-2. The browser submits JSON to `POST /api/v1/contact`.
-3. The Pages Function validates the request, origin, honeypot, rate limit, and Turnstile token.
-4. Resend delivers the notification to `contact@brishavrajbahak.com.np`.
-5. A neutral receipt confirmation is sent to the visitor without echoing their submitted message.
+- `TURNSTILE_SITE_KEY`
+- optional `WEB_ANALYTICS_TOKEN`
 
-See [docs/CONTACT_API.md](docs/CONTACT_API.md) for the API contract.
+The Turnstile site key and Web Analytics token are public values by design.
 
-## Deployment
+## New Endpoints
 
-The Cloudflare Pages project name is:
+- `GET /api/v1/playground/datasets`
+- `POST /api/v1/playground/analyze`
+- `POST /api/v1/analytics/event`
 
-```text
-brishav-portfolio
-```
+The contact API stays unchanged:
 
-Deploy the current production files:
+- `POST /api/v1/contact`
 
-```bash
-npx wrangler pages deploy public \
-  --project-name=brishav-portfolio \
-  --branch=main
+## Analytics Notes
 
-Deploy the rate-limit Durable Object Worker before preview or production deploys:
+Page/session analytics can use the optional Cloudflare Web Analytics beacon.
 
-```bash
-npx wrangler deploy --config workers/contact-rate-limiter/wrangler.toml
-```
-```
+Explicit interaction events are sent to `/api/v1/analytics/event`:
 
-The custom production domain is:
+- `terminal_command`
+- `mandala_view`
+- `playground_open`
+- `analyze_run`
 
-```text
-https://brishavrajbahak.com.np
-```
+## Before vs After V1
 
-See [docs/DEPLOY_CLOUDFLARE.md](docs/DEPLOY_CLOUDFLARE.md) for the full setup guide.
+Before:
+
+- one large desktop script
+- static project and skills sections
+- no demo analysis layer
+
+After:
+
+- modular advanced JS layer on top of the existing site
+- terminal plus mandala as distinct brand interactions
+- curated data playground tied to project themes
+
+## Screenshots
+
+- `TODO: desktop terminal + mandala`
+- `TODO: playground modal`
+- `TODO: mobile demo mode`
+
+## V2 Roadmap
+
+Deferred intentionally from Advanced V1:
+
+- uploads
+- R2
+- D1
+- Workers AI insights
+- PDF export
 
 ## Security
 
-- Never commit `.dev.vars`, `.env` files, Resend API keys, or the Turnstile secret.
-- Keep `SKIP_TURNSTILE_LOCAL=false` in production.
-- Verify that the Resend sending domain and Turnstile hostname match the production domain.
-- The public Turnstile site key is safe to include in frontend code.
+- Never commit `.dev.vars`, `.env` files, or secret API keys
+- Keep `SKIP_TURNSTILE_LOCAL=false` in production
+- Verify the Resend sending domain and Turnstile hostname match the production domain
+- Keep the optional analytics token public, but never place secrets in public config
 
 ## License
 
-This repository contains a personal portfolio and its original content. Reuse of the design, branding, images, or personal content requires permission.
+This repository contains personal portfolio content. Reuse of the branding, writing, images, or design requires permission.

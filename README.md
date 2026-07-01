@@ -72,7 +72,7 @@ This branch introduces the Advanced V1 layer:
 
 ### Requirements
 
-- Node.js
+- Node.js 22+
 - Wrangler CLI via `npx`
 - A Cloudflare account for Pages Functions and Turnstile testing
 

@@ -52,3 +52,8 @@ npm run preview
 ```
 
 The GitHub Actions workflow also builds and attempts preview deployment when secrets are available.
+
+## Validation Notes
+
+- Use the Pages preview URL for desktop, mobile, playground, and analytics verification.
+- If the preview hostname is not allowed by Turnstile, use `brishavrajbahak.com.np` only for the full contact-form regression and note that in the PR.

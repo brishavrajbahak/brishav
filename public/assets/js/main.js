@@ -796,7 +796,7 @@
       requestAnimationFrame(draw);
     })();
     /* ── Typewriter ── */
-    const roles  = ['Data Analyst', 'Data Science Aspirant', 'Aspiring BI Analyst', 'SQL & Python Learner', 'Analytics Portfolio Builder'];
+    const roles  = ['Data Analyst', 'Data Science Aspirant', 'Data Analyst / Data Science Aspirant'];
     let ri = 0, ci = 0, deleting = false;
     const roleEl = document.getElementById('role-text');
     function type() {
@@ -988,9 +988,9 @@
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalCursor = document.getElementById('terminalCursor');
     const commands = {
-      whoami: "Brishav Rajbahak | Aspiring Data Analyst and Data Science Aspirant from Kathmandu, Nepal.",
+      whoami: "Brishav Rajbahak | Data Analyst / Data Science Aspirant from Kathmandu, Nepal.",
       skills: `Analytics: SQL, Excel, Python, Pandas, NumPy\nVisualization: Tableau, Power BI, Matplotlib, Seaborn\nAnalysis: Data cleaning, EDA, reporting, KPI tracking\nPredictive Work: Scikit-Learn, XGBoost, regression, classification\nLearning Focus: Forecasting, dashboards, and practical data science projects`,
-      projects: `• Loan Default Analysis - Portfolio project exploring borrower behavior and default risk analysis.\n• Financial Inclusion Gap Analysis - In-progress project focused on inclusion gaps and reporting workflows.\nType 'github' to view all active repositories.`,
+      projects: `• Loan Default Analysis - Delivered borrower segmentation, SQL-backed preparation, and a Power BI story layer for risk communication.\n  Business impact: clarified the top repayment-pressure signals behind a 19.98% final-outcome default rate and translated them into dashboard-ready risk reporting.\n• Financial Inclusion Gap Analysis - Delivered a clean gap-analysis framing, reporting structure, and a clearer decision path for inclusion monitoring.\n  Business impact: sharpens which underserved groups should be prioritized first when access, trust, and reporting quality diverge.\nType 'github' to view all active repositories.`,
       contact: `Email: contact@brishavrajbahak.com.np\nGitHub: github.com/brishavrajbahak\nLinkedIn: linkedin.com/in/brishav-rajbahak\nInstagram: @razzbahakbrishav`,
       github: "Opening https://github.com/brishavrajbahak ...",
       help: `whoami    - Candidate summary\nskills    - Analytics and data science toolkit\nprojects  - Portfolio and practice work\ncontact   - Communication channels\ngithub    - Load GitHub profile\nplot      - Output Cartesian regression plot\ntrain     - Run simulated model training loop\nclear     - Reset terminal display\nsudo      - Elevate security privileges\nmatrix    - Enter the digital grid\ncoffee    - Synthesize caffeine`,

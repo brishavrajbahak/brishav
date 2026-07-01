@@ -125,7 +125,7 @@
     element.dataset.animated = 'true';
   });
   const role = document.getElementById('role-text');
-  if (role) role.textContent = 'Data Analyst Aspirant';
+  if (role) role.textContent = 'Data Analyst / Data Science Aspirant';
 
   function updateClock() {
     const time = document.getElementById('navTime');

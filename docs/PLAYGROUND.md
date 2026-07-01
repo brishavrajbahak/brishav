@@ -68,6 +68,11 @@ The analyze route follows the existing API patterns:
 - Durable Object-backed request limiting
 - predictable JSON errors
 
+## Verification Notes
+
+- Validate the playground catalog and analyze routes on the Cloudflare Pages preview URL, not only through local static serving.
+- Confirm analytics events tied to playground open and analyze actions through the browser network tab or Cloudflare logs.
+
 ## V2 Roadmap
 
 Potential future additions:

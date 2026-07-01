@@ -1,16 +1,37 @@
-## Summary
-
-- 
-
-## Advanced V1 Checklist
+## Merge Checklist
 
 - [ ] `npm ci`
 - [ ] `npm run lint`
 - [ ] `npm run build`
-- [ ] `npx wrangler pages functions build functions --outfile .wrangler/tmp/pages-functions-advanced.js`
-- [ ] Desktop terminal commands verified
-- [ ] Mandala renders in skills, terminal, and playground
-- [ ] Playground returns all three datasets correctly
-- [ ] Mobile Demo Mode card works
-- [ ] Contact form and Turnstile still work
-- [ ] Preview deploy verified
+- [ ] Preview deployment verified
+- [ ] Mobile Demo Mode verified
+- [ ] Pages Functions verified
+- [ ] Analytics verified
+- [ ] Contact / Turnstile verified
+- [ ] Bundles regenerated and committed
+
+## Summary
+
+- 
+
+## V1 Success Metrics Achieved
+
+- Terminal usage:
+- Mandala interaction rate:
+- Time on site:
+- Mobile Lighthouse:
+
+## Known Limitations in V1
+
+- Demo-only playground
+- No uploads
+- No R2 / D1 / Workers AI / PDF export
+
+## Validation Notes
+
+- If the preview hostname is not allowed by Turnstile, use `brishavrajbahak.com.np` for the contact-form test and note it here.
+- Verify analytics events in the preview network tab or Cloudflare logs:
+  - `terminal_command`
+  - `mandala_view`
+  - `playground_open`
+  - `analyze_run`

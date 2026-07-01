@@ -47,6 +47,11 @@ The mandala must keep:
 - Terminal: compact embedded version with pulse emphasis
 - Playground: dataset-focused highlights using `mandalaFocus`
 
+## Verification Notes
+
+- Verify the full mandala on desktop preview, the compact mandala in terminal output, and the reduced mandala on the mobile preview path.
+- Confirm the preview badge remains hidden on `main` builds and visible on non-`main` preview branches.
+
 ## V2 Roadmap
 
 Potential future upgrades:

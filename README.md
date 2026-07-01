@@ -79,7 +79,7 @@ This branch introduces the Advanced V1 layer:
 Install dependencies:
 
 ```bash
-npm install
+npm ci
 ```
 
 Create local secrets:
@@ -112,11 +112,29 @@ http://localhost:8788
 npm run build
 npm run lint
 npm run preview
+npm run premerge
 ```
 
 - `build` generates `advanced.js`, `mobile-advanced.js`, and `build-meta.js`
+- `postbuild` validates `build-meta.js` and enforces the advanced JS budget of `< 250KB gzipped`
 - `lint` validates the new modules, Functions routes, and build files
 - `preview` builds and deploys the current branch to Cloudflare Pages
+- `premerge` runs `npm ci`, `npm run lint`, and `npm run build`
+
+### Bundle Budget Check
+
+The bundle budget is enforced automatically during:
+
+```bash
+npm run build
+```
+
+That command triggers the `postbuild` validator, which checks the gzipped size of:
+
+- `public/assets/js/advanced.js`
+- `public/assets/js/mobile-advanced.js`
+
+The combined advanced JS budget must remain under `250KB gzipped`.
 
 ## Environment and Public Config
 
@@ -177,9 +195,7 @@ After:
 
 ## Screenshots
 
-- `TODO: desktop terminal + mandala`
-- `TODO: playground modal`
-- `TODO: mobile demo mode`
+Screenshots of terminal, mandala, and playground will be added to `main` after merge.
 
 ## V2 Roadmap
 

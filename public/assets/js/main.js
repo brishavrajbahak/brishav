@@ -948,36 +948,42 @@
       }, stepInterval);
     }
     const scrollLock = window.__scrollLock;
-    const closeMobileNav = () => {
-      mobileNav.classList.remove('open');
-      if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.remove('open');
-      hamburgerBtn.classList.remove('open');
-      hamburgerBtn.setAttribute('aria-expanded', 'false');
-      scrollLock?.unlock('mobile-nav');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileNav    = document.getElementById('mobileNav');
+    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+    const setMobileNavState = (isOpen) => {
+      mobileNav.classList.toggle('open', isOpen);
+      if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.toggle('open', isOpen);
+      hamburgerBtn.classList.toggle('open', isOpen);
+      hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+      mobileNav.setAttribute('aria-hidden', String(!isOpen));
+      mobileNavBackdrop?.setAttribute('aria-hidden', String(!isOpen));
+      if (isOpen) {
+        mobileNav.removeAttribute('inert');
+        mobileNavBackdrop?.removeAttribute('inert');
+        scrollLock?.lock('mobile-nav');
+      } else {
+        mobileNav.setAttribute('inert', '');
+        mobileNavBackdrop?.setAttribute('inert', '');
+        scrollLock?.unlock('mobile-nav');
+      }
     };
+    const closeMobileNav = () => setMobileNavState(false);
+    setMobileNavState(false);
     /* -- Nav Actions (Smooth Scroll & Close mobile nav) -- */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#') return;
         e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
+        const target = document.querySelector(href);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         closeMobileNav();
       });
     });
     /* -- Mobile Hamburger Toggle -- */
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileNav    = document.getElementById('mobileNav');
-    const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
     hamburgerBtn.addEventListener('click', () => {
-      const isOpen = mobileNav.classList.toggle('open');
-      mobileNavBackdrop.classList.toggle('open', isOpen);
-      hamburgerBtn.classList.toggle('open', isOpen);
-      hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
-      if (isOpen) {
-        scrollLock?.lock('mobile-nav');
-      } else {
-        scrollLock?.unlock('mobile-nav');
-      }
+      setMobileNavState(!mobileNav.classList.contains('open'));
     });
     // Close mobile drawer on outside click
     document.addEventListener('click', e => {
@@ -1653,7 +1659,7 @@
       ctx.stroke();
       
       // Draw labels
-      ctx.fillStyle = cyanColor; // Correctly resolves the CSS color dynamically
+      ctx.fillStyle = accentColor;
       ctx.font = '12px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';

@@ -57,24 +57,32 @@
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
 
-  function closeMobileNav() {
-    mobileNav?.classList.remove('open');
-    mobileNavBackdrop?.classList.remove('open');
-    hamburger?.classList.remove('open');
-    hamburger?.setAttribute('aria-expanded', 'false');
-    scrollLock?.unlock('mobile-nav');
-  }
-
-  hamburger?.addEventListener('click', () => {
-    const open = mobileNav?.classList.toggle('open') ?? false;
+  function setMobileNavState(open) {
+    mobileNav?.classList.toggle('open', open);
     mobileNavBackdrop?.classList.toggle('open', open);
-    hamburger.classList.toggle('open', open);
-    hamburger.setAttribute('aria-expanded', String(open));
+    hamburger?.classList.toggle('open', open);
+    hamburger?.setAttribute('aria-expanded', String(open));
+    mobileNav?.setAttribute('aria-hidden', String(!open));
+    mobileNavBackdrop?.setAttribute('aria-hidden', String(!open));
     if (open) {
+      mobileNav?.removeAttribute('inert');
+      mobileNavBackdrop?.removeAttribute('inert');
       scrollLock?.lock('mobile-nav');
     } else {
+      mobileNav?.setAttribute('inert', '');
+      mobileNavBackdrop?.setAttribute('inert', '');
       scrollLock?.unlock('mobile-nav');
     }
+  }
+
+  function closeMobileNav() {
+    setMobileNavState(false);
+  }
+
+  setMobileNavState(false);
+
+  hamburger?.addEventListener('click', () => {
+    setMobileNavState(!(mobileNav?.classList.contains('open') ?? false));
   });
   mobileNavBackdrop?.addEventListener('click', closeMobileNav);
 

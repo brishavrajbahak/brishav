@@ -17,6 +17,7 @@
   const mobileNav = document.getElementById('mobileNav');
   const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
   const hamburger = document.getElementById('hamburgerBtn');
+  const scrollLock = window.__scrollLock;
   const backToTop = document.getElementById('back-to-top');
   const scrollProgress = document.getElementById('scroll-progress');
   const scrollIndicator = document.getElementById('scrollIndicator');
@@ -56,18 +57,32 @@
     window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   });
 
-  function closeMobileNav() {
-    mobileNav?.classList.remove('open');
-    mobileNavBackdrop?.classList.remove('open');
-    hamburger?.classList.remove('open');
-    hamburger?.setAttribute('aria-expanded', 'false');
+  function setMobileNavState(open) {
+    mobileNav?.classList.toggle('open', open);
+    mobileNavBackdrop?.classList.toggle('open', open);
+    hamburger?.classList.toggle('open', open);
+    hamburger?.setAttribute('aria-expanded', String(open));
+    mobileNav?.setAttribute('aria-hidden', String(!open));
+    mobileNavBackdrop?.setAttribute('aria-hidden', String(!open));
+    if (open) {
+      mobileNav?.removeAttribute('inert');
+      mobileNavBackdrop?.removeAttribute('inert');
+      scrollLock?.lock('mobile-nav');
+    } else {
+      mobileNav?.setAttribute('inert', '');
+      mobileNavBackdrop?.setAttribute('inert', '');
+      scrollLock?.unlock('mobile-nav');
+    }
   }
 
+  function closeMobileNav() {
+    setMobileNavState(false);
+  }
+
+  setMobileNavState(false);
+
   hamburger?.addEventListener('click', () => {
-    const open = mobileNav?.classList.toggle('open') ?? false;
-    mobileNavBackdrop?.classList.toggle('open', open);
-    hamburger.classList.toggle('open', open);
-    hamburger.setAttribute('aria-expanded', String(open));
+    setMobileNavState(!(mobileNav?.classList.contains('open') ?? false));
   });
   mobileNavBackdrop?.addEventListener('click', closeMobileNav);
 
@@ -125,7 +140,7 @@
     element.dataset.animated = 'true';
   });
   const role = document.getElementById('role-text');
-  if (role) role.textContent = 'Data Analyst Aspirant';
+  if (role) role.textContent = 'Data Analyst / Data Science Aspirant';
 
   function updateClock() {
     const time = document.getElementById('navTime');

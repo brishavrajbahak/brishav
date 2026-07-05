@@ -51,8 +51,8 @@
     const ctx = canvas.getContext('2d');
 
     // Palette from the site's CSS tokens
-    const CR = [200,17,31],  // crimson (--cyan)
-          AM = [200,146,10], // amber   (--pink)
+    const CR = [200,17,31],  // crimson (--accent)
+          AM = [200,146,10], // amber   (--accent-strong)
           BL = [59,130,246]; // blue    (--violet)
     const r = (c,a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
@@ -67,12 +67,12 @@
       buildMatrixRain();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        1. GRADIENT DESCENT LOSS LANDSCAPE
        A 2D cross-section of a loss surface rendered as
        slow-breathing topographic contour lines —
        echoing both ML training and the Himalayas.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     // Sample a noisy "loss bowl" surface: Z = f(x,y)
     function lossZ(nx, ny, seed) {
       // A bumpy bowl with a global minimum
@@ -164,7 +164,7 @@
         ctx.stroke();
       }
 
-      // ── Draw gradient descent path ──
+      // -- Draw gradient descent path --
       // Animate a "current epoch" bead running along it
       const epochPos = ((t * 0.00025) % 1);
       const trailLen = 38;
@@ -206,21 +206,21 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        2. TENSOR / MATRIX RAIN (left third of screen)
        Sparse columns of floating numbers — numpy-style
        array values drifting downward like data pipelines.
        Very faint, not distracting.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const MATRIX_COLS = perf.isHigh ? 14 : perf.isMedium ? 8 : 0;
     let matrixDrops = [];
 
     // Vocabulary: numbers that feel data-science
     const matVocab = [
-      '0.92','0.08','1.00','0.73','−1','0.41',
-      '128','256','0.5σ','ε','∇','β₁','α',
-      '0.1','9.8','3.14','0.01','×10⁻³','NaN',
-      '0.88','1.0','−0.5','0.33','64','0.99'
+      '0.92','0.08','1.00','0.73','-1','0.41',
+      '128','256','0.5s','e','?','ß1','a',
+      '0.1','9.8','3.14','0.01','×10?³','NaN',
+      '0.88','1.0','-0.5','0.33','64','0.99'
     ];
 
     function buildMatrixRain() {
@@ -263,11 +263,11 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        3. DISTRIBUTION CURVES (bottom strip)
        Gaussian / skewed curves drifting as background
        decoration — like Seaborn histogram overlays.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const DIST_CURVES = [
       { mu: 0.20, sig: 0.07, col: CR, a: 0.045, phase: 0.0  },
       { mu: 0.45, sig: 0.10, col: AM, a: 0.035, phase: 1.2  },
@@ -306,12 +306,12 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        4. NEURAL WEIGHT MATRIX GRID (top-left corner)
        A sparse heatmap-style grid — activation values
        shown as colour-intensity squares, like a weight
        visualisation in matplotlib.imshow()
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const GRID_ROWS = 10, GRID_COLS = 10;
     let weightGrid = [], weightTarget = [], weightT = 0;
 
@@ -365,18 +365,18 @@
       ctx.font = '7px "JetBrains Mono", monospace';
       ctx.fillStyle = r(CR, 0.15);
       ctx.textAlign = 'left';
-      ctx.fillText('W₁  [10×10]', offX, offY - 6);
+      ctx.fillText('W1  [10×10]', offX, offY - 6);
 
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        5. HIMALAYAN DATA HORIZON
        Layered mountain silhouettes with subtle data-grid
        lines overlaid — combining origin (Kathmandu) with
        the ML field (elevation maps, terrain data).
        These complement the existing hero-mountains SVG.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     function drawDataHorizon(t) {
       ctx.save();
       const baseY = H;
@@ -436,13 +436,13 @@
     }
 
     const formulas = [
-      { text: 'f(x) = σ(Wᵀx + b)', x: 0.15, y: 0.22, speed: 0.045, alpha: 0.05 },
-      { text: '∇L(θ) = -∑ (y - p)x', x: 0.45, y: 0.15, speed: 0.038, alpha: 0.04 },
+      { text: 'f(x) = s(W?x + b)', x: 0.15, y: 0.22, speed: 0.045, alpha: 0.05 },
+      { text: '?L(?) = -? (y - p)x', x: 0.45, y: 0.15, speed: 0.038, alpha: 0.04 },
       { text: 'P(A|B) = P(B|A)P(A)/P(B)', x: 0.82, y: 0.32, speed: 0.052, alpha: 0.05 },
-      { text: 'wₜ₊₁ = wₜ - η∇L(wₜ)', x: 0.12, y: 0.75, speed: 0.032, alpha: 0.06 },
+      { text: 'w_t+1 = w_t - grad(L)', x: 0.12, y: 0.75, speed: 0.032, alpha: 0.06 },
       { text: 'L(y, p) = -y log(p) - (1-y) log(1-p)', x: 0.52, y: 0.85, speed: 0.042, alpha: 0.04 },
-      { text: 'softmax(z)ᵢ = eᶻⁱ / ∑ eᶻʲ', x: 0.78, y: 0.65, speed: 0.036, alpha: 0.05 },
-      { text: 'Cov(X, Y) = E[(X-μₓ)(Y-μᵧ)]', x: 0.28, y: 0.45, speed: 0.055, alpha: 0.04 }
+      { text: 'softmax(z) = exp(z) / sum exp(z)', x: 0.78, y: 0.65, speed: 0.036, alpha: 0.05 },
+      { text: 'Cov(X, Y) = E[(X-µ?)(Y-µ?)]', x: 0.28, y: 0.45, speed: 0.055, alpha: 0.04 }
     ];
 
     function drawMathFormulas(t) {
@@ -464,7 +464,7 @@
       ctx.restore();
     }
 
-    /* ══ Master render loop ══ */
+    /* -- Master render loop -- */
     let lastT = 0;
     const frameInterval = 1000 / perf.fps;
     function render(t) {
@@ -508,7 +508,7 @@
       animatedFavicon: true
     };
 
-    /* ── Global Mouse Tracking System ── */
+    /* -- Global Mouse Tracking System -- */
     window.globalMX = window.innerWidth / 2;
     window.globalMY = window.innerHeight / 2;
     window.mouseInWindow = false;
@@ -567,9 +567,9 @@
       if (globalDot) globalDot.style.opacity = '1';
     }, { passive: true });
 
-    /* ── Dynamic footer year ── */
+    /* -- Dynamic footer year -- */
     document.getElementById('year').textContent = new Date().getFullYear();
-    /* ── Staggered Entrance Pre-setup ── */
+    /* -- Staggered Entrance Pre-setup -- */
     // Automatically assign staggered indexes to all .fade-up items under major parents
     document.querySelectorAll('section, .skills-layout, .projects-grid, .contact-wrapper, .detail-grid').forEach(parent => {
       const children = parent.querySelectorAll('.fade-up');
@@ -577,7 +577,7 @@
         child.style.setProperty('--stagger-delay', index);
       });
     });
-    /* ── Loading Screen & Staggered Hero Reveal (Simulated ML Convergence) ── */
+    /* -- Loading Screen & Staggered Hero Reveal (Simulated ML Convergence) -- */
     window.addEventListener('load', () => {
       const consoleEl = document.getElementById('loadingConsole');
       const statusEl = document.querySelector('.loading-status');
@@ -635,7 +635,7 @@
       }
       setTimeout(printNextLine, 200);
     });
-    /* ── High-Performance Custom Cursor Hover & State Triggers ── */
+    /* -- High-Performance Custom Cursor Hover & State Triggers -- */
     if (isFinePointer) {
       const hoverTargets = 'a, button, .project-card, .skill-row, .contact-link-item, .social-btn, .detail-item, .nav-hamburger';
       document.querySelectorAll(hoverTargets).forEach(el => {
@@ -661,7 +661,7 @@
         openProjectCard(card);
       });
     });
-    /* ── 3D Card Tilt (GPU-only, skips while scrolling) ── */
+    /* -- 3D Card Tilt (GPU-only, skips while scrolling) -- */
     if (sitePerf.magneticEffects) document.querySelectorAll('.project-card').forEach(card => {
       const inner = card.querySelector('.project-card-inner');
       card.addEventListener('mousemove', e => {
@@ -685,7 +685,7 @@
         if (inner) inner.style.transform = '';
       });
     });
-    /* ── Button ripple on click ── */
+    /* -- Button ripple on click -- */
     if (sitePerf.magneticEffects) document.querySelectorAll('.btn-primary, .btn-ghost, .form-submit, .nav-cta').forEach(btn => {
       btn.addEventListener('click', e => {
         const ripple = document.createElement('span');
@@ -698,7 +698,7 @@
         ripple.addEventListener('animationend', () => ripple.remove());
       });
     });
-    /* ── Magnetic Interactions ── */
+    /* -- Magnetic Interactions -- */
     document.querySelectorAll('.btn-primary, .btn-ghost, .form-submit, .nav-cta').forEach(btn => {
       btn.addEventListener('mousemove', e => {
         if (document.body.classList.contains('is-scrolling')) return;
@@ -711,7 +711,7 @@
         btn.style.transform = '';
       });
     });
-    /* ── Particle canvas (throttled, pauses when hero off-screen) ── */
+    /* -- Particle canvas (throttled, pauses when hero off-screen) -- */
     (() => {
       const canvas = document.getElementById('particles-canvas');
       const heroSection = document.getElementById('home');
@@ -766,7 +766,7 @@
         lastFrameTime = timestamp;
         ctx.clearRect(0, 0, W, H);
         particles.forEach(p => {
-          /* ── Cursor proximity repulsion ── */
+          /* -- Cursor proximity repulsion -- */
           const pmx = (typeof window.globalMX !== 'undefined' && window.mouseInWindow) ? window.globalMX : -9999;
           const pmy = (typeof window.globalMY !== 'undefined' && window.mouseInWindow) ? window.globalMY : -9999;
           const ddx = p.x - pmx;
@@ -777,10 +777,10 @@
             p.vx += (ddx / dist) * force * 0.15;
             p.vy += (ddy / dist) * force * 0.15;
           }
-          /* ── Velocity damping to prevent runaway ── */
+          /* -- Velocity damping to prevent runaway -- */
           p.vx *= 0.97;
           p.vy *= 0.97;
-          /* ── Ensure minimum upward drift ── */
+          /* -- Ensure minimum upward drift -- */
           if (p.vy > -0.1) p.vy -= 0.02;
           p.x += p.vx;
           p.y += p.vy;
@@ -795,8 +795,8 @@
       }
       requestAnimationFrame(draw);
     })();
-    /* ── Typewriter ── */
-    const roles  = ['Data Analyst', 'Data Science Aspirant', 'Aspiring BI Analyst', 'SQL & Python Learner', 'Analytics Portfolio Builder'];
+    /* -- Typewriter -- */
+    const roles  = ['Data Analyst', 'Data Science Aspirant'];
     let ri = 0, ci = 0, deleting = false;
     const roleEl = document.getElementById('role-text');
     function type() {
@@ -815,7 +815,7 @@
     } else {
       type();
     }
-    /* ── Throttled Scroll Handling ── */
+    /* -- Throttled Scroll Handling -- */
     const scrollProgressEl = document.getElementById('scroll-progress');
     const backToTopBtn     = document.getElementById('back-to-top');
     const navEl            = document.querySelector('nav');
@@ -880,7 +880,7 @@
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    /* ── Nav Hover Glowing Spot Tracking ── */
+    /* -- Nav Hover Glowing Spot Tracking -- */
     navEl.addEventListener('mousemove', e => {
       if (document.body.classList.contains('is-scrolling')) return;
       const rect = navEl.getBoundingClientRect();
@@ -889,7 +889,7 @@
       navEl.style.setProperty('--nav-mx', x);
       navEl.style.setProperty('--nav-my', y);
     });
-    /* ── Single Integrated Intersection Observer ── */
+    /* -- Single Integrated Intersection Observer -- */
     const mainObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach(entry => {
@@ -925,7 +925,7 @@
       mainObserver.observe(el);
     });
     document.querySelectorAll('section[id]').forEach(sec => mainObserver.observe(sec));
-    /* ── Suffix-preserving Stat Counters ── */
+    /* -- Suffix-preserving Stat Counters -- */
     function animateStatCounter(el) {
       if (!el || el.dataset.animated === 'true') return;
       el.dataset.animated = 'true';
@@ -947,50 +947,62 @@
         }
       }, stepInterval);
     }
-    /* ── Nav Actions (Smooth Scroll & Close mobile nav) ── */
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        mobileNav.classList.remove('open');
-        if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-      });
-    });
-    /* ── Mobile Hamburger Toggle ── */
+    const scrollLock = window.__scrollLock;
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileNav    = document.getElementById('mobileNav');
     const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
-    hamburgerBtn.addEventListener('click', () => {
-      const isOpen = mobileNav.classList.toggle('open');
-      mobileNavBackdrop.classList.toggle('open', isOpen);
+    const setMobileNavState = (isOpen) => {
+      mobileNav.classList.toggle('open', isOpen);
+      if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.toggle('open', isOpen);
       hamburgerBtn.classList.toggle('open', isOpen);
       hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+      mobileNav.setAttribute('aria-hidden', String(!isOpen));
+      mobileNavBackdrop?.setAttribute('aria-hidden', String(!isOpen));
+      if (isOpen) {
+        mobileNav.removeAttribute('inert');
+        mobileNavBackdrop?.removeAttribute('inert');
+        scrollLock?.lock('mobile-nav');
+      } else {
+        mobileNav.setAttribute('inert', '');
+        mobileNavBackdrop?.setAttribute('inert', '');
+        scrollLock?.unlock('mobile-nav');
+      }
+    };
+    const closeMobileNav = () => setMobileNavState(false);
+    setMobileNavState(false);
+    /* -- Nav Actions (Smooth Scroll & Close mobile nav) -- */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const href = a.getAttribute('href');
+        if (!href || href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        closeMobileNav();
+      });
+    });
+    /* -- Mobile Hamburger Toggle -- */
+    hamburgerBtn.addEventListener('click', () => {
+      setMobileNavState(!mobileNav.classList.contains('open'));
     });
     // Close mobile drawer on outside click
     document.addEventListener('click', e => {
       if (!hamburgerBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-        mobileNav.classList.remove('open');
-        mobileNavBackdrop.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        closeMobileNav();
       }
     });
-    /* ── Syntax Highlighting Initialization (Deferred) ── */
+    /* -- Syntax Highlighting Initialization (Deferred) -- */
     window.addEventListener('load', () => {
       if (window.hljs) hljs.highlightAll();
     });
-    /* ── Advanced Interactive Terminal Widget Emulator ── */
+    /* -- Advanced Interactive Terminal Widget Emulator -- */
     const terminalInput = document.getElementById('terminalInput');
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalCursor = document.getElementById('terminalCursor');
     const commands = {
-      whoami: "Brishav Rajbahak | Aspiring Data Analyst and Data Science Aspirant from Kathmandu, Nepal.",
+      whoami: "Brishav Rajbahak | Data Analyst / Data Science Aspirant from Kathmandu, Nepal.",
       skills: `Analytics: SQL, Excel, Python, Pandas, NumPy\nVisualization: Tableau, Power BI, Matplotlib, Seaborn\nAnalysis: Data cleaning, EDA, reporting, KPI tracking\nPredictive Work: Scikit-Learn, XGBoost, regression, classification\nLearning Focus: Forecasting, dashboards, and practical data science projects`,
-      projects: `• Loan Default Analysis - Portfolio project exploring borrower behavior and default risk analysis.\n• Financial Inclusion Gap Analysis - In-progress project focused on inclusion gaps and reporting workflows.\nType 'github' to view all active repositories.`,
+      projects: `• Loan Default Analysis - Delivered borrower segmentation, SQL-backed preparation, and a Power BI story layer for risk communication.\n  Business impact: clarified the top repayment-pressure signals behind a 19.98% final-outcome default rate and translated them into dashboard-ready risk reporting.\n• Financial Inclusion Gap Analysis - Delivered a clean gap-analysis framing, reporting structure, and a clearer decision path for inclusion monitoring.\n  Business impact: sharpens which underserved groups should be prioritized first when access, trust, and reporting quality diverge.\nType 'github' to view all active repositories.`,
       contact: `Email: contact@brishavrajbahak.com.np\nGitHub: github.com/brishavrajbahak\nLinkedIn: linkedin.com/in/brishav-rajbahak\nInstagram: @razzbahakbrishav`,
       github: "Opening https://github.com/brishavrajbahak ...",
       help: `whoami    - Candidate summary\nskills    - Analytics and data science toolkit\nprojects  - Portfolio and practice work\ncontact   - Communication channels\ngithub    - Load GitHub profile\nplot      - Output Cartesian regression plot\ntrain     - Run simulated model training loop\nclear     - Reset terminal display\nsudo      - Elevate security privileges\nmatrix    - Enter the digital grid\ncoffee    - Synthesize caffeine`,
@@ -998,10 +1010,10 @@
       matrix: null,
       plot: null,
       train: null,
-      coffee: "Caffeine synthesizer initialized. Hot cup of coffee queued for production. ☕",
+      coffee: "Caffeine synthesizer initialized. Hot cup of coffee queued for production. ?",
       clear: null
     };
-    /* ── Matrix Digital Rain Engine ── */
+    /* -- Matrix Digital Rain Engine -- */
     let matrixRainActive = false;
     let matrixRainFrame = null;
     function startMatrixRain() {
@@ -1023,8 +1035,8 @@
       const fontSize = 12;
       const cols = Math.floor(matrixCanvas.width / fontSize);
       const drops = Array.from({ length: cols }, () => Math.floor(Math.random() * -20));
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789@#$%^&*';
-      const cyanVal = getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim() || '#e63946';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+      const cyanVal = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e63946';
       let frameCount = 0;
       const maxFrames = sitePerf.isLow ? 60 : sitePerf.isMedium ? 120 : 180;
       function drawMatrix() {
@@ -1073,7 +1085,12 @@
       if (isCommand) {
         const line = document.createElement('div');
         line.className = 'terminal-line';
-        line.innerHTML = `<span class="terminal-prompt">$</span> <span>${textOrLines}</span>`;
+        const prompt = document.createElement('span');
+        prompt.className = 'terminal-prompt';
+        prompt.textContent = '$';
+        const text = document.createElement('span');
+        text.textContent = textOrLines;
+        line.append(prompt, document.createTextNode(' '), text);
         terminalOutput.appendChild(line);
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
         return;
@@ -1109,7 +1126,7 @@
       }
       type();
     }
-    /* ── Regression Plot ASCII Canvas ── */
+    /* -- Regression Plot ASCII Canvas -- */
     function startRegressionPlot() {
       const termOut = document.getElementById('terminalOutput');
       const plotCanvas = document.createElement('canvas');
@@ -1223,7 +1240,7 @@
             pCtx.fillStyle = 'rgba(59,130,246,0.75)';
             pCtx.font = 'bold 8px "JetBrains Mono", monospace';
             pCtx.textAlign = 'left';
-            pCtx.fillText(`ŷ = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}   R² = ${r2}`, padL + 4, padT + 12);
+            pCtx.fillText(`y = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}   R² = ${r2}`, padL + 4, padT + 12);
           }
         }
         revealPts();
@@ -1231,19 +1248,19 @@
       draw();
     }
 
-    /* ── Simulated Model Training Loop ── */
+    /* -- Simulated Model Training Loop -- */
     function startTrainingLoop() {
       const termOut = document.getElementById('terminalOutput');
       const epochs = 15;
       let ep = 0;
       printToTerminal('Initializing training pipeline...');
       printToTerminal('Model: MLPClassifier  |  Optimizer: Adam  |  lr: 0.001');
-      printToTerminal('─'.repeat(52));
+      printToTerminal('-'.repeat(52));
 
       function runEpoch() {
         if (ep >= epochs) {
-          printToTerminal('─'.repeat(52));
-          printToTerminal('✔ Training complete. Model serialized → ./checkpoints/best.pt');
+          printToTerminal('-'.repeat(52));
+          printToTerminal('? Training complete. Model serialized ? ./checkpoints/best.pt');
           return;
         }
         const ratio = ep / (epochs - 1);
@@ -1251,7 +1268,7 @@
         const acc = (42 + 56 * Math.sin(ratio * Math.PI / 2) + (Math.random() - 0.5) * 1.2).toFixed(1);
         const valLoss = (parseFloat(loss) + (Math.random() * 0.04 - 0.01)).toFixed(4);
         const valAcc = (parseFloat(acc) - Math.random() * 2.5).toFixed(1);
-        const bar = '█'.repeat(Math.round(ratio * 12)) + '░'.repeat(12 - Math.round(ratio * 12));
+        const bar = '¦'.repeat(Math.round(ratio * 12)) + '¦'.repeat(12 - Math.round(ratio * 12));
         printToTerminal(`Ep ${String(ep + 1).padStart(2, '0')}/${epochs} [${bar}] loss:${loss} acc:${acc}% val_loss:${valLoss}`);
         ep++;
         setTimeout(runEpoch, 180 + Math.random() * 80);
@@ -1264,7 +1281,8 @@
       printToTerminal(cmd, true);
       if (trimmed === 'clear') {
         matrixRainActive = false;
-        terminalOutput.innerHTML = '<div class="terminal-line"><span class="terminal-prompt">$</span> <span>Terminal cleared. Available commands listed under \'help\'</span></div>';
+        terminalOutput.replaceChildren();
+        printToTerminal("Terminal cleared. Available commands listed under 'help'");
       } else if (trimmed === 'matrix') {
         printToTerminal('WAKE UP, NEO... THE MATRIX HAS YOU. FOLLOW THE WHITE RABBIT.');
         setTimeout(() => startMatrixRain(), 800);
@@ -1286,11 +1304,11 @@
       }
       terminalOutput.scrollTop = terminalOutput.scrollHeight;
     }
-    /* ── Terminal Keydown Listeners (Autocomplete, Command History) ── */
+    /* -- Terminal Keydown Listeners (Autocomplete, Command History) -- */
     let cmdHistory = [];
     let historyIndex = -1;
     let inactivityTimer;
-    /* ── Terminal & ambient sound (on by default) ── */
+    /* -- Terminal & ambient sound (on by default) -- */
     let globalSoundOn = true;
     let terminalSoundOn = true;
     let ambientOn = true;
@@ -1340,7 +1358,7 @@
       const btn = document.getElementById('terminalSoundBtn');
       if (btn) {
         btn.classList.toggle('active', on);
-        btn.textContent = on ? '🔊' : '🔇';
+        btn.textContent = on ? 'SFX' : 'OFF';
         btn.setAttribute('aria-label', on ? 'Mute all sounds' : 'Unmute all sounds');
       }
       
@@ -1389,8 +1407,8 @@
       document.addEventListener('click', activateAudio);
       document.addEventListener('keydown', activateAudio);
     }
-    /* ── Cyber Theme Selector removed (Theme is permanently Solar Gold) ── */
-    /* ── Fluid Navigation Slider Pill ── */
+    /* -- Cyber Theme Selector removed (Theme is permanently Solar Gold) -- */
+    /* -- Fluid Navigation Slider Pill -- */
     function initNavSlider() {
       const navLinksContainer = document.getElementById('navLinks');
       const pill = document.getElementById('navSliderPill');
@@ -1434,7 +1452,7 @@
         activeObserver.observe(a, { attributes: true, attributeFilter: ['class'] });
       });
     }
-    /* ── Holographic Spotlight on detail-item and skill-row ── */
+    /* -- Holographic Spotlight on detail-item and skill-row -- */
     function initHoloSpotlight() {
       const targets = document.querySelectorAll('.detail-item, .skill-row');
       targets.forEach(el => {
@@ -1528,17 +1546,17 @@
     terminalOutput.addEventListener('click', () => {
       terminalInput.focus();
     });
-    /* ── Toast Notifications ── */
+    /* -- Toast Notifications -- */
     function showToast(msg, type) {
       const toast = document.getElementById('toast');
-      document.getElementById('toastIcon').textContent = type === 'error' ? '✕' : '✓';
+      document.getElementById('toastIcon').textContent = type === 'error' ? '?' : '?';
       document.getElementById('toastMsg').textContent  = msg;
       toast.className = 'toast ' + (type === 'error' ? 'toast-error' : 'toast-success');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 5000);
     }
     window.showToast = showToast;
-    /* ── Live Clock (NPT) — updates every second ── */
+    /* -- Live Clock (NPT) — updates every second -- */
     function updateClock() {
       const timeEl = document.getElementById('navTime');
       if (!timeEl) return;
@@ -1553,7 +1571,7 @@
     }
     updateClock();
     setInterval(updateClock, 1000);
-    /* ── SKILL RADAR CHART ── */
+    /* -- SKILL RADAR CHART -- */
     function initSkillRadar() {
       const canvas = document.getElementById('skillRadar');
       if (!canvas) return;
@@ -1577,12 +1595,12 @@
       
       // Resolve dynamic theme colors from document variables (fixes static gold radar bug)
       const rootStyle = getComputedStyle(document.documentElement);
-      const cyanColor = rootStyle.getPropertyValue('--cyan').trim() || '#ffb703';
-      const pinkColor = rootStyle.getPropertyValue('--pink').trim() || '#fb8500';
+      const accentColor = rootStyle.getPropertyValue('--accent').trim() || '#ffb703';
+      const strongAccentColor = rootStyle.getPropertyValue('--accent-strong').trim() || '#fb8500';
       
-      const gridColor = cyanColor.startsWith('#') ? cyanColor + '1a' : 'rgba(255, 183, 3, 0.1)';
-      const dataFill  = pinkColor.startsWith('#') ? pinkColor + '33' : 'rgba(251, 133, 0, 0.2)';
-      const dataStroke = pinkColor.startsWith('#') ? pinkColor + 'cc' : 'rgba(251, 133, 0, 0.8)';
+      const gridColor = accentColor.startsWith('#') ? accentColor + '1a' : 'rgba(255, 183, 3, 0.1)';
+      const dataFill  = strongAccentColor.startsWith('#') ? strongAccentColor + '33' : 'rgba(251, 133, 0, 0.2)';
+      const dataStroke = strongAccentColor.startsWith('#') ? strongAccentColor + 'cc' : 'rgba(251, 133, 0, 0.8)';
       
       function drawPolygon(r, fillStyle, strokeStyle, lineWidth) {
         ctx.beginPath();
@@ -1641,7 +1659,7 @@
       ctx.stroke();
       
       // Draw labels
-      ctx.fillStyle = cyanColor; // Correctly resolves the CSS color dynamically
+      ctx.fillStyle = accentColor;
       ctx.font = '12px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1655,7 +1673,7 @@
     }
     initSkillRadar();
 
-    /* ── Animated Theme-Synced Favicon (Creative Edition) ── */
+    /* -- Animated Theme-Synced Favicon (Creative Edition) -- */
     function initAnimatedFavicon() {
       const canvas = document.createElement('canvas');
       canvas.width = 32;
@@ -1696,8 +1714,8 @@
         ctx.clearRect(0, 0, 32, 32);
         
         const rootStyle = getComputedStyle(document.documentElement);
-        const color = rootStyle.getPropertyValue('--cyan').trim() || '#e63946';
-        const pink = rootStyle.getPropertyValue('--pink').trim() || '#ff0080';
+        const color = rootStyle.getPropertyValue('--accent').trim() || '#e63946';
+        const strongAccent = rootStyle.getPropertyValue('--accent-strong').trim() || '#ff0080';
         
         const cx = 16, cy = 16;
         const t = frame * 0.04;
@@ -1725,8 +1743,8 @@
         
         // Inner contrast ring
         ctx.lineWidth = 1.0;
-        ctx.strokeStyle = pink;
-        ctx.shadowColor = pink;
+        ctx.strokeStyle = strongAccent;
+        ctx.shadowColor = strongAccent;
         ctx.shadowBlur = 2;
         drawHex(cx, cy, 12.5, -t * 0.05);
         ctx.stroke();
@@ -1745,7 +1763,7 @@
             const gy = cy + p.radius * Math.sin(ga);
             ctx.beginPath();
             ctx.arc(gx, gy, p.size * 0.6, 0, Math.PI * 2);
-            ctx.fillStyle = i === 1 ? pink : color;
+            ctx.fillStyle = i === 1 ? strongAccent : color;
             ctx.globalAlpha = 0.15 * (3 - g);
             ctx.fill();
           }
@@ -1754,8 +1772,8 @@
           ctx.globalAlpha = 0.95;
           ctx.beginPath();
           ctx.arc(px, py, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = i === 1 ? pink : color;
-          ctx.shadowColor = i === 1 ? pink : color;
+          ctx.fillStyle = i === 1 ? strongAccent : color;
+          ctx.shadowColor = i === 1 ? strongAccent : color;
           ctx.shadowBlur = 3;
           ctx.fill();
         });
@@ -1794,7 +1812,7 @@
       setInterval(render, 66);
     }
 
-    /* ── Creative Resume Download Experience ── */
+    /* -- Creative Resume Download Experience -- */
     (function initResumeDownload() {
       // Create the modal HTML
       const overlay = document.createElement('div');
@@ -1865,8 +1883,8 @@
 
         // Get colors dynamically
         const styles = getComputedStyle(document.documentElement);
-        const cyan = styles.getPropertyValue('--cyan').trim() || '#e63946';
-        const pink = styles.getPropertyValue('--pink').trim() || '#ff0080';
+        const accent = styles.getPropertyValue('--accent').trim() || '#e63946';
+        const strongAccent = styles.getPropertyValue('--accent-strong').trim() || '#ff0080';
 
         // Nodes coordinates inside 160x160 canvas
         const inputs = [
@@ -1887,7 +1905,7 @@
           ctx.lineWidth = 1;
           inputs.forEach(inp => {
             hiddens.forEach(hid => {
-              ctx.strokeStyle = hexToRgba(cyan, 0.12);
+              ctx.strokeStyle = hexToRgba(accent, 0.12);
               ctx.beginPath();
               ctx.moveTo(inp.x, inp.y);
               ctx.lineTo(hid.x, hid.y);
@@ -1895,7 +1913,7 @@
             });
           });
           hiddens.forEach(hid => {
-            ctx.strokeStyle = hexToRgba(pink, 0.12);
+            ctx.strokeStyle = hexToRgba(strongAccent, 0.12);
             ctx.beginPath();
             ctx.moveTo(hid.x, hid.y);
             ctx.lineTo(output.x, output.y);
@@ -1904,7 +1922,7 @@
           [...inputs, ...hiddens, output].forEach((node, i) => {
             ctx.beginPath();
             ctx.arc(node.x, node.y, i === inputs.length + hiddens.length ? 5 : 4, 0, Math.PI * 2);
-            ctx.fillStyle = i === inputs.length + hiddens.length ? pink : cyan;
+            ctx.fillStyle = i === inputs.length + hiddens.length ? strongAccent : accent;
             ctx.fill();
           });
           return { setSpeed: () => {}, stop: () => {} };
@@ -1945,7 +1963,7 @@
           // Inputs to hiddens
           inputs.forEach(inp => {
             hiddens.forEach(hid => {
-              ctx.strokeStyle = hexToRgba(cyan, 0.12);
+              ctx.strokeStyle = hexToRgba(accent, 0.12);
               ctx.beginPath();
               ctx.moveTo(inp.x, inp.y);
               ctx.lineTo(hid.x, hid.y);
@@ -1955,7 +1973,7 @@
 
           // Hiddens to output
           hiddens.forEach(hid => {
-            ctx.strokeStyle = hexToRgba(pink, 0.12);
+            ctx.strokeStyle = hexToRgba(strongAccent, 0.12);
             ctx.beginPath();
             ctx.moveTo(hid.x, hid.y);
             ctx.lineTo(output.x, output.y);
@@ -1973,7 +1991,7 @@
 
             ctx.beginPath();
             ctx.arc(px, py, 2.2, 0, Math.PI * 2);
-            ctx.fillStyle = p.type === 'input-to-hidden' ? cyan : pink;
+            ctx.fillStyle = p.type === 'input-to-hidden' ? accent : strongAccent;
             ctx.shadowColor = ctx.fillStyle;
             ctx.shadowBlur = 4;
             ctx.fill();
@@ -2009,10 +2027,10 @@
             inp.pulse *= 0.9;
             ctx.beginPath();
             ctx.arc(inp.x, inp.y, 4 + inp.pulse * 2, 0, Math.PI * 2);
-            ctx.fillStyle = cyan;
+            ctx.fillStyle = accent;
             ctx.fill();
             if (inp.pulse > 0.05) {
-              ctx.strokeStyle = hexToRgba(cyan, inp.pulse);
+              ctx.strokeStyle = hexToRgba(accent, inp.pulse);
               ctx.lineWidth = 1.5;
               ctx.stroke();
             }
@@ -2024,16 +2042,16 @@
             const size = 5 + hid.pulse * 3;
             ctx.beginPath();
             ctx.arc(hid.x, hid.y, size, 0, Math.PI * 2);
-            ctx.fillStyle = hexToRgba(cyan, 0.4);
+            ctx.fillStyle = hexToRgba(accent, 0.4);
             ctx.fill();
             
             ctx.beginPath();
             ctx.arc(hid.x, hid.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = cyan;
+            ctx.fillStyle = accent;
             ctx.fill();
             
             if (hid.pulse > 0.05) {
-              ctx.strokeStyle = hexToRgba(cyan, hid.pulse);
+              ctx.strokeStyle = hexToRgba(accent, hid.pulse);
               ctx.lineWidth = 1.5;
               ctx.stroke();
             }
@@ -2044,12 +2062,12 @@
           const outSize = 6 + output.pulse * 4 + 1.2 * Math.sin(time * 3);
           ctx.beginPath();
           ctx.arc(output.x, output.y, outSize, 0, Math.PI * 2);
-          ctx.fillStyle = hexToRgba(pink, 0.3 + output.pulse * 0.3);
+            ctx.fillStyle = hexToRgba(strongAccent, 0.3 + output.pulse * 0.3);
           ctx.fill();
 
           ctx.beginPath();
           ctx.arc(output.x, output.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = pink;
+          ctx.fillStyle = strongAccent;
           ctx.fill();
           
           ctx.strokeStyle = '#ffffff';
@@ -2057,7 +2075,7 @@
           ctx.stroke();
 
           if (output.pulse > 0.05) {
-            ctx.strokeStyle = hexToRgba(pink, output.pulse);
+            ctx.strokeStyle = hexToRgba(strongAccent, output.pulse);
             ctx.lineWidth = 2;
             ctx.stroke();
           }
@@ -2079,27 +2097,27 @@
         status.textContent = 'INITIALIZING';
 
         await addLine('<span class="r-accent">$</span> <span class="r-label">Initializing secure handshake...</span>', 300);
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">TLS 1.3 tunnel established</span>', 600);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">TLS 1.3 tunnel established</span>', 600);
         await addLine('<span class="r-accent">$</span> <span class="r-label">Authenticating recruiter clearance...</span>', 500);
         
         status.textContent = 'SCANNING';
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">Access level: </span><span class="r-value">FULL DOSSIER</span>', 700);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">Access level: </span><span class="r-value">FULL DOSSIER</span>', 700);
         await addLine('', 200);
-        await addLine('<span class="r-accent">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', 100);
-        await addLine('<span class="r-pink">⟐ CANDIDATE PROFILE SCAN</span>', 400);
-        await addLine('<span class="r-accent">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', 100);
+        await addLine('<span class="r-accent">------------------------------</span>', 100);
+        await addLine('<span class="r-strong">? CANDIDATE PROFILE SCAN</span>', 400);
+        await addLine('<span class="r-accent">------------------------------</span>', 100);
         await addLine('', 150);
         
         status.textContent = 'VERIFYING';
         await addLine('<span class="r-label">  Name     :</span> <span class="r-value">Brishav Rajbahak</span>', 350);
         await addLine('<span class="r-label">  Alias    :</span> <span class="r-value">@brishavrajbahak</span>', 300);
-        await addLine('<span class="r-label">  Origin   :</span> <span class="r-value">Kathmandu, Nepal 🇳🇵</span>', 300);
+        await addLine('<span class="r-label">  Origin   :</span> <span class="r-value">Kathmandu, Nepal</span>', 300);
         await addLine('<span class="r-label">  Class    :</span> <span class="r-value">Data Analyst / Data Science Aspirant</span>', 300);
-        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">● OPEN TO INTERNSHIPS & ENTRY ROLES</span>', 300);
+        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">? OPEN TO INTERNSHIPS & ENTRY ROLES</span>', 300);
         await addLine('', 200);
 
         status.textContent = 'ANALYZING';
-        await addLine('<span class="r-accent">⟐</span> <span class="r-label">Scanning skill matrix...</span>', 400);
+        await addLine('<span class="r-accent">?</span> <span class="r-label">Scanning skill matrix...</span>', 400);
 
         // Render the visualization layout container (ML training logs + Neural Net canvas)
         const analysisContainer = document.createElement('div');
@@ -2129,7 +2147,7 @@
         // Run training logs simulation sequence
         addLogLine('<span class="ml-tag-system">[SYS]</span> Initializing Deep neural_net_classifier.bin...', 'ml-tag-system');
         await new Promise(r => setTimeout(r, 250));
-        addLogLine('<span class="ml-tag-system">[SYS]</span> Layers: Input (3) ➔ Hidden (4) ➔ Output (1)', 'ml-tag-system');
+        addLogLine('<span class="ml-tag-system">[SYS]</span> Layers: Input (3) ? Hidden (4) ? Output (1)', 'ml-tag-system');
         await new Promise(r => setTimeout(r, 200));
         addLogLine('<span class="ml-tag-train">[TRAIN]</span> Optimizing connection weights (Adam, lr=0.003)...', 'ml-tag-train');
         await new Promise(r => setTimeout(r, 300));
@@ -2147,7 +2165,7 @@
           if (e === 12) nnVisualizer.setSpeed(3.2);
           if (e === 17) nnVisualizer.setSpeed(1.0);
 
-          addLogLine(`Epoch [${e.toString().padStart(2, '0')}/${totalEpochs}] ➔ <span class="ml-tag-metric">Loss: ${loss}</span> | <span class="ml-tag-train">Accuracy: ${acc}%</span>`);
+          addLogLine(`Epoch [${e.toString().padStart(2, '0')}/${totalEpochs}] ? <span class="ml-tag-metric">Loss: ${loss}</span> | <span class="ml-tag-train">Accuracy: ${acc}%</span>`);
           
           // Stagger delay between epochs
           await new Promise(r => setTimeout(r, 80 + Math.random() * 50));
@@ -2160,7 +2178,7 @@
         await new Promise(r => setTimeout(r, 450));
 
         status.textContent = 'COMPILING';
-        await addLine('<span class="r-accent">⟐</span> <span class="r-label">Compiling dossier package...</span>', 400);
+        await addLine('<span class="r-accent">?</span> <span class="r-label">Compiling dossier package...</span>', 400);
 
         // Add progress bar
         const progressWrap = document.createElement('div');
@@ -2175,8 +2193,8 @@
         }
 
         await addLine('', 200);
-        await addLine('<span class="r-ok">✔</span> <span class="r-value">Dossier compiled successfully</span>', 300);
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">Integrity hash: </span><span class="r-accent">SHA-256:OK</span>', 200);
+        await addLine('<span class="r-ok">?</span> <span class="r-value">Dossier compiled successfully</span>', 300);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">Integrity hash: </span><span class="r-accent">SHA-256:OK</span>', 200);
 
         status.textContent = 'COMPLETE';
 
@@ -2201,6 +2219,7 @@
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           overlay.classList.add('active');
+          scrollLock?.lock('resume-dossier');
           runSequence();
         });
       });
@@ -2208,11 +2227,13 @@
       // Close modal
       closeBtn.addEventListener('click', () => {
         overlay.classList.remove('active');
+        scrollLock?.unlock('resume-dossier');
         if (nnVisualizer && nnVisualizer.stop) nnVisualizer.stop();
       });
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
           overlay.classList.remove('active');
+          scrollLock?.unlock('resume-dossier');
           if (nnVisualizer && nnVisualizer.stop) nnVisualizer.stop();
         }
       });
@@ -2222,25 +2243,25 @@
     (() => {
       const peakData = {
         1: {
-          tag: '▲ SUMMIT',
+          tag: '? SUMMIT',
           timeline: '2024 — PRESENT',
-          role: 'Data Analyst Aspirant',
+          role: 'Data Analyst / Data Science Aspirant',
           company: 'Independent Portfolio Work · Kathmandu',
           desc: 'Building portfolio projects in SQL, Python, dashboards, and forecasting while strengthening data storytelling and reporting skills.',
           skills: ['SQL', 'Python', 'Pandas', 'Excel', 'Tableau', 'Statistics'],
-          borderColor: 'var(--cyan)'
+          borderColor: 'var(--accent)'
         },
         2: {
-          tag: '▲ CAMP II',
+          tag: '? CAMP II',
           timeline: '2022 — 2024',
           role: 'Analytics Project Builder',
           company: 'Independent Practice · Remote',
           desc: 'Working through hands-on case studies in data cleaning, querying, visualization, and predictive analysis.',
           skills: ['SQL', 'Pandas', 'Scikit-Learn', 'EDA', 'Dashboards', 'Reporting'],
-          borderColor: 'var(--pink)'
+          borderColor: 'var(--accent-strong)'
         },
         3: {
-          tag: '▲ BASE CAMP',
+          tag: '? BASE CAMP',
           timeline: '2021 — 2022',
           role: 'Computer Science Student',
           company: 'Academic Foundation · Kathmandu',
@@ -2332,7 +2353,7 @@
     function ease(t){ return t<.5?2*t*t:-1+(4-2*t)*t; }
     const panelFrameInterval = sitePerf.isHigh ? 1000 / 30 : 1000 / 15;
 
-    /* ── PANEL 1: Neural Network ── */
+    /* -- PANEL 1: Neural Network -- */
     function initNeural() {
       const canvas = document.getElementById('gpNeuralCanvas');
       if (!canvas) return;
@@ -2395,175 +2416,7 @@
       requestAnimationFrame(draw);
     }
 
-    /* ── PANEL 2: Live Scrolling Line Chart ── */
-    function initLineChart() {
-      const canvas = document.getElementById('gpLineCanvas');
-      const valEl  = document.getElementById('gpLiveVal');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      const pts = 55;
-      const loss=[],acc=[],f1=[];
-      for(let i=0;i<pts;i++){
-        const b=(pts-i)/pts;
-        loss.push(.08+b*.72+(Math.random()-.5)*.06);
-        acc.push(.55+(1-b)*.38+(Math.random()-.5)*.04);
-        f1.push(acc[acc.length-1]-0.05+(Math.random()-.5)*.02);
-      }
-      function drawLine(data,color,dashArr){
-        ctx.beginPath();
-        ctx.setLineDash(dashArr);
-        data.forEach((v,i)=>{
-          const x=(i/(pts-1))*w, y=h*(1-v)*.88+h*.06;
-          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-        });
-        ctx.strokeStyle=color; ctx.lineWidth=1.2; ctx.stroke();
-        ctx.setLineDash([]);
-      }
-      let last=0;
-      let lastDraw=0;
-      function draw(ts){
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        if(ts-last>90){ last=ts;
-          loss.push(Math.max(.04,loss[loss.length-1]+(Math.random()-.52)*.018)); loss.shift();
-          acc.push(Math.min(.97,acc[acc.length-1]+(Math.random()-.46)*.012));   acc.shift();
-          f1.push(Math.min(.95,acc[acc.length-1]-0.03+(Math.random()-.5)*.015)); f1.shift();
-          ctx.clearRect(0,0,w,h);
-          [.25,.5,.75].forEach(v=>{
-            const y=h*(1-v)*.88+h*.06;
-            ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y);
-            ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=.5; ctx.stroke();
-          });
-          drawLine(loss,'rgba(200,17,31,0.35)',[]);
-          drawLine(acc,'rgba(59,130,246,0.28)',[4,4]);
-          drawLine(f1,'rgba(200,146,10,0.45)',[2,2]);
-          if(valEl) valEl.textContent=(acc[acc.length-1]*100).toFixed(1)+'%';
-        }
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-    /* ── PANEL 3: Hardware Telemetry (Bar Chart) ── */
-    function initHardware() {
-      const canvas = document.getElementById('gpHardwareCanvas');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      
-      const bars = [
-        { label: 'GPU-0', val: 0.8, nxt: 0.8, color: 'rgba(200,17,31,' },
-        { label: 'GPU-1', val: 0.6, nxt: 0.6, color: 'rgba(200,17,31,' },
-        { label: 'MEM-0', val: 0.4, nxt: 0.4, color: 'rgba(200,146,10,' },
-        { label: 'MEM-1', val: 0.3, nxt: 0.3, color: 'rgba(200,146,10,' },
-        { label: 'CPU',   val: 0.2, nxt: 0.2, color: 'rgba(59,130,246,' }
-      ];
-      
-      let last = 0;
-      let lastDraw = 0;
-      function draw(ts) {
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        if(ts-last>150){ 
-          last=ts;
-          bars.forEach(b => {
-            b.nxt = Math.max(0.1, Math.min(0.95, b.nxt + (Math.random() - 0.5) * 0.35));
-          });
-        }
-        
-        ctx.clearRect(0,0,w,h);
-        
-        const bw = (w - 20) / bars.length;
-        bars.forEach((b, i) => {
-          b.val += (b.nxt - b.val) * 0.15; // smooth interpolation
-          const bh = b.val * (h - 25);
-          const x = 10 + i * bw + bw*0.15;
-          const barW = bw * 0.7;
-          
-          // Background track
-          ctx.fillStyle = 'rgba(0,0,0,0.03)';
-          ctx.fillRect(x, 5, barW, h - 30);
-          
-          // Fill
-          ctx.fillStyle = b.color + '0.45)';
-          ctx.fillRect(x, h - 25 - bh, barW, bh);
-          
-          // Label
-          ctx.fillStyle = 'rgba(0,0,0,0.5)';
-          ctx.font = 'bold 7px monospace';
-          ctx.textAlign = 'center';
-          ctx.fillText(b.label, x + barW/2, h - 5);
-          
-          // Value
-          ctx.fillText(Math.floor(b.val * 100) + '%', x + barW/2, h - 25 - bh - 3);
-        });
-        
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-
-    /* ── PANEL 4: Rotating Donut ── */
-    function initDonut() {
-      const canvas = document.getElementById('gpDonutCanvas');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      const cx=w/2, cy=h/2-4, oR=Math.min(w,h)*.38, iR=oR*.54;
-      const slices=[
-        {label:'Train',c:'rgba(200,17,31,',cur:.70,nxt:.70},
-        {label:'Val',  c:'rgba(200,146,10,',cur:.15,nxt:.15},
-        {label:'Test', c:'rgba(59,130,246,', cur:.15,nxt:.15},
-      ];
-      let rot=-Math.PI/2, mt=0;
-      let lastDraw = 0;
-
-      function draw(ts){
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        ctx.clearRect(0,0,w,h);
-        rot+=.002; mt=Math.min(1,mt+.004);
-        if(mt>=1){ mt=0; slices.forEach((s,i)=>s.cur=s.nxt);
-          const r1=.55+Math.random()*.20, r2=(1-r1)*(.4+Math.random()*.3);
-          slices[0].nxt=r1; slices[1].nxt=r2; slices[2].nxt=1-r1-r2;
-        }
-        const vals=slices.map(s=>lerp(s.cur,s.nxt,ease(mt)));
-        const total=vals.reduce((a,b)=>a+b,0);
-        let sa=rot;
-        slices.forEach((s,i)=>{
-          const sw=(vals[i]/total)*Math.PI*2;
-          ctx.beginPath(); ctx.moveTo(cx,cy);
-          ctx.arc(cx,cy,oR,sa,sa+sw);
-          ctx.arc(cx,cy,iR,sa+sw,sa,true); ctx.closePath();
-          ctx.fillStyle=s.c+'0.22)'; ctx.strokeStyle=s.c+'0.38)'; ctx.lineWidth=.7;
-          ctx.fill(); ctx.stroke(); sa+=sw;
-        });
-        ctx.font='bold 10px monospace'; ctx.textAlign='center';
-        ctx.fillStyle='rgba(0,0,0,0.26)'; ctx.fillText('DATA',cx,cy+2);
-        ctx.font='7px monospace'; ctx.fillStyle='rgba(0,0,0,0.16)';
-        ctx.fillText('SPLIT',cx,cy+12);
-        // legend
-        const ly=h-13;
-        slices.forEach((s,i)=>{
-          const lx=10+i*(w/3);
-          ctx.fillStyle=s.c+'0.42)'; ctx.fillRect(lx,ly,7,4);
-          ctx.font='7px monospace'; ctx.textAlign='left';
-          ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.fillText(s.label,lx+9,ly+4);
-        });
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-    /* ── PANEL 5: Data Pipeline Flow ── */
+    /* -- PANEL 2: Data Pipeline Flow -- */
     function initPipeline() {
       const canvas = document.getElementById('gpPipelineCanvas');
       if (!canvas) return;
@@ -2653,7 +2506,7 @@
           const normX = ((x / rect.width) * 2 - 1).toFixed(2);
           const normY = ((1 - (y / rect.height)) * 2 - 1).toFixed(2);
           coordsSpan.textContent = `[X: ${normX}, Y: ${normY}]`;
-          coordsSpan.style.color = 'var(--cyan)';
+          coordsSpan.style.color = 'var(--accent)';
         });
         
         panel.addEventListener('mouseleave', () => {
@@ -2664,10 +2517,10 @@
     }
 
     function startAllAnimations(){
-      initNeural(); initLineChart(); initHardware(); initDonut(); initPipeline(); initCoordinateTrackers();
+      initNeural(); initPipeline(); initCoordinateTrackers();
     }
 
-    /* ── Scroll Parallax ── */
+    /* -- Scroll Parallax -- */
     if (!prefersReduced) {
       const ng=document.getElementById('node-grid-layer');
       const ao=document.getElementById('accent-glow-orb');
@@ -2686,3 +2539,6 @@
     }
   })();
   
+
+
+

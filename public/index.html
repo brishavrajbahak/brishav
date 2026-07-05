@@ -3,30 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    (() => {
-      const breakpoint = 768;
-      const root = document.documentElement;
-      const viewportWidth = window.visualViewport?.width || window.innerWidth || screen.width;
-      const initialMobile = viewportWidth <= breakpoint;
-      root.classList.add(initialMobile ? 'mobile-mode' : 'desktop-mode');
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) root.classList.add('reduced-motion');
-
-      let resizeTimer;
-      window.addEventListener('resize', () => {
-        window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(() => {
-          const currentWidth = window.visualViewport?.width || window.innerWidth || screen.width;
-          if ((currentWidth <= breakpoint) !== initialMobile) window.location.reload();
-        }, 300);
-      }, { passive: true });
-    })();
-  </script>
+  <script src="assets/js/bootstrap.js?v=1"></script>
   <title>Brishav Rajbahak — Data Analyst | Data Science Aspirant</title>
   <!-- SEO & Open Graph -->
-  <meta name="description" content="Brishav Rajbahak — aspiring data analyst from Kathmandu, Nepal, building skills in SQL, Python, dashboards, reporting, and data science projects.">
+  <meta name="description" content="Brishav Rajbahak — data analyst and data science aspirant from Kathmandu, Nepal, with an interactive terminal, signal mandala, and curated demo analytics playground.">
   <meta property="og:title" content="Brishav Rajbahak — Data Analyst | Data Science Aspirant">
-  <meta property="og:description" content="Aspiring data analyst from Kathmandu focused on SQL, Python, dashboards, reporting, and data science portfolio work.">
+  <meta property="og:description" content="Data analyst and data science aspirant from Kathmandu with an interactive terminal, curated analytics demos, and a data storytelling portfolio.">
   <meta property="og:image" content="https://brishavrajbahak.com.np/Brishav.jpg">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://brishavrajbahak.com.np">
@@ -41,26 +23,26 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@brishavrajbahak">
   <meta name="twitter:title" content="Brishav Rajbahak — Data Analyst | Data Science Aspirant">
-  <meta name="twitter:description" content="Aspiring data analyst from Kathmandu building skills in SQL, Python, dashboards, reporting, and data science projects.">
+  <meta name="twitter:description" content="Data analyst and data science aspirant from Kathmandu with an interactive terminal, curated analytics demos, and a data storytelling portfolio.">
   <meta name="twitter:image" content="https://brishavrajbahak.com.np/Brishav.jpg">
   <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="assets/css/main.css?v=4">
+  <link rel="stylesheet" href="assets/css/main.css?v=5">
 </head>
 <body>
-  <!-- ── Translucent Background System ── -->
+  <!-- -- Translucent Background System -- -->
   <!-- Node Grid (SVG lines + dots) -->
   <div id="node-grid-layer" aria-hidden="true">
     <!-- replaced by canvas bg system below -->
   </div>
   <!-- Warm Accent Glow Orb -->
   <div id="accent-glow-orb" aria-hidden="true"></div>
-  <!-- ── ML/DATA SCIENCE BACKGROUND CANVAS ── -->
+  <!-- -- ML/DATA SCIENCE BACKGROUND CANVAS -- -->
   <canvas id="bg-canvas" aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
   
   <!-- Glassy Panels — animated figures & diagrams -->
   <div id="glassy-panels" aria-hidden="true">
 
-    <!-- ═══ PANEL 1 (top-right): Animated Neural Network ═══ -->
+    <!-- --- PANEL 1 (top-right): Animated Neural Network --- -->
     <div class="glass-panel glass-panel-accent" id="gpNeural" style="
       width: clamp(190px, 21vw, 290px);
       top: 9vh; right: clamp(3%, 5vw, 8%);
@@ -73,55 +55,7 @@
       <canvas id="gpNeuralCanvas" width="240" height="140" style="width:100%;height:auto;display:block;"></canvas>
     </div>
 
-    <!-- ═══ PANEL 2 (bottom-center): Animated Live Line Chart ═══ -->
-    <div class="glass-panel" id="gpLineChart" style="
-      width: clamp(200px, 23vw, 310px);
-      bottom: 8vh; left: 0; right: 0; margin: 0 auto;
-      padding: 14px 16px 12px;
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">live_metrics</span>
-        <span id="gpLiveVal" style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:rgba(200,17,31,0.40)">—</span>
-      </div>
-      <canvas id="gpLineCanvas" width="260" height="80" style="width:100%;height:auto;display:block;"></canvas>
-      <div class="gp-legend" style="margin-top:6px">
-        <span><span class="gp-legend-line" style="background:rgba(200,17,31,0.40)"></span>Loss</span>
-        <span><span class="gp-legend-line" style="background:rgba(59,130,246,0.32);background-image:repeating-linear-gradient(90deg,rgba(59,130,246,0.32) 0,rgba(59,130,246,0.32) 4px,transparent 4px,transparent 6px)"></span>Acc</span>
-        <span><span class="gp-legend-line" style="background:rgba(200,146,10,0.45);background-image:repeating-linear-gradient(90deg,rgba(200,146,10,0.45) 0,rgba(200,146,10,0.45) 2px,transparent 2px,transparent 4px)"></span>F1</span>
-      </div>
-    </div>
-
-    <!-- ═══ PANEL 3 (mid-left): Hardware Telemetry ═══ -->
-    <div class="glass-panel" id="gpHardware" style="
-      width: clamp(160px, 19vw, 250px);
-      top: 48vh; left: clamp(1.5%, 3vw, 5%);
-      padding: 14px 16px 12px;
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">sys_telemetry</span>
-      </div>
-      <canvas id="gpHardwareCanvas" width="200" height="120" style="width:100%;height:auto;display:block;"></canvas>
-    </div>
-
-
-    <!-- ═══ PANEL 4 (top-left): Animated Donut / Data Distribution ═══ -->
-    <div class="glass-panel" id="gpDonut" style="
-      width: clamp(130px, 14vw, 180px);
-      top: 7vh; left: clamp(2%, 4vw, 6%);
-      padding: 14px 16px 12px;
-      background: rgba(255,184,107,0.03);
-      border-color: rgba(255,184,107,0.10);
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">data_split</span>
-      </div>
-      <canvas id="gpDonutCanvas" width="130" height="120" style="width:100%;height:auto;display:block;"></canvas>
-    </div>
-
-    <!-- ═══ PANEL 5 (right-center): Animated Data Flow Pipeline ═══ -->
+    <!-- --- PANEL 2 (right-center): Animated Data Flow Pipeline --- -->
     <div class="glass-panel" id="gpPipeline" style="
       width: clamp(80px, 9vw, 120px);
       top: 32vh; right: clamp(1.5%, 2.5vw, 4%);
@@ -138,14 +72,14 @@
     <div class="loading-logo">BR</div>
     <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
     <div class="loading-status">Initializing...</div>
-    <div class="loading-console" id="loadingConsole" style="width:280px;height:90px;background:rgba(255,255,255,0.7);border:1px solid var(--border-cyan);border-radius:6px;margin-top:12px;font-family:var(--font-mono);font-size:8px;color:var(--cyan);overflow:hidden;padding:10px;line-height:1.5;text-align:left;box-shadow:var(--depth-1);"></div>
+    <div class="loading-console" id="loadingConsole" style="width:280px;height:90px;background:rgba(255,255,255,0.7);border:1px solid var(--border-accent);border-radius:6px;margin-top:12px;font-family:var(--font-mono);font-size:8px;color:var(--accent);overflow:hidden;padding:10px;line-height:1.5;text-align:left;box-shadow:var(--depth-1);"></div>
   </div>
   <!-- Cursor Spotlight -->
   <div id="cursor-spotlight" aria-hidden="true"></div>
   <!-- Scroll Progress -->
   <div id="scroll-progress" aria-hidden="true"></div>
   <!-- Back to top -->
-  <button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">UP</button>
   <!-- Decorative: hidden from screen readers -->
   <div class="floating-snippets" aria-hidden="true">
     <div class="float-snippet s1">const reality = await build();</div>
@@ -156,7 +90,7 @@
   <canvas id="particles-canvas" aria-hidden="true"></canvas>
   <!-- Floating ambient controls and theme switcher removed -->
   <div id="cursor-dot" aria-hidden="true"></div>
-  <!-- ── NAV ── -->
+  <!-- -- NAV -- -->
   <nav role="navigation" aria-label="Main navigation">
     <a href="#home" class="nav-logo" aria-label="Brishav Rajbahak — Home">BR</a>
     <div class="nav-slider-pill" id="navSliderPill" aria-hidden="true"></div>
@@ -182,8 +116,8 @@
     </button>
   </nav>
   <!-- Mobile nav drawer -->
-  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
-  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation">
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true" inert></div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true" inert>
     <a href="#home">Home</a>
     <a href="#about">About</a>
     <!-- <a href="#experience">Experience</a> -->
@@ -192,7 +126,8 @@
 
     <a href="#contact" class="mobile-cta">Contact</a>
   </nav>
-  <!-- ── HERO ── -->
+  <main id="main-content">
+  <!-- -- HERO -- -->
   <section id="home" aria-label="Introduction">
     <div class="container">
       <div class="hero-inner">
@@ -210,12 +145,20 @@
             I enjoy cleaning data, exploring patterns, building dashboards, and turning raw numbers into clear insights using SQL, Python, and practical forecasting workflows.
           </p>
           <div class="hero-actions fade-up">
-            <a href="#projects" class="btn-primary">See My Work →</a>
+            <a href="#projects" class="btn-primary">See My Work -></a>
             <a href="#contact" class="btn-ghost">Initiate Contact</a>
             <a href="#" class="btn-ghost" title="Download Resume">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: -2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
               Resume
             </a>
+          </div>
+          <div class="terminal-launchpad fade-up">
+            <button type="button" class="terminal-launchpad-btn" data-open-playground data-event="playground_open" data-event-source="hero-launchpad">
+              Explore Playground
+            </button>
+            <button type="button" class="terminal-launchpad-btn ghost" data-scroll-insights>
+              Read Insight Logs
+            </button>
           </div>
           <!-- Interactive Terminal -->
           <div class="hero-terminal fade-up" id="heroTerminal" aria-hidden="false">
@@ -227,7 +170,7 @@
               </div>
               <div class="terminal-title">Interactive Terminal</div>
               <div class="terminal-sound-controls" style="margin-left: auto; display: flex; align-items: center;">
-                <button type="button" class="terminal-sound-btn active" id="terminalSoundBtn" aria-label="Toggle sound" title="Toggle audio">🔊</button>
+                <button type="button" class="terminal-sound-btn active" id="terminalSoundBtn" aria-label="Toggle sound" title="Toggle audio">SFX</button>
               </div>
             </div>
             <div class="terminal-output" id="terminalOutput">
@@ -243,13 +186,19 @@
             </div>
           </div>
           <p class="mobile-terminal-note">Desktop mode recommended for the full terminal experience.</p>
+          <div class="mobile-demo-card fade-up" data-open-playground data-event="playground_open" data-event-source="mobile-demo-card">
+            <div class="mobile-demo-label">Demo Mode</div>
+            <strong>Open the curated analysis playground</strong>
+            <span>Skip the terminal and jump straight into three Nepal-themed data demos.</span>
+          </div>
+          <div id="mobileMandalaPreview" class="mobile-mandala-preview fade-up" aria-label="Reduced mandala preview"></div>
           <div class="hero-stats fade-up" aria-label="Stats">
             <div class="stat-item">
-              <span class="stat-number cyan">3+</span>
-              <span class="stat-label">Portfolio Projects</span>
+              <span class="stat-number accent">2</span>
+              <span class="stat-label">Active Projects</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number pink">15+</span>
+              <span class="stat-number accent-strong">15+</span>
               <span class="stat-label">Practice Repositories</span>
             </div>
             <div class="stat-item">
@@ -258,7 +207,7 @@
             </div>
           </div>
           <div class="availability-widget fade-up" aria-label="Availability status">
-            <strong>Open to internships &amp; entry roles</strong><span>&nbsp;·&nbsp;Data analyst and BI opportunities</span>
+            <strong>Open to internships &amp; entry roles</strong><span>&nbsp;|&nbsp;Data analyst and BI opportunities</span>
           </div>
         </div>
         <div class="hero-visual fade-up" aria-hidden="true">
@@ -274,8 +223,7 @@
                    width="280" height="280"
                    loading="eager"
                    decoding="async"
-                   fetchpriority="high"
-                   onerror="this.style.display='none'; this.closest('picture').nextElementSibling.style.display='flex';">
+                   fetchpriority="high">
             </picture>
             <div class="profile-img-fallback" style="display:none;" aria-hidden="true">BR</div>
           </div>
@@ -307,7 +255,7 @@ class Net(nn.Module):
         <polygon points="780,70 820,110 740,110" fill="rgba(255, 195, 0, 0.05)" />
         <path d="M740 110 L780 70 L800 90 L790 98 L810 105 L820 110" stroke="rgba(255, 195, 0, 0.4)" stroke-width="1.5" fill="none" />
         <!-- Foreground range: Sharp low-poly crystalline crimson outline -->
-        <path d="M0 200 L0 180 L140 150 L290 170 L460 135 L620 160 L780 115 L940 150 L1120 120 L1280 165 L1440 140 L1440 200 Z" fill="rgba(230, 57, 70, 0.05)" stroke="var(--cyan)" stroke-width="2"/>
+        <path d="M0 200 L0 180 L140 150 L290 170 L460 135 L620 160 L780 115 L940 150 L1120 120 L1280 165 L1440 140 L1440 200 Z" fill="rgba(230, 57, 70, 0.05)" stroke="var(--accent)" stroke-width="2"/>
         <!-- Faint grid mapping lines on mountains for that modern digital theme -->
         <path d="M140 150 L140 200 M460 135 L460 200 M780 115 L780 200 M1120 120 L1120 200" stroke="rgba(230, 57, 70, 0.15)" stroke-width="1" stroke-dasharray="2 4"/>
       </svg>
@@ -322,24 +270,25 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  <!-- ── ABOUT ── -->
+  <!-- -- ABOUT -- -->
   <section id="about" aria-label="About">
     <div class="container">
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">01</div>
-        <div class="section-label" data-formula="μ=Σx/n">System.Identity</div>
-        <h2 class="section-title">About <span style="color:var(--cyan)">Me</span></h2>
+        <div class="section-label" data-formula="avg=sum(x)/n">System.Identity</div>
+        <h2 class="section-title">About <span style="color:var(--accent)">Me</span></h2>
       </div>
       <div class="about-grid">
         <div class="about-body fade-up">
-          <p>I'm <strong>Brishav Rajbahak</strong> — an aspiring data analyst from <span class="pink">Kathmandu</span>, Nepal, building a strong foundation in analytics, reporting, and data science.</p>
+          <p>I'm <strong>Brishav Rajbahak</strong> — an aspiring data analyst from <span class="accent-strong">Kathmandu</span>, Nepal, building a strong foundation in analytics, reporting, and data science.</p>
           <p>My current focus is learning how to clean data, write better SQL, explore trends with Python, and present findings clearly through dashboards, charts, and structured analysis.</p>
+          <p class="about-philosophy"><strong>Data Philosophy:</strong> clean structure before cleverness, useful signal before visual noise, and every model or chart should end with a decision someone can actually act on.</p>
           <p>This portfolio highlights the projects and practice work I am using to grow into data analyst, BI, and data science roles.</p>
         </div>
         <div class="fade-up">
           <div class="detail-grid">
-            <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value">Kathmandu, Nepal 🇳🇵</div></div>
-            <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">🟢 Open to Internships &amp; Entry Roles</div></div>
+            <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value">Kathmandu, Nepal</div></div>
+            <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">Open to internships and entry roles</div></div>
             <div class="detail-item"><div class="detail-label">Focus</div><div class="detail-value">Data Analysis &amp; BI</div></div>
             <div class="detail-item"><div class="detail-label">Education</div><div class="detail-value">Computer Science</div></div>
             <div class="detail-item"><div class="detail-label">Interests</div><div class="detail-value">SQL · Dashboards · Forecasting</div></div>
@@ -356,13 +305,13 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  <!-- ── EXPERIENCE (COMMENTED OUT) ──
+  <!-- -- EXPERIENCE (COMMENTED OUT) --
   <section id="experience" aria-label="Experience">
     <div class="container">
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">02</div>
         <div class="section-label" data-formula="P(A|B)=P(B|A)P(A)/P(B)">System.Ascent</div>
-        <h2 class="section-title">The <span style="color:var(--pink)">Summit</span> So Far</h2>
+        <h2 class="section-title">The <span style="color:var(--accent-strong)">Summit</span> So Far</h2>
       </div>
       <div class="peaks-showcase-wrapper fade-up">
         <div class="peaks-controller">
@@ -375,17 +324,18 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  ── END OF EXPERIENCE COMMENTED OUT -->
-  <!-- ── SKILLS ── -->
+  -- END OF EXPERIENCE COMMENTED OUT -->
+  <!-- -- SKILLS -- -->
   <section id="skills" aria-label="Skills">
     <div class="container">
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">03</div>
-        <div class="section-label" data-formula="∇L=∂L/∂θ">System.Arsenal</div>
-        <h2 class="section-title">Core <span style="color:var(--cyan)">Toolkit</span></h2>
+        <div class="section-label" data-formula="dL/dw">System.Arsenal</div>
+        <h2 class="section-title">Core <span style="color:var(--accent)">Toolkit</span></h2>
       </div>
       <div class="skills-layout">
         <div class="radar-container fade-up">
+          <div id="skillsMandala" class="skills-mandala-host" aria-label="Advanced signal mandala"></div>
           <canvas id="skillRadar" width="400" height="400"></canvas>
         </div>
         <div class="skill-stack">
@@ -472,7 +422,7 @@ class Net(nn.Module):
                 <line x1="2" y1="19" x2="22" y2="19"/>
                 <!-- Gaussian normal distribution bell shape -->
                 <path d="M3 19c3 0 4-1.5 6-6s2-9 3-9 1 4.5 3 9 3 6 6 6"/>
-                <!-- Mean μ dashed line -->
+                <!-- Mean µ dashed line -->
                 <line x1="12" y1="4" x2="12" y2="19" stroke-dasharray="1.5 1.5"/>
               </svg>
             </div>
@@ -533,23 +483,23 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  <!-- ── PROJECTS ── -->
+  <!-- -- PROJECTS -- -->
   <section id="projects" aria-label="Projects">
     <div class="container">
       <div class="projects-header fade-up">
         <div class="section-header fade-up" style="margin-bottom: 0;">
           <div class="section-number" aria-hidden="true">04</div>
-          <div class="section-label" data-formula="σ(z)=1/(1+e⁻ᶻ)">System.Deployments</div>
-          <h2 class="section-title">Projects &amp; <span style="color:var(--cyan)">Practice Work</span></h2>
+          <div class="section-label" data-formula="s(z)=1/(1+e^-z)">System.Deployments</div>
+          <h2 class="section-title">Projects &amp; <span style="color:var(--accent)">Practice Work</span></h2>
         </div>
-        <a href="https://github.com/brishavrajbahak" class="view-all" target="_blank" rel="noopener noreferrer">All Repos →</a>
+        <a href="https://github.com/brishavrajbahak" class="view-all" target="_blank" rel="noopener noreferrer">All Repos ?</a>
       </div>
       <div class="projects-grid">
         <div class="project-card featured fade-up" data-project-url="https://github.com/brishavrajbahak/loan-default-analysis" role="link" tabindex="0" aria-label="Open Loan Default Analysis on GitHub">
           <div class="project-card-inner">
             <div class="project-banner">
               <div class="project-banner-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M3 3v18h18"/>
                   <rect x="7" y="10" width="4" height="8" rx="1" fill="rgba(230,57,70,0.15)"/>
                   <rect x="14" y="6" width="4" height="12" rx="1" fill="rgba(230,57,70,0.15)"/>
@@ -557,10 +507,12 @@ class Net(nn.Module):
               </div>
             </div>
             <div class="project-body">
-              <div class="project-featured-badge">⭐ FEATURED</div>
+              <div class="project-featured-badge">? FEATURED</div>
               <div class="project-status">Portfolio Project</div>
               <div class="project-title">Loan Default Analysis</div>
               <p class="project-desc">A loan default analysis project built with Python, Pandas, SQL, and SQLite, featuring a Power BI dashboard and a final measured default rate of 19.98% for outcome-focused risk reporting.</p>
+              <p class="project-impact" data-project-impact><strong>Business impact:</strong> clarified the top repayment-pressure signals behind a 19.98% final-outcome default rate and translated them into dashboard-ready risk reporting.</p>
+              <p class="project-delivered"><strong>What I delivered:</strong> borrower segmentation, SQL-backed preparation, and a Power BI story layer for risk communication.</p>
               <div class="project-tags">
                 <span class="tag">Python</span>
                 <span class="tag">Pandas</span>
@@ -572,6 +524,7 @@ class Net(nn.Module):
               <div class="project-links">
                 <a href="https://github.com/brishavrajbahak/loan-default-analysis" class="project-link primary" target="_blank" rel="noopener noreferrer">View Project</a>
                 <a href="https://github.com/brishavrajbahak/loan-default-analysis" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <button type="button" class="project-link" data-open-playground data-event="playground_open" data-event-source="loan-risk-project">Open Demo</button>
               </div>
             </div>
           </div>
@@ -580,7 +533,7 @@ class Net(nn.Module):
           <div class="project-card-inner">
             <div class="project-banner">
               <div class="project-banner-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M4 19h16"/>
                   <path d="M6 16V9"/>
                   <path d="M12 16V5"/>
@@ -595,6 +548,8 @@ class Net(nn.Module):
               <div class="project-status">In Progress</div>
               <div class="project-title">Financial Inclusion Gap Analysis</div>
               <p class="project-desc">An in-progress analytics project focused on exploring access gaps in financial inclusion, identifying underserved segments, and building a reporting workflow around disparity trends and actionable insights.</p>
+              <p class="project-impact" data-project-impact><strong>Business impact:</strong> sharpens which underserved groups should be prioritized first when access, trust, and reporting quality diverge.</p>
+              <p class="project-delivered"><strong>What I delivered:</strong> a clean gap-analysis framing, reporting structure, and a clearer decision path for inclusion monitoring.</p>
               <div class="project-tags">
                 <span class="tag">Python</span>
                 <span class="tag">Pandas</span>
@@ -613,13 +568,46 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  <!-- ── TESTIMONIALS (COMMENTED OUT) ──
+  <section id="insight-logs" aria-label="Insight Logs">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">05</div>
+        <div class="section-label" data-formula="dsignal/dtime">System.Logs</div>
+        <h2 class="section-title">Insight <span style="color:var(--accent-strong)">Logs</span></h2>
+      </div>
+      <div class="insight-log-grid">
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Nepal tourism looks strongest when stay length and occupancy move together.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Arrival counts alone can flatter demand while hiding whether local spend is actually improving.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Gandaki-style performance becomes more attractive when longer stays and solid occupancy move with arrivals instead of lagging behind them.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>The better tourism KPI is not “who arrived”, but “who stayed, spent, and filled rooms at the same time”.</p></div>
+        </article>
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Default pressure usually appears before default is formally recorded.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Risk teams often review default outcomes too late, after delinquency has already stretched across a segment.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Microbusiness and informal borrower patterns become more useful when delinquency is treated as an early signal rather than a lagging result.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>The best intervention metric is the one that rises before the headline risk number does.</p></div>
+        </article>
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Remittance strength can still hide fragile channel quality.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Higher transfer values can look healthy while the reliability of formal transfer channels quietly weakens.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Provinces with high household dependence but low formal-channel use deserve more attention than provinces with similar transfer volume but stronger systems.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>Resilience is not just about how much money arrives. It is also about how safely and consistently it arrives.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <!-- -- TESTIMONIALS (COMMENTED OUT) --
   <section id="testimonials" aria-label="Testimonials">
     <div class="container">
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">05</div>
-        <div class="section-label" data-formula="H=−Σp·log(p)">System.Logs</div>
-        <h2 class="section-title">Word on the <span style="color:var(--pink)">Grid</span></h2>
+        <div class="section-label" data-formula="H=-sum(p*log(p))">System.Logs</div>
+        <h2 class="section-title">Word on the <span style="color:var(--accent-strong)">Grid</span></h2>
       </div>
       <div class="testimonials-carousel fade-up">
         <div class="testimonial-slide">
@@ -644,14 +632,14 @@ class Net(nn.Module):
     </div>
   </section>
   <div class="section-divider" aria-hidden="true"></div>
-  ── END TESTIMONIALS COMMENTED OUT -->
-  <!-- ── CONTACT ── -->
+  -- END TESTIMONIALS COMMENTED OUT -->
+  <!-- -- CONTACT -- -->
   <section id="contact" aria-label="Contact">
     <div class="container">
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">06</div>
-        <div class="section-label" data-formula="RMSE=√(Σ(ŷ−y)²/n)">System.Comms</div>
-        <h2 class="section-title">Let's Talk About <span style="color:var(--cyan)">Opportunities.</span></h2>
+        <div class="section-label" data-formula="RMSE=sqrt(sum((yhat-y)^2)/n)">System.Comms</div>
+        <h2 class="section-title">Let's Talk About <span style="color:var(--accent)">Opportunities.</span></h2>
       </div>
       <div class="contact-wrapper">
         <div class="contact-info fade-up">
@@ -743,13 +731,50 @@ class Net(nn.Module):
       </div>
     </div>
   </section>
+  <div class="playground-modal" id="playgroundModal" aria-hidden="true">
+    <div class="playground-dialog" role="dialog" aria-modal="true" aria-labelledby="playgroundTitle">
+      <button type="button" class="playground-close" id="playgroundClose" aria-label="Close playground">×</button>
+      <div class="playground-layout">
+        <aside class="playground-sidebar">
+          <span class="playground-label">Demo Playground</span>
+          <h3 id="playgroundTitle">Curated Nepal Data Scenarios</h3>
+          <p>Three small, deterministic demos designed to show how Brishav frames signal, risk, and reporting value without hiding behind AI-generated filler.</p>
+          <div class="playground-dataset-list" id="playgroundDatasetList"></div>
+          <label class="playground-select-wrap">
+            <span>Dataset</span>
+            <select id="playgroundDatasetSelect" aria-label="Select playground dataset"></select>
+          </label>
+          <div class="playground-mode-strip">
+            <button type="button" class="playground-mode-btn active" data-analysis-mode="overview">Overview</button>
+            <button type="button" class="playground-mode-btn" data-analysis-mode="distribution">Distribution</button>
+            <button type="button" class="playground-mode-btn" data-analysis-mode="trend">Trend</button>
+          </div>
+          <div class="playground-actions">
+            <button type="button" class="terminal-launchpad-btn" id="playgroundRunBtn">Run Analysis</button>
+            <button type="button" class="terminal-launchpad-btn ghost" id="playgroundExportCsv">Export CSV</button>
+          </div>
+        </aside>
+        <section class="playground-results">
+          <div class="playground-summary" id="playgroundSummary">
+            <div class="playground-summary-theme">Awaiting signal</div>
+            <h3>Pick a dataset to begin.</h3>
+            <p>The playground will return metrics, chart-ready breakdowns, and a premium rule-based insight line.</p>
+          </div>
+          <div class="playground-metrics" id="playgroundMetrics"></div>
+          <div id="playgroundMandala" class="playground-mandala" aria-label="Playground mandala view"></div>
+          <div class="playground-charts" id="playgroundCharts"></div>
+        </section>
+      </div>
+    </div>
+  </div>
   <!-- Marquee removed to eliminate meaningless words and screen clutter -->
-  <!-- ── FOOTER ── -->
+  </main>
+  <!-- -- FOOTER -- -->
   <footer role="contentinfo">
     <div class="container">
       <div class="footer-inner">
         <div class="footer-logo" aria-label="Brishav Rajbahak">BR</div>
-        <p class="footer-copy">© <span id="year"></span> Brishav Rajbahak — aspiring data analyst from Kathmandu, Nepal.</p>
+        <p class="footer-copy">© <span id="year"></span> Brishav Rajbahak — aspiring data analyst from Kathmandu, Nepal. <span class="footer-preview-badge" id="footerPreviewBadge" hidden>v1-advanced-preview</span></p>
         <div class="footer-socials">
           <a href="https://github.com/brishavrajbahak" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" data-tooltip="GitHub">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="currentColor"/></svg>
@@ -774,57 +799,22 @@ class Net(nn.Module):
     <!-- Subtle ambient pad — silent until user enables -->
   </audio>
   <div class="toast" id="toast" role="status" aria-live="polite">
-    <span class="toast-icon" id="toastIcon" aria-hidden="true">✓</span>
+    <span class="toast-icon" id="toastIcon" aria-hidden="true">OK</span>
     <span id="toastMsg">Message transmitted!</span>
   </div>
   
-  <!-- ── Himalayan Peaks Experience Controller ── -->
+  <!-- -- Himalayan Peaks Experience Controller -- -->
   
-  <!-- ── Translucent Panel System: Canvas Animations + Parallax ── -->
+  <!-- -- Translucent Panel System: Canvas Animations + Parallax -- -->
   
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-  <script src="assets/js/config.public.js?v=2" defer></script>
-  <script>
-    (() => {
-      const mobile = document.documentElement.classList.contains('mobile-mode');
-      const loadScript = source => new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = source;
-        script.async = false;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.body.appendChild(script);
-      });
-
-      if (mobile) {
-        const revealMobilePage = () => {
-          document.getElementById('loading-screen')?.classList.add('hidden');
-          document.body.classList.add('page-loaded');
-          document.getElementById('home')?.classList.add('hero-revealed');
-        };
-
-        revealMobilePage();
-        loadScript('assets/js/mobile-core.js?v=5').catch(error => {
-          console.error('Mobile core failed to load.', error);
-          revealMobilePage();
-        });
-      } else {
-        const fonts = document.createElement('link');
-        fonts.rel = 'stylesheet';
-        fonts.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap';
-        fonts.crossOrigin = 'anonymous';
-        document.head.appendChild(fonts);
-
-        const stylesheet = document.createElement('link');
-        stylesheet.rel = 'stylesheet';
-        stylesheet.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css';
-        document.head.appendChild(stylesheet);
-        loadScript('assets/js/main.js?v=4');
-        loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js')
-          .then(() => window.hljs?.highlightAll());
-      }
-    })();
-  </script>
+  <script src="assets/js/config.public.js?v=3" defer></script>
+  <script src="assets/js/runtime-loader.js?v=1" defer></script>
   <script src="assets/js/contact-client.js?v=2" defer></script>
 </body>
 </html>
+
+
+
+
+

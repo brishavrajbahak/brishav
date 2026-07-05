@@ -1,0 +1,18 @@
+{
+  "id": "remittance",
+  "label": "Remittance Resilience Monitor",
+  "theme": "Remittance",
+  "description": "Illustrative provincial remittance dependency indicators covering household reliance and channel quality.",
+  "records": [
+    { "province": "Bagmati", "year": 2022, "household_dependency_pct": 24, "avg_transfer_usd": 228, "formal_channel_pct": 71, "usage_frequency": "Monthly" },
+    { "province": "Bagmati", "year": 2023, "household_dependency_pct": 23, "avg_transfer_usd": 241, "formal_channel_pct": 74, "usage_frequency": "Monthly" },
+    { "province": "Madhesh", "year": 2022, "household_dependency_pct": 38, "avg_transfer_usd": 194, "formal_channel_pct": 58, "usage_frequency": "Monthly" },
+    { "province": "Madhesh", "year": 2023, "household_dependency_pct": 41, "avg_transfer_usd": 203, "formal_channel_pct": 55, "usage_frequency": "Monthly" },
+    { "province": "Koshi", "year": 2022, "household_dependency_pct": 31, "avg_transfer_usd": 186, "formal_channel_pct": 63, "usage_frequency": "Quarterly" },
+    { "province": "Koshi", "year": 2023, "household_dependency_pct": 33, "avg_transfer_usd": 196, "formal_channel_pct": 61, "usage_frequency": "Quarterly" },
+    { "province": "Lumbini", "year": 2022, "household_dependency_pct": 29, "avg_transfer_usd": 178, "formal_channel_pct": 66, "usage_frequency": "Monthly" },
+    { "province": "Lumbini", "year": 2023, "household_dependency_pct": 30, "avg_transfer_usd": 187, "formal_channel_pct": 68, "usage_frequency": "Monthly" },
+    { "province": "Karnali", "year": 2022, "household_dependency_pct": 44, "avg_transfer_usd": 162, "formal_channel_pct": 49, "usage_frequency": "Irregular" },
+    { "province": "Karnali", "year": 2023, "household_dependency_pct": 47, "avg_transfer_usd": 171, "formal_channel_pct": 46, "usage_frequency": "Irregular" }
+  ]
+}

@@ -51,7 +51,7 @@
     const ctx = canvas.getContext('2d');
 
     // Palette from the site's CSS tokens
-    const CR = [200,17,31],  // crimson (--cyan)
+    const CR = [200,17,31],  // crimson (--accent)
           AM = [200,146,10], // amber   (--pink)
           BL = [59,130,246]; // blue    (--violet)
     const r = (c,a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
@@ -67,12 +67,12 @@
       buildMatrixRain();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        1. GRADIENT DESCENT LOSS LANDSCAPE
        A 2D cross-section of a loss surface rendered as
        slow-breathing topographic contour lines —
        echoing both ML training and the Himalayas.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     // Sample a noisy "loss bowl" surface: Z = f(x,y)
     function lossZ(nx, ny, seed) {
       // A bumpy bowl with a global minimum
@@ -164,7 +164,7 @@
         ctx.stroke();
       }
 
-      // ── Draw gradient descent path ──
+      // -- Draw gradient descent path --
       // Animate a "current epoch" bead running along it
       const epochPos = ((t * 0.00025) % 1);
       const trailLen = 38;
@@ -206,21 +206,21 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        2. TENSOR / MATRIX RAIN (left third of screen)
        Sparse columns of floating numbers — numpy-style
        array values drifting downward like data pipelines.
        Very faint, not distracting.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const MATRIX_COLS = perf.isHigh ? 14 : perf.isMedium ? 8 : 0;
     let matrixDrops = [];
 
     // Vocabulary: numbers that feel data-science
     const matVocab = [
-      '0.92','0.08','1.00','0.73','−1','0.41',
-      '128','256','0.5σ','ε','∇','β₁','α',
-      '0.1','9.8','3.14','0.01','×10⁻³','NaN',
-      '0.88','1.0','−0.5','0.33','64','0.99'
+      '0.92','0.08','1.00','0.73','-1','0.41',
+      '128','256','0.5s','e','?','ß1','a',
+      '0.1','9.8','3.14','0.01','×10?³','NaN',
+      '0.88','1.0','-0.5','0.33','64','0.99'
     ];
 
     function buildMatrixRain() {
@@ -263,11 +263,11 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        3. DISTRIBUTION CURVES (bottom strip)
        Gaussian / skewed curves drifting as background
        decoration — like Seaborn histogram overlays.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const DIST_CURVES = [
       { mu: 0.20, sig: 0.07, col: CR, a: 0.045, phase: 0.0  },
       { mu: 0.45, sig: 0.10, col: AM, a: 0.035, phase: 1.2  },
@@ -306,12 +306,12 @@
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        4. NEURAL WEIGHT MATRIX GRID (top-left corner)
        A sparse heatmap-style grid — activation values
        shown as colour-intensity squares, like a weight
        visualisation in matplotlib.imshow()
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     const GRID_ROWS = 10, GRID_COLS = 10;
     let weightGrid = [], weightTarget = [], weightT = 0;
 
@@ -365,18 +365,18 @@
       ctx.font = '7px "JetBrains Mono", monospace';
       ctx.fillStyle = r(CR, 0.15);
       ctx.textAlign = 'left';
-      ctx.fillText('W₁  [10×10]', offX, offY - 6);
+      ctx.fillText('W1  [10×10]', offX, offY - 6);
 
       ctx.restore();
     }
 
-    /* ══════════════════════════════════════════════════
+    /* --------------------------------------------------
        5. HIMALAYAN DATA HORIZON
        Layered mountain silhouettes with subtle data-grid
        lines overlaid — combining origin (Kathmandu) with
        the ML field (elevation maps, terrain data).
        These complement the existing hero-mountains SVG.
-    ══════════════════════════════════════════════════ */
+    -------------------------------------------------- */
     function drawDataHorizon(t) {
       ctx.save();
       const baseY = H;
@@ -436,13 +436,13 @@
     }
 
     const formulas = [
-      { text: 'f(x) = σ(Wᵀx + b)', x: 0.15, y: 0.22, speed: 0.045, alpha: 0.05 },
-      { text: '∇L(θ) = -∑ (y - p)x', x: 0.45, y: 0.15, speed: 0.038, alpha: 0.04 },
+      { text: 'f(x) = s(W?x + b)', x: 0.15, y: 0.22, speed: 0.045, alpha: 0.05 },
+      { text: '?L(?) = -? (y - p)x', x: 0.45, y: 0.15, speed: 0.038, alpha: 0.04 },
       { text: 'P(A|B) = P(B|A)P(A)/P(B)', x: 0.82, y: 0.32, speed: 0.052, alpha: 0.05 },
-      { text: 'wₜ₊₁ = wₜ - η∇L(wₜ)', x: 0.12, y: 0.75, speed: 0.032, alpha: 0.06 },
+      { text: 'w_t+1 = w_t - grad(L)', x: 0.12, y: 0.75, speed: 0.032, alpha: 0.06 },
       { text: 'L(y, p) = -y log(p) - (1-y) log(1-p)', x: 0.52, y: 0.85, speed: 0.042, alpha: 0.04 },
-      { text: 'softmax(z)ᵢ = eᶻⁱ / ∑ eᶻʲ', x: 0.78, y: 0.65, speed: 0.036, alpha: 0.05 },
-      { text: 'Cov(X, Y) = E[(X-μₓ)(Y-μᵧ)]', x: 0.28, y: 0.45, speed: 0.055, alpha: 0.04 }
+      { text: 'softmax(z) = exp(z) / sum exp(z)', x: 0.78, y: 0.65, speed: 0.036, alpha: 0.05 },
+      { text: 'Cov(X, Y) = E[(X-µ?)(Y-µ?)]', x: 0.28, y: 0.45, speed: 0.055, alpha: 0.04 }
     ];
 
     function drawMathFormulas(t) {
@@ -464,7 +464,7 @@
       ctx.restore();
     }
 
-    /* ══ Master render loop ══ */
+    /* -- Master render loop -- */
     let lastT = 0;
     const frameInterval = 1000 / perf.fps;
     function render(t) {
@@ -508,7 +508,7 @@
       animatedFavicon: true
     };
 
-    /* ── Global Mouse Tracking System ── */
+    /* -- Global Mouse Tracking System -- */
     window.globalMX = window.innerWidth / 2;
     window.globalMY = window.innerHeight / 2;
     window.mouseInWindow = false;
@@ -567,9 +567,9 @@
       if (globalDot) globalDot.style.opacity = '1';
     }, { passive: true });
 
-    /* ── Dynamic footer year ── */
+    /* -- Dynamic footer year -- */
     document.getElementById('year').textContent = new Date().getFullYear();
-    /* ── Staggered Entrance Pre-setup ── */
+    /* -- Staggered Entrance Pre-setup -- */
     // Automatically assign staggered indexes to all .fade-up items under major parents
     document.querySelectorAll('section, .skills-layout, .projects-grid, .contact-wrapper, .detail-grid').forEach(parent => {
       const children = parent.querySelectorAll('.fade-up');
@@ -577,7 +577,7 @@
         child.style.setProperty('--stagger-delay', index);
       });
     });
-    /* ── Loading Screen & Staggered Hero Reveal (Simulated ML Convergence) ── */
+    /* -- Loading Screen & Staggered Hero Reveal (Simulated ML Convergence) -- */
     window.addEventListener('load', () => {
       const consoleEl = document.getElementById('loadingConsole');
       const statusEl = document.querySelector('.loading-status');
@@ -635,7 +635,7 @@
       }
       setTimeout(printNextLine, 200);
     });
-    /* ── High-Performance Custom Cursor Hover & State Triggers ── */
+    /* -- High-Performance Custom Cursor Hover & State Triggers -- */
     if (isFinePointer) {
       const hoverTargets = 'a, button, .project-card, .skill-row, .contact-link-item, .social-btn, .detail-item, .nav-hamburger';
       document.querySelectorAll(hoverTargets).forEach(el => {
@@ -661,7 +661,7 @@
         openProjectCard(card);
       });
     });
-    /* ── 3D Card Tilt (GPU-only, skips while scrolling) ── */
+    /* -- 3D Card Tilt (GPU-only, skips while scrolling) -- */
     if (sitePerf.magneticEffects) document.querySelectorAll('.project-card').forEach(card => {
       const inner = card.querySelector('.project-card-inner');
       card.addEventListener('mousemove', e => {
@@ -685,7 +685,7 @@
         if (inner) inner.style.transform = '';
       });
     });
-    /* ── Button ripple on click ── */
+    /* -- Button ripple on click -- */
     if (sitePerf.magneticEffects) document.querySelectorAll('.btn-primary, .btn-ghost, .form-submit, .nav-cta').forEach(btn => {
       btn.addEventListener('click', e => {
         const ripple = document.createElement('span');
@@ -698,7 +698,7 @@
         ripple.addEventListener('animationend', () => ripple.remove());
       });
     });
-    /* ── Magnetic Interactions ── */
+    /* -- Magnetic Interactions -- */
     document.querySelectorAll('.btn-primary, .btn-ghost, .form-submit, .nav-cta').forEach(btn => {
       btn.addEventListener('mousemove', e => {
         if (document.body.classList.contains('is-scrolling')) return;
@@ -711,7 +711,7 @@
         btn.style.transform = '';
       });
     });
-    /* ── Particle canvas (throttled, pauses when hero off-screen) ── */
+    /* -- Particle canvas (throttled, pauses when hero off-screen) -- */
     (() => {
       const canvas = document.getElementById('particles-canvas');
       const heroSection = document.getElementById('home');
@@ -766,7 +766,7 @@
         lastFrameTime = timestamp;
         ctx.clearRect(0, 0, W, H);
         particles.forEach(p => {
-          /* ── Cursor proximity repulsion ── */
+          /* -- Cursor proximity repulsion -- */
           const pmx = (typeof window.globalMX !== 'undefined' && window.mouseInWindow) ? window.globalMX : -9999;
           const pmy = (typeof window.globalMY !== 'undefined' && window.mouseInWindow) ? window.globalMY : -9999;
           const ddx = p.x - pmx;
@@ -777,10 +777,10 @@
             p.vx += (ddx / dist) * force * 0.15;
             p.vy += (ddy / dist) * force * 0.15;
           }
-          /* ── Velocity damping to prevent runaway ── */
+          /* -- Velocity damping to prevent runaway -- */
           p.vx *= 0.97;
           p.vy *= 0.97;
-          /* ── Ensure minimum upward drift ── */
+          /* -- Ensure minimum upward drift -- */
           if (p.vy > -0.1) p.vy -= 0.02;
           p.x += p.vx;
           p.y += p.vy;
@@ -795,8 +795,8 @@
       }
       requestAnimationFrame(draw);
     })();
-    /* ── Typewriter ── */
-    const roles  = ['Data Analyst', 'Data Science Aspirant', 'Data Analyst / Data Science Aspirant'];
+    /* -- Typewriter -- */
+    const roles  = ['Data Analyst', 'Data Science Aspirant'];
     let ri = 0, ci = 0, deleting = false;
     const roleEl = document.getElementById('role-text');
     function type() {
@@ -815,7 +815,7 @@
     } else {
       type();
     }
-    /* ── Throttled Scroll Handling ── */
+    /* -- Throttled Scroll Handling -- */
     const scrollProgressEl = document.getElementById('scroll-progress');
     const backToTopBtn     = document.getElementById('back-to-top');
     const navEl            = document.querySelector('nav');
@@ -880,7 +880,7 @@
     backToTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    /* ── Nav Hover Glowing Spot Tracking ── */
+    /* -- Nav Hover Glowing Spot Tracking -- */
     navEl.addEventListener('mousemove', e => {
       if (document.body.classList.contains('is-scrolling')) return;
       const rect = navEl.getBoundingClientRect();
@@ -889,7 +889,7 @@
       navEl.style.setProperty('--nav-mx', x);
       navEl.style.setProperty('--nav-my', y);
     });
-    /* ── Single Integrated Intersection Observer ── */
+    /* -- Single Integrated Intersection Observer -- */
     const mainObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach(entry => {
@@ -925,7 +925,7 @@
       mainObserver.observe(el);
     });
     document.querySelectorAll('section[id]').forEach(sec => mainObserver.observe(sec));
-    /* ── Suffix-preserving Stat Counters ── */
+    /* -- Suffix-preserving Stat Counters -- */
     function animateStatCounter(el) {
       if (!el || el.dataset.animated === 'true') return;
       el.dataset.animated = 'true';
@@ -947,7 +947,7 @@
         }
       }, stepInterval);
     }
-    /* ── Nav Actions (Smooth Scroll & Close mobile nav) ── */
+    /* -- Nav Actions (Smooth Scroll & Close mobile nav) -- */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
@@ -960,7 +960,7 @@
         hamburgerBtn.setAttribute('aria-expanded', 'false');
       });
     });
-    /* ── Mobile Hamburger Toggle ── */
+    /* -- Mobile Hamburger Toggle -- */
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const mobileNav    = document.getElementById('mobileNav');
     const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
@@ -979,11 +979,11 @@
         hamburgerBtn.setAttribute('aria-expanded', 'false');
       }
     });
-    /* ── Syntax Highlighting Initialization (Deferred) ── */
+    /* -- Syntax Highlighting Initialization (Deferred) -- */
     window.addEventListener('load', () => {
       if (window.hljs) hljs.highlightAll();
     });
-    /* ── Advanced Interactive Terminal Widget Emulator ── */
+    /* -- Advanced Interactive Terminal Widget Emulator -- */
     const terminalInput = document.getElementById('terminalInput');
     const terminalOutput = document.getElementById('terminalOutput');
     const terminalCursor = document.getElementById('terminalCursor');
@@ -998,10 +998,10 @@
       matrix: null,
       plot: null,
       train: null,
-      coffee: "Caffeine synthesizer initialized. Hot cup of coffee queued for production. ☕",
+      coffee: "Caffeine synthesizer initialized. Hot cup of coffee queued for production. ?",
       clear: null
     };
-    /* ── Matrix Digital Rain Engine ── */
+    /* -- Matrix Digital Rain Engine -- */
     let matrixRainActive = false;
     let matrixRainFrame = null;
     function startMatrixRain() {
@@ -1023,8 +1023,8 @@
       const fontSize = 12;
       const cols = Math.floor(matrixCanvas.width / fontSize);
       const drops = Array.from({ length: cols }, () => Math.floor(Math.random() * -20));
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789@#$%^&*';
-      const cyanVal = getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim() || '#e63946';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+      const cyanVal = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e63946';
       let frameCount = 0;
       const maxFrames = sitePerf.isLow ? 60 : sitePerf.isMedium ? 120 : 180;
       function drawMatrix() {
@@ -1073,7 +1073,12 @@
       if (isCommand) {
         const line = document.createElement('div');
         line.className = 'terminal-line';
-        line.innerHTML = `<span class="terminal-prompt">$</span> <span>${textOrLines}</span>`;
+        const prompt = document.createElement('span');
+        prompt.className = 'terminal-prompt';
+        prompt.textContent = '$';
+        const text = document.createElement('span');
+        text.textContent = textOrLines;
+        line.append(prompt, document.createTextNode(' '), text);
         terminalOutput.appendChild(line);
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
         return;
@@ -1109,7 +1114,7 @@
       }
       type();
     }
-    /* ── Regression Plot ASCII Canvas ── */
+    /* -- Regression Plot ASCII Canvas -- */
     function startRegressionPlot() {
       const termOut = document.getElementById('terminalOutput');
       const plotCanvas = document.createElement('canvas');
@@ -1223,7 +1228,7 @@
             pCtx.fillStyle = 'rgba(59,130,246,0.75)';
             pCtx.font = 'bold 8px "JetBrains Mono", monospace';
             pCtx.textAlign = 'left';
-            pCtx.fillText(`ŷ = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}   R² = ${r2}`, padL + 4, padT + 12);
+            pCtx.fillText(`y = ${slope.toFixed(3)}x + ${intercept.toFixed(3)}   R² = ${r2}`, padL + 4, padT + 12);
           }
         }
         revealPts();
@@ -1231,19 +1236,19 @@
       draw();
     }
 
-    /* ── Simulated Model Training Loop ── */
+    /* -- Simulated Model Training Loop -- */
     function startTrainingLoop() {
       const termOut = document.getElementById('terminalOutput');
       const epochs = 15;
       let ep = 0;
       printToTerminal('Initializing training pipeline...');
       printToTerminal('Model: MLPClassifier  |  Optimizer: Adam  |  lr: 0.001');
-      printToTerminal('─'.repeat(52));
+      printToTerminal('-'.repeat(52));
 
       function runEpoch() {
         if (ep >= epochs) {
-          printToTerminal('─'.repeat(52));
-          printToTerminal('✔ Training complete. Model serialized → ./checkpoints/best.pt');
+          printToTerminal('-'.repeat(52));
+          printToTerminal('? Training complete. Model serialized ? ./checkpoints/best.pt');
           return;
         }
         const ratio = ep / (epochs - 1);
@@ -1251,7 +1256,7 @@
         const acc = (42 + 56 * Math.sin(ratio * Math.PI / 2) + (Math.random() - 0.5) * 1.2).toFixed(1);
         const valLoss = (parseFloat(loss) + (Math.random() * 0.04 - 0.01)).toFixed(4);
         const valAcc = (parseFloat(acc) - Math.random() * 2.5).toFixed(1);
-        const bar = '█'.repeat(Math.round(ratio * 12)) + '░'.repeat(12 - Math.round(ratio * 12));
+        const bar = '¦'.repeat(Math.round(ratio * 12)) + '¦'.repeat(12 - Math.round(ratio * 12));
         printToTerminal(`Ep ${String(ep + 1).padStart(2, '0')}/${epochs} [${bar}] loss:${loss} acc:${acc}% val_loss:${valLoss}`);
         ep++;
         setTimeout(runEpoch, 180 + Math.random() * 80);
@@ -1264,7 +1269,8 @@
       printToTerminal(cmd, true);
       if (trimmed === 'clear') {
         matrixRainActive = false;
-        terminalOutput.innerHTML = '<div class="terminal-line"><span class="terminal-prompt">$</span> <span>Terminal cleared. Available commands listed under \'help\'</span></div>';
+        terminalOutput.replaceChildren();
+        printToTerminal("Terminal cleared. Available commands listed under 'help'");
       } else if (trimmed === 'matrix') {
         printToTerminal('WAKE UP, NEO... THE MATRIX HAS YOU. FOLLOW THE WHITE RABBIT.');
         setTimeout(() => startMatrixRain(), 800);
@@ -1286,11 +1292,11 @@
       }
       terminalOutput.scrollTop = terminalOutput.scrollHeight;
     }
-    /* ── Terminal Keydown Listeners (Autocomplete, Command History) ── */
+    /* -- Terminal Keydown Listeners (Autocomplete, Command History) -- */
     let cmdHistory = [];
     let historyIndex = -1;
     let inactivityTimer;
-    /* ── Terminal & ambient sound (on by default) ── */
+    /* -- Terminal & ambient sound (on by default) -- */
     let globalSoundOn = true;
     let terminalSoundOn = true;
     let ambientOn = true;
@@ -1340,7 +1346,7 @@
       const btn = document.getElementById('terminalSoundBtn');
       if (btn) {
         btn.classList.toggle('active', on);
-        btn.textContent = on ? '🔊' : '🔇';
+        btn.textContent = on ? 'SFX' : 'OFF';
         btn.setAttribute('aria-label', on ? 'Mute all sounds' : 'Unmute all sounds');
       }
       
@@ -1389,8 +1395,8 @@
       document.addEventListener('click', activateAudio);
       document.addEventListener('keydown', activateAudio);
     }
-    /* ── Cyber Theme Selector removed (Theme is permanently Solar Gold) ── */
-    /* ── Fluid Navigation Slider Pill ── */
+    /* -- Cyber Theme Selector removed (Theme is permanently Solar Gold) -- */
+    /* -- Fluid Navigation Slider Pill -- */
     function initNavSlider() {
       const navLinksContainer = document.getElementById('navLinks');
       const pill = document.getElementById('navSliderPill');
@@ -1434,7 +1440,7 @@
         activeObserver.observe(a, { attributes: true, attributeFilter: ['class'] });
       });
     }
-    /* ── Holographic Spotlight on detail-item and skill-row ── */
+    /* -- Holographic Spotlight on detail-item and skill-row -- */
     function initHoloSpotlight() {
       const targets = document.querySelectorAll('.detail-item, .skill-row');
       targets.forEach(el => {
@@ -1528,17 +1534,17 @@
     terminalOutput.addEventListener('click', () => {
       terminalInput.focus();
     });
-    /* ── Toast Notifications ── */
+    /* -- Toast Notifications -- */
     function showToast(msg, type) {
       const toast = document.getElementById('toast');
-      document.getElementById('toastIcon').textContent = type === 'error' ? '✕' : '✓';
+      document.getElementById('toastIcon').textContent = type === 'error' ? '?' : '?';
       document.getElementById('toastMsg').textContent  = msg;
       toast.className = 'toast ' + (type === 'error' ? 'toast-error' : 'toast-success');
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 5000);
     }
     window.showToast = showToast;
-    /* ── Live Clock (NPT) — updates every second ── */
+    /* -- Live Clock (NPT) — updates every second -- */
     function updateClock() {
       const timeEl = document.getElementById('navTime');
       if (!timeEl) return;
@@ -1553,7 +1559,7 @@
     }
     updateClock();
     setInterval(updateClock, 1000);
-    /* ── SKILL RADAR CHART ── */
+    /* -- SKILL RADAR CHART -- */
     function initSkillRadar() {
       const canvas = document.getElementById('skillRadar');
       if (!canvas) return;
@@ -1577,7 +1583,7 @@
       
       // Resolve dynamic theme colors from document variables (fixes static gold radar bug)
       const rootStyle = getComputedStyle(document.documentElement);
-      const cyanColor = rootStyle.getPropertyValue('--cyan').trim() || '#ffb703';
+      const cyanColor = rootStyle.getPropertyValue('--accent').trim() || '#ffb703';
       const pinkColor = rootStyle.getPropertyValue('--pink').trim() || '#fb8500';
       
       const gridColor = cyanColor.startsWith('#') ? cyanColor + '1a' : 'rgba(255, 183, 3, 0.1)';
@@ -1655,7 +1661,7 @@
     }
     initSkillRadar();
 
-    /* ── Animated Theme-Synced Favicon (Creative Edition) ── */
+    /* -- Animated Theme-Synced Favicon (Creative Edition) -- */
     function initAnimatedFavicon() {
       const canvas = document.createElement('canvas');
       canvas.width = 32;
@@ -1696,7 +1702,7 @@
         ctx.clearRect(0, 0, 32, 32);
         
         const rootStyle = getComputedStyle(document.documentElement);
-        const color = rootStyle.getPropertyValue('--cyan').trim() || '#e63946';
+        const color = rootStyle.getPropertyValue('--accent').trim() || '#e63946';
         const pink = rootStyle.getPropertyValue('--pink').trim() || '#ff0080';
         
         const cx = 16, cy = 16;
@@ -1794,7 +1800,7 @@
       setInterval(render, 66);
     }
 
-    /* ── Creative Resume Download Experience ── */
+    /* -- Creative Resume Download Experience -- */
     (function initResumeDownload() {
       // Create the modal HTML
       const overlay = document.createElement('div');
@@ -1865,7 +1871,7 @@
 
         // Get colors dynamically
         const styles = getComputedStyle(document.documentElement);
-        const cyan = styles.getPropertyValue('--cyan').trim() || '#e63946';
+        const cyan = styles.getPropertyValue('--accent').trim() || '#e63946';
         const pink = styles.getPropertyValue('--pink').trim() || '#ff0080';
 
         // Nodes coordinates inside 160x160 canvas
@@ -2079,27 +2085,27 @@
         status.textContent = 'INITIALIZING';
 
         await addLine('<span class="r-accent">$</span> <span class="r-label">Initializing secure handshake...</span>', 300);
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">TLS 1.3 tunnel established</span>', 600);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">TLS 1.3 tunnel established</span>', 600);
         await addLine('<span class="r-accent">$</span> <span class="r-label">Authenticating recruiter clearance...</span>', 500);
         
         status.textContent = 'SCANNING';
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">Access level: </span><span class="r-value">FULL DOSSIER</span>', 700);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">Access level: </span><span class="r-value">FULL DOSSIER</span>', 700);
         await addLine('', 200);
-        await addLine('<span class="r-accent">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', 100);
-        await addLine('<span class="r-pink">⟐ CANDIDATE PROFILE SCAN</span>', 400);
-        await addLine('<span class="r-accent">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>', 100);
+        await addLine('<span class="r-accent">------------------------------</span>', 100);
+        await addLine('<span class="r-pink">? CANDIDATE PROFILE SCAN</span>', 400);
+        await addLine('<span class="r-accent">------------------------------</span>', 100);
         await addLine('', 150);
         
         status.textContent = 'VERIFYING';
         await addLine('<span class="r-label">  Name     :</span> <span class="r-value">Brishav Rajbahak</span>', 350);
         await addLine('<span class="r-label">  Alias    :</span> <span class="r-value">@brishavrajbahak</span>', 300);
-        await addLine('<span class="r-label">  Origin   :</span> <span class="r-value">Kathmandu, Nepal 🇳🇵</span>', 300);
+        await addLine('<span class="r-label">  Origin   :</span> <span class="r-value">Kathmandu, Nepal</span>', 300);
         await addLine('<span class="r-label">  Class    :</span> <span class="r-value">Data Analyst / Data Science Aspirant</span>', 300);
-        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">● OPEN TO INTERNSHIPS & ENTRY ROLES</span>', 300);
+        await addLine('<span class="r-label">  Status   :</span> <span class="r-ok">? OPEN TO INTERNSHIPS & ENTRY ROLES</span>', 300);
         await addLine('', 200);
 
         status.textContent = 'ANALYZING';
-        await addLine('<span class="r-accent">⟐</span> <span class="r-label">Scanning skill matrix...</span>', 400);
+        await addLine('<span class="r-accent">?</span> <span class="r-label">Scanning skill matrix...</span>', 400);
 
         // Render the visualization layout container (ML training logs + Neural Net canvas)
         const analysisContainer = document.createElement('div');
@@ -2129,7 +2135,7 @@
         // Run training logs simulation sequence
         addLogLine('<span class="ml-tag-system">[SYS]</span> Initializing Deep neural_net_classifier.bin...', 'ml-tag-system');
         await new Promise(r => setTimeout(r, 250));
-        addLogLine('<span class="ml-tag-system">[SYS]</span> Layers: Input (3) ➔ Hidden (4) ➔ Output (1)', 'ml-tag-system');
+        addLogLine('<span class="ml-tag-system">[SYS]</span> Layers: Input (3) ? Hidden (4) ? Output (1)', 'ml-tag-system');
         await new Promise(r => setTimeout(r, 200));
         addLogLine('<span class="ml-tag-train">[TRAIN]</span> Optimizing connection weights (Adam, lr=0.003)...', 'ml-tag-train');
         await new Promise(r => setTimeout(r, 300));
@@ -2147,7 +2153,7 @@
           if (e === 12) nnVisualizer.setSpeed(3.2);
           if (e === 17) nnVisualizer.setSpeed(1.0);
 
-          addLogLine(`Epoch [${e.toString().padStart(2, '0')}/${totalEpochs}] ➔ <span class="ml-tag-metric">Loss: ${loss}</span> | <span class="ml-tag-train">Accuracy: ${acc}%</span>`);
+          addLogLine(`Epoch [${e.toString().padStart(2, '0')}/${totalEpochs}] ? <span class="ml-tag-metric">Loss: ${loss}</span> | <span class="ml-tag-train">Accuracy: ${acc}%</span>`);
           
           // Stagger delay between epochs
           await new Promise(r => setTimeout(r, 80 + Math.random() * 50));
@@ -2160,7 +2166,7 @@
         await new Promise(r => setTimeout(r, 450));
 
         status.textContent = 'COMPILING';
-        await addLine('<span class="r-accent">⟐</span> <span class="r-label">Compiling dossier package...</span>', 400);
+        await addLine('<span class="r-accent">?</span> <span class="r-label">Compiling dossier package...</span>', 400);
 
         // Add progress bar
         const progressWrap = document.createElement('div');
@@ -2175,8 +2181,8 @@
         }
 
         await addLine('', 200);
-        await addLine('<span class="r-ok">✔</span> <span class="r-value">Dossier compiled successfully</span>', 300);
-        await addLine('<span class="r-ok">✔</span> <span class="r-label">Integrity hash: </span><span class="r-accent">SHA-256:OK</span>', 200);
+        await addLine('<span class="r-ok">?</span> <span class="r-value">Dossier compiled successfully</span>', 300);
+        await addLine('<span class="r-ok">?</span> <span class="r-label">Integrity hash: </span><span class="r-accent">SHA-256:OK</span>', 200);
 
         status.textContent = 'COMPLETE';
 
@@ -2222,16 +2228,16 @@
     (() => {
       const peakData = {
         1: {
-          tag: '▲ SUMMIT',
+          tag: '? SUMMIT',
           timeline: '2024 — PRESENT',
-          role: 'Data Analyst Aspirant',
+          role: 'Data Analyst / Data Science Aspirant',
           company: 'Independent Portfolio Work · Kathmandu',
           desc: 'Building portfolio projects in SQL, Python, dashboards, and forecasting while strengthening data storytelling and reporting skills.',
           skills: ['SQL', 'Python', 'Pandas', 'Excel', 'Tableau', 'Statistics'],
-          borderColor: 'var(--cyan)'
+          borderColor: 'var(--accent)'
         },
         2: {
-          tag: '▲ CAMP II',
+          tag: '? CAMP II',
           timeline: '2022 — 2024',
           role: 'Analytics Project Builder',
           company: 'Independent Practice · Remote',
@@ -2240,7 +2246,7 @@
           borderColor: 'var(--pink)'
         },
         3: {
-          tag: '▲ BASE CAMP',
+          tag: '? BASE CAMP',
           timeline: '2021 — 2022',
           role: 'Computer Science Student',
           company: 'Academic Foundation · Kathmandu',
@@ -2332,7 +2338,7 @@
     function ease(t){ return t<.5?2*t*t:-1+(4-2*t)*t; }
     const panelFrameInterval = sitePerf.isHigh ? 1000 / 30 : 1000 / 15;
 
-    /* ── PANEL 1: Neural Network ── */
+    /* -- PANEL 1: Neural Network -- */
     function initNeural() {
       const canvas = document.getElementById('gpNeuralCanvas');
       if (!canvas) return;
@@ -2395,7 +2401,7 @@
       requestAnimationFrame(draw);
     }
 
-    /* ── PANEL 2: Live Scrolling Line Chart ── */
+    /* -- PANEL 2: Live Scrolling Line Chart -- */
     function initLineChart() {
       const canvas = document.getElementById('gpLineCanvas');
       const valEl  = document.getElementById('gpLiveVal');
@@ -2447,7 +2453,7 @@
       requestAnimationFrame(draw);
     }
 
-    /* ── PANEL 3: Hardware Telemetry (Bar Chart) ── */
+    /* -- PANEL 3: Hardware Telemetry (Bar Chart) -- */
     function initHardware() {
       const canvas = document.getElementById('gpHardwareCanvas');
       if (!canvas) return;
@@ -2509,7 +2515,7 @@
     }
 
 
-    /* ── PANEL 4: Rotating Donut ── */
+    /* -- PANEL 4: Rotating Donut -- */
     function initDonut() {
       const canvas = document.getElementById('gpDonutCanvas');
       if (!canvas) return;
@@ -2563,7 +2569,7 @@
       requestAnimationFrame(draw);
     }
 
-    /* ── PANEL 5: Data Pipeline Flow ── */
+    /* -- PANEL 5: Data Pipeline Flow -- */
     function initPipeline() {
       const canvas = document.getElementById('gpPipelineCanvas');
       if (!canvas) return;
@@ -2653,7 +2659,7 @@
           const normX = ((x / rect.width) * 2 - 1).toFixed(2);
           const normY = ((1 - (y / rect.height)) * 2 - 1).toFixed(2);
           coordsSpan.textContent = `[X: ${normX}, Y: ${normY}]`;
-          coordsSpan.style.color = 'var(--cyan)';
+          coordsSpan.style.color = 'var(--accent)';
         });
         
         panel.addEventListener('mouseleave', () => {
@@ -2667,7 +2673,7 @@
       initNeural(); initLineChart(); initHardware(); initDonut(); initPipeline(); initCoordinateTrackers();
     }
 
-    /* ── Scroll Parallax ── */
+    /* -- Scroll Parallax -- */
     if (!prefersReduced) {
       const ng=document.getElementById('node-grid-layer');
       const ao=document.getElementById('accent-glow-orb');
@@ -2686,3 +2692,5 @@
     }
   })();
   
+
+

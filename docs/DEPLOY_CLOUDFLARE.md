@@ -1,13 +1,14 @@
-# Deploy to Cloudflare Pages
+# Cloudflare Deploy Notes
 
-## Pages Project
+This is the deployment order I use for this project.
 
-- Project name: `brishav-portfolio`
-- Output directory: `public`
-- Root directory: `/`
-- Build command in Cloudflare Pages: leave empty if built assets are committed
+## Project
 
-## Required Order
+- Pages project: `brishav-portfolio`
+- output directory: `public`
+- repo-local Wrangler comes from `package.json`
+
+## Deploy order
 
 Deploy the Durable Object worker first:
 
@@ -22,28 +23,7 @@ npm run build
 npx wrangler pages deploy public --project-name=brishav-portfolio --branch=main
 ```
 
-## Turnstile
-
-- Put the public site key in [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js)
-- Put the secret key in Cloudflare Pages secrets as `TURNSTILE_SECRET_KEY`
-
-## Email
-
-Required secret:
-
-- `RESEND_API_KEY`
-
-Plain-text config remains in [`wrangler.toml`](/D:/tr/wrangler.toml).
-
-## Optional Analytics
-
-If Cloudflare Web Analytics is enabled for the site, place the public token in:
-
-- [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js)
-
-That token is public and does not belong in a secret manager.
-
-## Preview Deploys
+## Preview deploy
 
 For the advanced branch:
 
@@ -51,9 +31,26 @@ For the advanced branch:
 npm run preview
 ```
 
-The GitHub Actions workflow also builds and attempts preview deployment when secrets are available.
+The GitHub Actions workflow also builds the branch and can deploy a preview when the Cloudflare token is available.
 
-## Validation Notes
+## Turnstile
 
-- Use the Pages preview URL for desktop, mobile, playground, and analytics verification.
-- If the preview hostname is not allowed by Turnstile, use `brishavrajbahak.com.np` only for the full contact-form regression and note that in the PR.
+- public site key: [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js)
+- secret key: Cloudflare Pages secret `TURNSTILE_SECRET_KEY`
+
+If the Pages preview hostname is not in the Turnstile allowlist, I use the production domain for the full contact-form regression and note that in the PR.
+
+## Email
+
+Required secret:
+
+- `RESEND_API_KEY`
+
+## What I verify after deploy
+
+- desktop terminal
+- mobile Demo Mode
+- mandala rendering
+- playground datasets and analyze route
+- analytics events
+- contact form on an allowed hostname

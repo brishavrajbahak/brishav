@@ -120,7 +120,7 @@ export function initTerminalRuntime({ analytics, buildMeta, openPlayground, open
   }
 
   function resetTerminal() {
-    output.innerHTML = '';
+    output.replaceChildren();
     state.queue = [];
     state.typing = false;
     const seenKey = 'advanced-v1-onboarding-seen';
@@ -136,7 +136,12 @@ export function initTerminalRuntime({ analytics, buildMeta, openPlayground, open
   function appendCommand(value) {
     const line = document.createElement('div');
     line.className = 'terminal-line is-command';
-    line.innerHTML = `<span class="terminal-prompt">$</span><span>${escapeHtml(value)}</span>`;
+    const prompt = document.createElement('span');
+    prompt.className = 'terminal-prompt';
+    prompt.textContent = '$';
+    const text = document.createElement('span');
+    text.textContent = value;
+    line.append(prompt, text);
     output.appendChild(line);
     output.scrollTop = output.scrollHeight;
   }
@@ -180,11 +185,4 @@ function hydrateSuggestion(input, suggestion) {
     return `analyze ${suggestion}`;
   }
   return suggestion;
-}
-
-function escapeHtml(value) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
 }

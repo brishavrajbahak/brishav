@@ -1,37 +1,37 @@
-# Playground
+# Playground Notes
 
-## Purpose
+I built the playground to show how I frame analysis, not to pretend I have a live AI system behind the site.
 
-The Advanced V1 playground is a curated demo layer that shows how Brishav frames signal, summary metrics, and reporting-ready conclusions without relying on opaque AI output.
+## What it is
 
-## Scope
-
-Advanced V1 keeps the playground intentionally narrow:
-
-- exactly three datasets
-- no uploads
-- no persistence
-- no R2
-- no D1
-- no Workers AI
-- no PDF export
-
-## Datasets
+The playground is a curated demo layer with three fixed datasets:
 
 - `tourism`
 - `loan-risk`
 - `remittance`
 
-Each dataset is stored statically in:
+Each one exists to show a different analysis style:
 
-- [`public/assets/data/demo`](/D:/tr/public/assets/data/demo)
+- tourism: recovery and commercial signal framing
+- loan risk: pressure, default, and early intervention logic
+- remittance: dependency, channel quality, and resilience framing
+
+## Why it is fixed
+
+I kept the dataset list fixed because that gives me three advantages:
+
+- the API is much easier to harden
+- the outputs stay deterministic
+- I can explain every chart and every summary line without hand-waving
+
+That matters more to me than adding uploads just to make the feature look bigger.
 
 ## Endpoints
 
 - `GET /api/v1/playground/datasets`
 - `POST /api/v1/playground/analyze`
 
-### Analyze request
+Example request:
 
 ```json
 {
@@ -41,44 +41,41 @@ Each dataset is stored statically in:
 }
 ```
 
-### Supported analysis types
+Supported analysis types:
 
 - `overview`
 - `distribution`
 - `trend`
 
-## Response shape
+## What the response contains
 
-The analyze endpoint returns:
+The analyze route returns:
 
-- dataset descriptor
+- dataset metadata
 - summary text
-- surprise insight
+- one polished surprise insight
 - metric cards
 - chart-ready payloads
 - mandala focus node IDs
-- full dataset records for CSV export
+- records for CSV export
 
-## Hardening
+## Hardening expectations
 
-The analyze route follows the existing API patterns:
+The analyze route is intentionally narrow:
 
+- fixed dataset allowlist
+- fixed analysis-mode allowlist
 - origin checks
-- controlled input validation
-- Durable Object-backed request limiting
-- predictable JSON errors
+- JSON-only requests
+- predictable error responses
+- Durable Object-backed rate limiting when available
 
-## Verification Notes
+## How I verify it
 
-- Validate the playground catalog and analyze routes on the Cloudflare Pages preview URL, not only through local static serving.
-- Confirm analytics events tied to playground open and analyze actions through the browser network tab or Cloudflare logs.
+I do not treat local static serving as enough. I verify the playground on the actual Cloudflare Pages preview URL, including:
 
-## V2 Roadmap
-
-Potential future additions:
-
-- upload support
-- persisted results
-- Workers AI summaries
-- richer chart comparisons
-- export variants beyond CSV
+- dataset catalog load
+- analyze requests
+- modal behavior
+- analytics events
+- mobile Demo Mode access

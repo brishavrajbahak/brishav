@@ -4,6 +4,8 @@ const WINDOW_MS = 60_000;
 const MAX_REQUESTS_PER_WINDOW = 5;
 const ALLOW_METHODS = 'POST, OPTIONS';
 const DEFAULT_ALLOWED_ORIGIN = 'https://brishavrajbahak.com.np';
+// This local bucket is isolate-local only. It is useful as a fallback during
+// local/dev execution, but it is not a distributed production rate limit.
 const localRateLimit = globalThis.__CONTACT_RATE_LIMIT__ ||= new Map();
 
 export async function onRequestOptions(context) {

@@ -9,6 +9,7 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
   };
 
   const modal = document.getElementById('playgroundModal');
+  const dialog = modal?.querySelector('.playground-dialog');
   const closeBtn = document.getElementById('playgroundClose');
   const datasetList = document.getElementById('playgroundDatasetList');
   const datasetSelect = document.getElementById('playgroundDatasetSelect');
@@ -49,7 +50,14 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
       if (event.target === modal) close();
     });
     document.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && modal?.classList.contains('open')) close();
+      if (!modal?.classList.contains('open')) return;
+      if (event.key === 'Escape') {
+        close();
+        return;
+      }
+      if (event.key === 'Tab') {
+        trapFocus(event);
+      }
     });
     runBtn?.addEventListener('click', () => runSelectedAnalysis());
   }
@@ -90,9 +98,13 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
 
   function renderDatasetOptions() {
     if (datasetSelect) {
-      datasetSelect.innerHTML = state.datasets
-        .map(dataset => `<option value="${dataset.id}">${dataset.label}</option>`)
-        .join('');
+      datasetSelect.replaceChildren();
+      state.datasets.forEach(dataset => {
+        const option = document.createElement('option');
+        option.value = dataset.id;
+        option.textContent = dataset.label;
+        datasetSelect.appendChild(option);
+      });
       datasetSelect.value = state.selectedDatasetId;
       datasetSelect.addEventListener('change', () => {
         state.selectedDatasetId = datasetSelect.value;
@@ -101,22 +113,25 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
     }
 
     if (datasetList) {
-      datasetList.innerHTML = state.datasets
-        .map(dataset => `
-          <button type="button" class="playground-dataset-card${dataset.id === state.selectedDatasetId ? ' active' : ''}" data-dataset-id="${dataset.id}">
-            <span class="playground-dataset-theme">${dataset.theme}</span>
-            <strong>${dataset.label}</strong>
-            <span>${dataset.description}</span>
-          </button>
-        `)
-        .join('');
+      datasetList.replaceChildren();
+      state.datasets.forEach(dataset => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = `playground-dataset-card${dataset.id === state.selectedDatasetId ? ' active' : ''}`;
+        card.dataset.datasetId = dataset.id;
+        card.setAttribute('aria-pressed', String(dataset.id === state.selectedDatasetId));
 
-      datasetList.querySelectorAll('[data-dataset-id]').forEach(card => {
+        appendTextBlock(card, 'span', 'playground-dataset-theme', dataset.theme);
+        appendTextBlock(card, 'strong', '', dataset.label);
+        appendTextBlock(card, 'span', '', dataset.description);
+
         card.addEventListener('click', () => {
-          state.selectedDatasetId = card.dataset.datasetId;
+          state.selectedDatasetId = dataset.id;
           if (datasetSelect) datasetSelect.value = state.selectedDatasetId;
           highlightDatasetCard();
         });
+
+        datasetList.appendChild(card);
       });
     }
 
@@ -126,7 +141,9 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
   function highlightDatasetCard() {
     if (runBtn) runBtn.disabled = !state.selectedDatasetId;
     datasetList?.querySelectorAll('[data-dataset-id]').forEach(card => {
-      card.classList.toggle('active', card.dataset.datasetId === state.selectedDatasetId);
+      const active = card.dataset.datasetId === state.selectedDatasetId;
+      card.classList.toggle('active', active);
+      card.setAttribute('aria-pressed', String(active));
     });
   }
 
@@ -152,7 +169,7 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
       }
 
       state.activeResult = data.result;
-      renderResult(data.result);
+      await renderResult(data.result);
       analytics?.trackEvent('analyze_run', { dataset: state.selectedDatasetId, mode: state.selectedMode });
     } catch (error) {
       console.error('Playground analysis failed:', error);
@@ -163,24 +180,9 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
   }
 
   async function renderResult(result) {
-    summary.innerHTML = `
-      <div class="playground-summary-theme">${result.dataset.theme}</div>
-      <h3>${result.dataset.label}</h3>
-      <p>${result.summary}</p>
-      <div class="playground-surprise">${result.surpriseInsight}</div>
-    `;
-
-    metrics.innerHTML = result.metrics
-      .map(metric => `
-        <article class="playground-metric-card">
-          <span>${metric.label}</span>
-          <strong>${metric.value}</strong>
-          <small>${metric.note}</small>
-        </article>
-      `)
-      .join('');
-
-    charts.innerHTML = '';
+    setSummary(result);
+    renderMetrics(result.metrics);
+    charts.replaceChildren();
     charts.appendChild(renderSimpleChart(result.charts.comparison, 'bar'));
     charts.appendChild(renderSimpleChart(result.charts.trend, result.charts.trend.kind || 'line'));
 
@@ -222,6 +224,46 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
     lastFocus?.focus?.();
   }
 
+  function renderBootstrapFailure() {
+    state.datasets = [];
+    state.selectedDatasetId = '';
+    if (datasetList) datasetList.replaceChildren();
+    if (datasetSelect) {
+      datasetSelect.replaceChildren();
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'Unavailable';
+      datasetSelect.appendChild(option);
+    }
+    if (runBtn) runBtn.disabled = true;
+    if (exportBtn) exportBtn.disabled = true;
+    summary.replaceChildren();
+    appendTextBlock(summary, 'div', 'playground-summary-theme', 'Bootstrap failed');
+    appendTextBlock(summary, 'h3', '', 'Dataset catalog unavailable.');
+    appendTextBlock(summary, 'p', '', 'The advanced playground could not load its curated demo datasets right now.');
+  }
+
+  function trapFocus(event) {
+    if (!dialog) return;
+    const focusable = getFocusable(dialog);
+    if (!focusable.length) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+      return;
+    }
+
+    if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   return {
     init,
     open,
@@ -230,18 +272,24 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
     },
   };
 
-  function renderBootstrapFailure() {
-    state.datasets = [];
-    state.selectedDatasetId = '';
-    if (datasetList) datasetList.innerHTML = '';
-    if (datasetSelect) datasetSelect.innerHTML = '<option value="">Unavailable</option>';
-    if (runBtn) runBtn.disabled = true;
-    if (exportBtn) exportBtn.disabled = true;
-    summary.innerHTML = `
-      <div class="playground-summary-theme">Bootstrap failed</div>
-      <h3>Dataset catalog unavailable.</h3>
-      <p>The advanced playground could not load its curated demo datasets right now.</p>
-    `;
+  function setSummary(result) {
+    summary.replaceChildren();
+    appendTextBlock(summary, 'div', 'playground-summary-theme', `${result.dataset.theme} demo dataset`);
+    appendTextBlock(summary, 'h3', '', result.dataset.label);
+    appendTextBlock(summary, 'p', '', result.summary);
+    appendTextBlock(summary, 'div', 'playground-surprise', result.surpriseInsight);
+  }
+
+  function renderMetrics(metricList) {
+    metrics.replaceChildren();
+    metricList.forEach(metric => {
+      const card = document.createElement('article');
+      card.className = 'playground-metric-card';
+      appendTextBlock(card, 'span', '', metric.label);
+      appendTextBlock(card, 'strong', '', metric.value);
+      appendTextBlock(card, 'small', '', metric.note);
+      metrics.appendChild(card);
+    });
   }
 }
 
@@ -258,14 +306,15 @@ async function readJson(response) {
 function renderSimpleChart(chart, kind) {
   const card = document.createElement('article');
   card.className = 'playground-chart-card';
+  card.setAttribute('role', 'img');
+  card.setAttribute('aria-label', `${chart.title}. ${chart.items.map(item => `${item.label} ${item.value}`).join(', ')}`);
   const maxValue = Math.max(...chart.items.map(item => item.value), 1);
 
-  card.innerHTML = `
-    <div class="playground-chart-header">
-      <span>${chart.eyebrow || 'Signal view'}</span>
-      <strong>${chart.title}</strong>
-    </div>
-  `;
+  const header = document.createElement('div');
+  header.className = 'playground-chart-header';
+  appendTextBlock(header, 'span', '', chart.eyebrow || 'Signal view');
+  appendTextBlock(header, 'strong', '', chart.title);
+  card.appendChild(header);
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 420 220');
@@ -281,7 +330,7 @@ function renderSimpleChart(chart, kind) {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' '));
     path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'var(--cyan)');
+    path.setAttribute('stroke', 'var(--accent)');
     path.setAttribute('stroke-width', '3');
     svg.appendChild(path);
 
@@ -315,7 +364,7 @@ function renderSimpleChart(chart, kind) {
       rect.setAttribute('width', String(barWidth));
       rect.setAttribute('height', String(height));
       rect.setAttribute('rx', '12');
-      rect.setAttribute('fill', index % 2 === 0 ? 'var(--cyan)' : 'var(--pink)');
+      rect.setAttribute('fill', index % 2 === 0 ? 'var(--accent)' : 'var(--pink)');
       rect.setAttribute('fill-opacity', '0.82');
       svg.appendChild(rect);
 
@@ -352,4 +401,17 @@ function toCsv(records) {
     ),
   ];
   return lines.join('\n');
+}
+
+function appendTextBlock(parent, tagName, className, text) {
+  const element = document.createElement(tagName);
+  if (className) element.className = className;
+  element.textContent = text;
+  parent.appendChild(element);
+  return element;
+}
+
+function getFocusable(root) {
+  return [...root.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(element => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true');
 }

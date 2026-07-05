@@ -1,43 +1,48 @@
 # Brishav Rajbahak Portfolio
 
-Interactive portfolio website for Brishav Rajbahak, centered on data analysis, reporting, curated demos, and practical business-facing storytelling.
+This is my portfolio site for [brishavrajbahak.com.np](https://brishavrajbahak.com.np).
 
-**Live website:** [brishavrajbahak.com.np](https://brishavrajbahak.com.np)
+I built it to present myself as a `Data Analyst` and `Data Science Aspirant` without hiding behind generic portfolio templates. The desktop experience leans into an interactive terminal and a signal mandala because those two pieces communicate how I think: structured inputs, deliberate exploration, and visible relationships between tools, domains, and outcomes.
 
-## Advanced V1
+I kept the mobile path intentionally lighter. On mobile I care more about clarity, speed, and a clean project/storytelling path than about preserving every desktop effect.
 
-This branch introduces the Advanced V1 layer:
+## What is in Advanced V1
 
-- enhanced desktop terminal with command registry
-- SVG-based mandala visualization across skills, terminal, and playground
-- curated playground with three Nepal-themed demo datasets
-- privacy-friendly interaction events for terminal and playground usage
-- build pipeline using `esbuild`
+Advanced V1 adds three things on top of the earlier portfolio baseline:
 
-## Highlights
+- a desktop terminal driven by a command registry
+- an SVG mandala that maps skills, tools, and domains
+- a curated demo playground with fixed datasets
 
-- Responsive portfolio with dedicated desktop and mobile experiences
-- Interactive desktop terminal plus mobile Demo Mode card
-- Signal mandala for skills, tools, and domain connections
-- Curated playground demos: Tourism, Loan Risk, Remittance
-- Cloudflare Pages hosting and Pages Functions backend
-- Contact form protected by Cloudflare Turnstile
-- Resend email delivery with Durable Object-backed contact rate limiting
-- Versioned built assets and preview-branch badge support
+The playground is intentionally demo-only. I chose fixed datasets because I wanted deterministic outputs that I can explain end to end in an interview. I did not want fake "AI analysis" theater or a black-box upload flow I could not defend.
 
-## Technology
+## Current feature set
 
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- esbuild
-- Cloudflare Pages
-- Cloudflare Pages Functions
-- Cloudflare Turnstile
-- Cloudflare Web Analytics beacon (optional public token)
-- Resend
+- desktop terminal with commands like `help`, `whoami --deep`, `projects --detail`, `mandala`, and `analyze loan-risk`
+- mobile Demo Mode card that opens the same curated playground without the terminal layer
+- mandala rendering in the skills section, terminal, and playground
+- three built-in demo datasets:
+  - Tourism
+  - Loan Risk
+  - Remittance
+- contact form protected by Turnstile
+- Cloudflare Pages Functions backend
+- Resend email delivery
+- Durable Object-backed contact rate limiting
+- optional Cloudflare Web Analytics event tracking
 
-## Project Structure
+## Why the playground is fixed
+
+The datasets are fixed on purpose.
+
+- I can explain every field and every output.
+- The API surface stays narrow and easier to harden.
+- The charts and summary text stay deterministic.
+- The UI stays honest about being a curated demo rather than a live model.
+
+That tradeoff is worth it for this version.
+
+## Project structure
 
 ```text
 .
@@ -63,18 +68,17 @@ This branch introduces the Advanced V1 layer:
 |-- workers/
 |-- docs/
 |-- build.js
-|-- CHANGELOG.md
 |-- package.json
 `-- wrangler.toml
 ```
 
-## Local Development
+## Local development
 
 ### Requirements
 
 - Node.js 22+
-- Wrangler CLI via `npx`
-- A Cloudflare account for Pages Functions and Turnstile testing
+- `npx` for Wrangler commands
+- a Cloudflare account if I want to test Pages Functions, Turnstile, or preview deploys
 
 Install dependencies:
 
@@ -94,19 +98,15 @@ Run the Durable Object worker in one terminal:
 npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
 ```
 
-Run the site in a second terminal:
+Run the site in another terminal:
 
 ```bash
 npm run dev
 ```
 
-That script builds the advanced JS bundles and starts:
+That rebuilds the advanced bundles and serves the site locally through Wrangler Pages.
 
-```text
-http://localhost:8788
-```
-
-## Build Scripts
+## Build scripts
 
 ```bash
 npm run build
@@ -115,104 +115,92 @@ npm run preview
 npm run premerge
 ```
 
-- `build` generates `advanced.js`, `mobile-advanced.js`, and `build-meta.js`
-- `postbuild` validates `build-meta.js` and enforces the advanced JS budget of `< 250KB gzipped`
-- `lint` validates the new modules, Functions routes, and build files
+- `build` bundles `advanced.js`, `mobile-advanced.js`, and regenerates `build-meta.js`
+- `postbuild` runs automatically and checks the combined advanced bundle budget
+- `lint` validates the frontend modules, Functions routes, and build files
 - `preview` builds and deploys the current branch to Cloudflare Pages
 - `premerge` runs `npm ci`, `npm run lint`, and `npm run build`
 
-### Bundle Budget Check
+## Bundle budget
 
-The bundle budget is enforced automatically during:
+I enforce the advanced bundle budget during build:
 
 ```bash
 npm run build
 ```
 
-That command triggers the `postbuild` validator, which checks the gzipped size of:
+That runs the postbuild validator and checks the gzipped size of:
 
 - `public/assets/js/advanced.js`
 - `public/assets/js/mobile-advanced.js`
 
-The combined advanced JS budget must remain under `250KB gzipped`.
+The combined target stays under `250KB gzipped`.
 
-## Environment and Public Config
+## Public config and secrets
 
-Non-secret Pages values remain in [wrangler.toml](/D:/tr/wrangler.toml).
+Non-secret Pages values live in [`wrangler.toml`](/D:/tr/wrangler.toml).
 
-Encrypted Cloudflare Pages secrets still include:
+Public frontend config lives in [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js).
 
-```text
-RESEND_API_KEY
-TURNSTILE_SECRET_KEY
-```
-
-Public frontend config lives in:
-
-[`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js)
-
-It currently contains:
+That file can safely contain:
 
 - `TURNSTILE_SITE_KEY`
-- optional `WEB_ANALYTICS_TOKEN`
+- `WEB_ANALYTICS_TOKEN`
 
-The Turnstile site key and Web Analytics token are public values by design.
+Secrets belong in Cloudflare Pages secrets instead:
 
-## New Endpoints
+- `RESEND_API_KEY`
+- `TURNSTILE_SECRET_KEY`
+
+## API routes
+
+Advanced V1 adds:
 
 - `GET /api/v1/playground/datasets`
 - `POST /api/v1/playground/analyze`
 - `POST /api/v1/analytics/event`
 
-The contact API stays unchanged:
+The contact API stays:
 
 - `POST /api/v1/contact`
 
-## Analytics Notes
+## Interaction analytics
 
-Page/session analytics can use the optional Cloudflare Web Analytics beacon.
-
-Explicit interaction events are sent to `/api/v1/analytics/event`:
+I keep tracking narrow and explicit. These events can be sent to `/api/v1/analytics/event`:
 
 - `terminal_command`
 - `mandala_view`
 - `playground_open`
 - `analyze_run`
 
-## Before vs After V1
+## Known limitations in this version
 
-Before:
+This branch is intentionally narrow.
 
-- one large desktop script
-- static project and skills sections
-- no demo analysis layer
-
-After:
-
-- modular advanced JS layer on top of the existing site
-- terminal plus mandala as distinct brand interactions
-- curated data playground tied to project themes
+- The playground is demo-only.
+- There are no uploads.
+- There is no R2, D1, Workers AI, or PDF export.
+- The fallback in-memory contact limiter is only isolate-local when Durable Objects are unavailable.
 
 ## Screenshots
 
 Screenshots of terminal, mandala, and playground will be added to `main` after merge.
 
-## V2 Roadmap
-
-Deferred intentionally from Advanced V1:
+## V2 ideas I deliberately deferred
 
 - uploads
+- persisted results
 - R2
 - D1
-- Workers AI insights
+- Workers AI summaries
 - PDF export
 
-## Security
+## Security notes
 
-- Never commit `.dev.vars`, `.env` files, or secret API keys
-- Keep `SKIP_TURNSTILE_LOCAL=false` in production
-- Verify the Resend sending domain and Turnstile hostname match the production domain
-- Keep the optional analytics token public, but never place secrets in public config
+- Never commit `.dev.vars`, `.env`, or provider secrets.
+- Turnstile site keys are public. The matching secret key is not.
+- The contact form depends on the production hostname being allowed in Turnstile.
+- The strict CSP in `public/_headers` is part of the deployed security boundary, not a nice-to-have.
 
 ## License
 

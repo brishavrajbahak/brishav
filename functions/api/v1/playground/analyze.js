@@ -24,6 +24,14 @@ export async function onRequestPost(context) {
   if (!isAllowedOrigin(request, env)) {
     return json(request, env, { ok: false, code: 'ORIGIN_NOT_ALLOWED' }, 403);
   }
+  if (!isJsonRequest(request)) {
+    return json(
+      request,
+      env,
+      { ok: false, code: 'VALIDATION_ERROR', errors: ['Content-Type must be application/json.'] },
+      400,
+    );
+  }
 
   const ip = normalizeClientIp(
     request.headers.get('CF-Connecting-IP') || request.headers.get('x-forwarded-for') || 'unknown',
@@ -49,7 +57,7 @@ export async function onRequestPost(context) {
     return json(request, env, { ok: false, code: 'VALIDATION_ERROR', errors: ['Body must be valid JSON.'] }, 400);
   }
 
-  if (body.version !== 1) {
+  if (!isPlainObject(body) || body.version !== 1) {
     return json(request, env, { ok: false, code: 'VALIDATION_ERROR', errors: ['Unsupported API version.'] }, 400);
   }
 
@@ -60,7 +68,11 @@ export async function onRequestPost(context) {
     return json(request, env, { ok: false, code: 'VALIDATION_ERROR', errors: ['datasetId is required.'] }, 400);
   }
 
-  if (!['overview', 'distribution', 'trend'].includes(analysisType)) {
+  if (datasetId.length > 40 || !/^[a-z-]+$/.test(datasetId)) {
+    return json(request, env, { ok: false, code: 'VALIDATION_ERROR', errors: ['datasetId is invalid.'] }, 400);
+  }
+
+  if (analysisType.length > 24 || !['overview', 'distribution', 'trend'].includes(analysisType)) {
     return json(request, env, { ok: false, code: 'VALIDATION_ERROR', errors: ['Unsupported analysis type.'] }, 400);
   }
 
@@ -119,6 +131,15 @@ async function checkRateLimit(env, key) {
 
 function normalizeClientIp(value) {
   return String(value || 'unknown').split(',')[0].trim() || 'unknown';
+}
+
+function isJsonRequest(request) {
+  const contentType = request.headers.get('content-type') || '';
+  return contentType.toLowerCase().includes('application/json');
+}
+
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
 function isAllowedOrigin(request, env) {

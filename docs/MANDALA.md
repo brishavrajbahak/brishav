@@ -1,62 +1,47 @@
-# Mandala
+# Mandala Notes
 
-## Purpose
+The mandala is the most deliberate visual addition in Advanced V1.
 
-The mandala is the Advanced V1 signature visualization. It maps Brishav's skills, tools, and applied domains into one operating diagram that can appear in:
+I used it because I wanted one artifact on the site that shows relationships, not just a list of tools.
+
+## What it renders
+
+The mandala maps:
+
+- core identity
+- skills
+- tools
+- applied domains
+
+The source of truth is [`public/assets/data/mandala-config.json`](/D:/tr/public/assets/data/mandala-config.json).
+
+## Why SVG
+
+I chose SVG with vanilla JavaScript instead of a canvas-heavy approach because SVG is easier to inspect, easier to style, and easier to make accessible.
+
+That matters here because the mandala is not decorative filler. It is part of the explanation layer of the site.
+
+## Where it appears
 
 - the Skills section
-- terminal output
-- the playground summary
+- the terminal `mandala` command
+- the playground result area
 
-## Source of Truth
+## Accessibility expectations
 
-Mandala data is stored in:
+The mandala needs to stay usable with:
 
-- [`public/assets/data/mandala-config.json`](/D:/tr/public/assets/data/mandala-config.json)
+- keyboard focus on interactive nodes
+- meaningful ARIA labels
+- reduced-motion handling
+- readable detail text when a node is focused or activated
 
-The config contains:
+## What I need to be able to explain
 
-- groups
-- nodes
-- relationships
-- labels
-- summaries
+If I am asked about this module, I should be able to explain:
 
-## Rendering Model
-
-Advanced V1 uses:
-
-- SVG
-- vanilla JavaScript
-- CSS animations
-
-This keeps the visualization lightweight, inspectable, and easier to make accessible than a Canvas-first approach.
-
-## Accessibility
-
-The mandala must keep:
-
-- ARIA labels for meaningful nodes
-- keyboard focus for interactive nodes
-- reduced-motion support
-- compact rendering for terminal and mobile use
-
-## Interaction Behavior
-
-- Skills section: full-size visual map with hover/focus detail text
-- Terminal: compact embedded version with pulse emphasis
-- Playground: dataset-focused highlights using `mandalaFocus`
-
-## Verification Notes
-
-- Verify the full mandala on desktop preview, the compact mandala in terminal output, and the reduced mandala on the mobile preview path.
-- Confirm the preview badge remains hidden on `main` builds and visible on non-`main` preview branches.
-
-## V2 Roadmap
-
-Potential future upgrades:
-
-- richer tooltips
-- filters by project or domain
-- animated transitions between datasets
-- deeper narrative overlays
+- how the config is loaded
+- how node positions are calculated
+- how focus expansion works
+- how compact and full-size views differ
+- how keyboard activation updates the detail panel

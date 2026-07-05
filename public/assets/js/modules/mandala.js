@@ -1,7 +1,7 @@
 let cachedConfig;
 
 const GROUP_COLORS = {
-  core: 'var(--cyan)',
+  core: 'var(--accent)',
   skills: 'var(--pink)',
   tools: 'var(--violet)',
   domains: 'var(--text)',
@@ -28,7 +28,7 @@ export async function renderMandala(container, options = {}) {
   const nodePositions = buildNodePositions(config, center, radii);
   const highlighted = focusIds.size ? expandFocus(config.relationships, focusIds) : focusIds;
 
-  container.innerHTML = '';
+  container.replaceChildren();
   container.classList.add('mandala-shell');
 
   const figure = document.createElement('figure');
@@ -64,18 +64,22 @@ export async function renderMandala(container, options = {}) {
 
   const detail = document.createElement('figcaption');
   detail.className = 'mandala-detail';
-  detail.innerHTML = `
-    <div class="mandala-detail-label">${options.title || config.title}</div>
-    <div class="mandala-detail-title">${options.subtitle || 'Signal paths across skills, tools, and applied domains.'}</div>
-  `;
+  setDetailContent(
+    detail,
+    options.title || config.title,
+    options.subtitle || 'Signal paths across skills, tools, and applied domains.',
+  );
 
   config.nodes.forEach(node => {
     const pos = nodePositions.get(node.id);
-    const color = GROUP_COLORS[node.group] || 'var(--cyan)';
+    const color = GROUP_COLORS[node.group] || 'var(--accent)';
     const active = highlighted.size === 0 || highlighted.has(node.id);
 
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    group.setAttribute('class', `mandala-node${active ? ' is-active' : ''}${!reducedMotion && options.pulseId === node.id ? ' is-pulse' : ''}`);
+    group.setAttribute(
+      'class',
+      `mandala-node${active ? ' is-active' : ''}${!reducedMotion && options.pulseId === node.id ? ' is-pulse' : ''}`,
+    );
     group.setAttribute('tabindex', '0');
     group.setAttribute('role', 'button');
     group.setAttribute('aria-label', `${node.label}. ${node.summary}`);
@@ -108,16 +112,17 @@ export async function renderMandala(container, options = {}) {
     group.appendChild(caption);
 
     const onActivate = () => {
-      detail.innerHTML = `
-        <div class="mandala-detail-label">${labelForGroup(config, node.group)}</div>
-        <div class="mandala-detail-title">${node.label}</div>
-        <p>${node.summary}</p>
-      `;
+      setDetailContent(detail, labelForGroup(config, node.group), node.label, node.summary);
     };
 
     group.addEventListener('mouseenter', onActivate);
     group.addEventListener('focus', onActivate);
     group.addEventListener('click', onActivate);
+    group.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      onActivate();
+    });
     nodeLayer.appendChild(group);
   });
 
@@ -163,7 +168,7 @@ function labelForGroup(config, groupId) {
 function abbreviateLabel(label, compact) {
   if (!compact) return label;
   if (label.length <= 12) return label;
-  return `${label.slice(0, 10)}…`;
+  return `${label.slice(0, 10)}...`;
 }
 
 function expandFocus(relationships, focusIds) {
@@ -175,4 +180,24 @@ function expandFocus(relationships, focusIds) {
     }
   });
   return expanded;
+}
+
+function setDetailContent(container, label, title, summary = '') {
+  container.replaceChildren();
+
+  const labelEl = document.createElement('div');
+  labelEl.className = 'mandala-detail-label';
+  labelEl.textContent = label;
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'mandala-detail-title';
+  titleEl.textContent = title;
+
+  container.append(labelEl, titleEl);
+
+  if (summary) {
+    const summaryEl = document.createElement('p');
+    summaryEl.textContent = summary;
+    container.appendChild(summaryEl);
+  }
 }

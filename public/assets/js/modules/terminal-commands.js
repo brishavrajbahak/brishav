@@ -45,7 +45,7 @@ export function createCommandRegistry(deps) {
               type: 'text',
               lines: [
                 'Brishav Rajbahak',
-                'Signal: aspiring data analyst based in Kathmandu, Nepal.',
+                'Signal: data analyst and data science aspirant based in Kathmandu, Nepal.',
                 'Focus: SQL, Python, Power BI, reporting, and insight delivery.',
                 'Current arc: translating portfolio projects into business-facing analysis stories.',
               ],
@@ -64,7 +64,7 @@ export function createCommandRegistry(deps) {
                 'Financial Inclusion Gap Analysis',
                 '  Delivered: a clean gap-analysis framing, reporting structure, and a clearer decision path for inclusion monitoring.',
                 '  Business impact: sharpens which underserved groups should be prioritized first when access, trust, and reporting quality diverge.',
-                '  CTAs: View Project, GitHub, Open Demo.',
+                '  CTAs: View Project, GitHub.',
               ],
             };
           }

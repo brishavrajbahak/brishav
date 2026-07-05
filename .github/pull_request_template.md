@@ -1,14 +1,15 @@
 ## Merge Checklist
 
-- [ ] `npm ci`
-- [ ] `npm run lint`
-- [ ] `npm run build`
-- [ ] Preview deployment verified
-- [ ] Mobile Demo Mode verified
-- [ ] Pages Functions verified
-- [ ] Analytics verified
-- [ ] Contact / Turnstile verified
-- [ ] Bundles regenerated and committed
+- [ ] I ran `npm ci`
+- [ ] I ran `npm run lint`
+- [ ] I ran `npm run build`
+- [ ] I verified the Cloudflare Pages preview
+- [ ] I verified mobile Demo Mode
+- [ ] I verified Pages Functions
+- [ ] I verified analytics events
+- [ ] I verified contact / Turnstile on an allowed hostname
+- [ ] I rebuilt and committed the generated bundles
+- [ ] I did not stage or commit planning/spec markdown from the prep process
 
 ## Summary
 
@@ -23,9 +24,9 @@
 
 ## Known Limitations in V1
 
-- Demo-only playground
-- No uploads
-- No R2 / D1 / Workers AI / PDF export
+- The playground is still a curated demo, not an upload workflow.
+- This branch does not add uploads.
+- This branch does not add R2, D1, Workers AI, or PDF export.
 
 ## Validation Notes
 

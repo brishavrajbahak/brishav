@@ -55,55 +55,7 @@
       <canvas id="gpNeuralCanvas" width="240" height="140" style="width:100%;height:auto;display:block;"></canvas>
     </div>
 
-    <!-- --- PANEL 2 (bottom-center): Animated Live Line Chart --- -->
-    <div class="glass-panel" id="gpLineChart" style="
-      width: clamp(200px, 23vw, 310px);
-      bottom: 8vh; left: 0; right: 0; margin: 0 auto;
-      padding: 14px 16px 12px;
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">live_metrics</span>
-        <span id="gpLiveVal" style="margin-left:auto;font-family:var(--font-mono);font-size:9px;color:rgba(200,17,31,0.40)">—</span>
-      </div>
-      <canvas id="gpLineCanvas" width="260" height="80" style="width:100%;height:auto;display:block;"></canvas>
-      <div class="gp-legend" style="margin-top:6px">
-        <span><span class="gp-legend-line" style="background:rgba(200,17,31,0.40)"></span>Loss</span>
-        <span><span class="gp-legend-line" style="background:rgba(59,130,246,0.32);background-image:repeating-linear-gradient(90deg,rgba(59,130,246,0.32) 0,rgba(59,130,246,0.32) 4px,transparent 4px,transparent 6px)"></span>Acc</span>
-        <span><span class="gp-legend-line" style="background:rgba(200,146,10,0.45);background-image:repeating-linear-gradient(90deg,rgba(200,146,10,0.45) 0,rgba(200,146,10,0.45) 2px,transparent 2px,transparent 4px)"></span>F1</span>
-      </div>
-    </div>
-
-    <!-- --- PANEL 3 (mid-left): Hardware Telemetry --- -->
-    <div class="glass-panel" id="gpHardware" style="
-      width: clamp(160px, 19vw, 250px);
-      top: 48vh; left: clamp(1.5%, 3vw, 5%);
-      padding: 14px 16px 12px;
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">sys_telemetry</span>
-      </div>
-      <canvas id="gpHardwareCanvas" width="200" height="120" style="width:100%;height:auto;display:block;"></canvas>
-    </div>
-
-
-    <!-- --- PANEL 4 (top-left): Animated Donut / Data Distribution --- -->
-    <div class="glass-panel" id="gpDonut" style="
-      width: clamp(130px, 14vw, 180px);
-      top: 7vh; left: clamp(2%, 4vw, 6%);
-      padding: 14px 16px 12px;
-      background: rgba(255,184,107,0.03);
-      border-color: rgba(255,184,107,0.10);
-    ">
-      <div class="gp-header">
-        <span class="gp-dot gp-dot-green"></span>
-        <span class="gp-label">data_split</span>
-      </div>
-      <canvas id="gpDonutCanvas" width="130" height="120" style="width:100%;height:auto;display:block;"></canvas>
-    </div>
-
-    <!-- --- PANEL 5 (right-center): Animated Data Flow Pipeline --- -->
+    <!-- --- PANEL 2 (right-center): Animated Data Flow Pipeline --- -->
     <div class="glass-panel" id="gpPipeline" style="
       width: clamp(80px, 9vw, 120px);
       top: 32vh; right: clamp(1.5%, 2.5vw, 4%);
@@ -242,11 +194,11 @@
           <div id="mobileMandalaPreview" class="mobile-mandala-preview fade-up" aria-label="Reduced mandala preview"></div>
           <div class="hero-stats fade-up" aria-label="Stats">
             <div class="stat-item">
-              <span class="stat-number cyan">2</span>
+              <span class="stat-number accent">2</span>
               <span class="stat-label">Active Projects</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number pink">15+</span>
+              <span class="stat-number accent-strong">15+</span>
               <span class="stat-label">Practice Repositories</span>
             </div>
             <div class="stat-item">
@@ -328,7 +280,7 @@ class Net(nn.Module):
       </div>
       <div class="about-grid">
         <div class="about-body fade-up">
-          <p>I'm <strong>Brishav Rajbahak</strong> — an aspiring data analyst from <span class="pink">Kathmandu</span>, Nepal, building a strong foundation in analytics, reporting, and data science.</p>
+          <p>I'm <strong>Brishav Rajbahak</strong> — an aspiring data analyst from <span class="accent-strong">Kathmandu</span>, Nepal, building a strong foundation in analytics, reporting, and data science.</p>
           <p>My current focus is learning how to clean data, write better SQL, explore trends with Python, and present findings clearly through dashboards, charts, and structured analysis.</p>
           <p class="about-philosophy"><strong>Data Philosophy:</strong> clean structure before cleverness, useful signal before visual noise, and every model or chart should end with a decision someone can actually act on.</p>
           <p>This portfolio highlights the projects and practice work I am using to grow into data analyst, BI, and data science roles.</p>
@@ -359,7 +311,7 @@ class Net(nn.Module):
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">02</div>
         <div class="section-label" data-formula="P(A|B)=P(B|A)P(A)/P(B)">System.Ascent</div>
-        <h2 class="section-title">The <span style="color:var(--pink)">Summit</span> So Far</h2>
+        <h2 class="section-title">The <span style="color:var(--accent-strong)">Summit</span> So Far</h2>
       </div>
       <div class="peaks-showcase-wrapper fade-up">
         <div class="peaks-controller">
@@ -581,7 +533,7 @@ class Net(nn.Module):
           <div class="project-card-inner">
             <div class="project-banner">
               <div class="project-banner-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M4 19h16"/>
                   <path d="M6 16V9"/>
                   <path d="M12 16V5"/>
@@ -621,7 +573,7 @@ class Net(nn.Module):
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">05</div>
         <div class="section-label" data-formula="dsignal/dtime">System.Logs</div>
-        <h2 class="section-title">Insight <span style="color:var(--pink)">Logs</span></h2>
+        <h2 class="section-title">Insight <span style="color:var(--accent-strong)">Logs</span></h2>
       </div>
       <div class="insight-log-grid">
         <article class="insight-log-card fade-up">
@@ -655,7 +607,7 @@ class Net(nn.Module):
       <div class="section-header fade-up">
         <div class="section-number" aria-hidden="true">05</div>
         <div class="section-label" data-formula="H=-sum(p*log(p))">System.Logs</div>
-        <h2 class="section-title">Word on the <span style="color:var(--pink)">Grid</span></h2>
+        <h2 class="section-title">Word on the <span style="color:var(--accent-strong)">Grid</span></h2>
       </div>
       <div class="testimonials-carousel fade-up">
         <div class="testimonial-slide">
@@ -861,6 +813,7 @@ class Net(nn.Module):
   <script src="assets/js/contact-client.js?v=2" defer></script>
 </body>
 </html>
+
 
 
 

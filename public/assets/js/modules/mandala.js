@@ -1,8 +1,8 @@
-let cachedConfig;
+﻿let cachedConfig;
 
 const GROUP_COLORS = {
   core: 'var(--accent)',
-  skills: 'var(--pink)',
+  skills: 'var(--accent-strong)',
   tools: 'var(--violet)',
   domains: 'var(--text)',
 };
@@ -201,3 +201,4 @@ function setDetailContent(container, label, title, summary = '') {
     container.appendChild(summaryEl);
   }
 }
+

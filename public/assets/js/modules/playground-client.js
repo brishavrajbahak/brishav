@@ -1,4 +1,4 @@
-import { renderMandala } from './mandala.js';
+﻿import { renderMandala } from './mandala.js';
 
 export function createPlaygroundClient({ analytics, mobile = false } = {}) {
   const state = {
@@ -339,7 +339,7 @@ function renderSimpleChart(chart, kind) {
       circle.setAttribute('cx', String(point.x));
       circle.setAttribute('cy', String(point.y));
       circle.setAttribute('r', '4');
-      circle.setAttribute('fill', 'var(--pink)');
+      circle.setAttribute('fill', 'var(--accent-strong)');
       svg.appendChild(circle);
 
       const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -364,7 +364,7 @@ function renderSimpleChart(chart, kind) {
       rect.setAttribute('width', String(barWidth));
       rect.setAttribute('height', String(height));
       rect.setAttribute('rx', '12');
-      rect.setAttribute('fill', index % 2 === 0 ? 'var(--accent)' : 'var(--pink)');
+      rect.setAttribute('fill', index % 2 === 0 ? 'var(--accent)' : 'var(--accent-strong)');
       rect.setAttribute('fill-opacity', '0.82');
       svg.appendChild(rect);
 
@@ -415,3 +415,4 @@ function getFocusable(root) {
   return [...root.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
     .filter(element => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true');
 }
+

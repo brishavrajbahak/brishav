@@ -52,7 +52,7 @@
 
     // Palette from the site's CSS tokens
     const CR = [200,17,31],  // crimson (--accent)
-          AM = [200,146,10], // amber   (--pink)
+          AM = [200,146,10], // amber   (--accent-strong)
           BL = [59,130,246]; // blue    (--violet)
     const r = (c,a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
@@ -1583,12 +1583,12 @@
       
       // Resolve dynamic theme colors from document variables (fixes static gold radar bug)
       const rootStyle = getComputedStyle(document.documentElement);
-      const cyanColor = rootStyle.getPropertyValue('--accent').trim() || '#ffb703';
-      const pinkColor = rootStyle.getPropertyValue('--pink').trim() || '#fb8500';
+      const accentColor = rootStyle.getPropertyValue('--accent').trim() || '#ffb703';
+      const strongAccentColor = rootStyle.getPropertyValue('--accent-strong').trim() || '#fb8500';
       
-      const gridColor = cyanColor.startsWith('#') ? cyanColor + '1a' : 'rgba(255, 183, 3, 0.1)';
-      const dataFill  = pinkColor.startsWith('#') ? pinkColor + '33' : 'rgba(251, 133, 0, 0.2)';
-      const dataStroke = pinkColor.startsWith('#') ? pinkColor + 'cc' : 'rgba(251, 133, 0, 0.8)';
+      const gridColor = accentColor.startsWith('#') ? accentColor + '1a' : 'rgba(255, 183, 3, 0.1)';
+      const dataFill  = strongAccentColor.startsWith('#') ? strongAccentColor + '33' : 'rgba(251, 133, 0, 0.2)';
+      const dataStroke = strongAccentColor.startsWith('#') ? strongAccentColor + 'cc' : 'rgba(251, 133, 0, 0.8)';
       
       function drawPolygon(r, fillStyle, strokeStyle, lineWidth) {
         ctx.beginPath();
@@ -1703,7 +1703,7 @@
         
         const rootStyle = getComputedStyle(document.documentElement);
         const color = rootStyle.getPropertyValue('--accent').trim() || '#e63946';
-        const pink = rootStyle.getPropertyValue('--pink').trim() || '#ff0080';
+        const strongAccent = rootStyle.getPropertyValue('--accent-strong').trim() || '#ff0080';
         
         const cx = 16, cy = 16;
         const t = frame * 0.04;
@@ -1731,8 +1731,8 @@
         
         // Inner contrast ring
         ctx.lineWidth = 1.0;
-        ctx.strokeStyle = pink;
-        ctx.shadowColor = pink;
+        ctx.strokeStyle = strongAccent;
+        ctx.shadowColor = strongAccent;
         ctx.shadowBlur = 2;
         drawHex(cx, cy, 12.5, -t * 0.05);
         ctx.stroke();
@@ -1751,7 +1751,7 @@
             const gy = cy + p.radius * Math.sin(ga);
             ctx.beginPath();
             ctx.arc(gx, gy, p.size * 0.6, 0, Math.PI * 2);
-            ctx.fillStyle = i === 1 ? pink : color;
+            ctx.fillStyle = i === 1 ? strongAccent : color;
             ctx.globalAlpha = 0.15 * (3 - g);
             ctx.fill();
           }
@@ -1760,8 +1760,8 @@
           ctx.globalAlpha = 0.95;
           ctx.beginPath();
           ctx.arc(px, py, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = i === 1 ? pink : color;
-          ctx.shadowColor = i === 1 ? pink : color;
+          ctx.fillStyle = i === 1 ? strongAccent : color;
+          ctx.shadowColor = i === 1 ? strongAccent : color;
           ctx.shadowBlur = 3;
           ctx.fill();
         });
@@ -1871,8 +1871,8 @@
 
         // Get colors dynamically
         const styles = getComputedStyle(document.documentElement);
-        const cyan = styles.getPropertyValue('--accent').trim() || '#e63946';
-        const pink = styles.getPropertyValue('--pink').trim() || '#ff0080';
+        const accent = styles.getPropertyValue('--accent').trim() || '#e63946';
+        const strongAccent = styles.getPropertyValue('--accent-strong').trim() || '#ff0080';
 
         // Nodes coordinates inside 160x160 canvas
         const inputs = [
@@ -1893,7 +1893,7 @@
           ctx.lineWidth = 1;
           inputs.forEach(inp => {
             hiddens.forEach(hid => {
-              ctx.strokeStyle = hexToRgba(cyan, 0.12);
+              ctx.strokeStyle = hexToRgba(accent, 0.12);
               ctx.beginPath();
               ctx.moveTo(inp.x, inp.y);
               ctx.lineTo(hid.x, hid.y);
@@ -1901,7 +1901,7 @@
             });
           });
           hiddens.forEach(hid => {
-            ctx.strokeStyle = hexToRgba(pink, 0.12);
+            ctx.strokeStyle = hexToRgba(strongAccent, 0.12);
             ctx.beginPath();
             ctx.moveTo(hid.x, hid.y);
             ctx.lineTo(output.x, output.y);
@@ -1910,7 +1910,7 @@
           [...inputs, ...hiddens, output].forEach((node, i) => {
             ctx.beginPath();
             ctx.arc(node.x, node.y, i === inputs.length + hiddens.length ? 5 : 4, 0, Math.PI * 2);
-            ctx.fillStyle = i === inputs.length + hiddens.length ? pink : cyan;
+            ctx.fillStyle = i === inputs.length + hiddens.length ? strongAccent : accent;
             ctx.fill();
           });
           return { setSpeed: () => {}, stop: () => {} };
@@ -1951,7 +1951,7 @@
           // Inputs to hiddens
           inputs.forEach(inp => {
             hiddens.forEach(hid => {
-              ctx.strokeStyle = hexToRgba(cyan, 0.12);
+              ctx.strokeStyle = hexToRgba(accent, 0.12);
               ctx.beginPath();
               ctx.moveTo(inp.x, inp.y);
               ctx.lineTo(hid.x, hid.y);
@@ -1961,7 +1961,7 @@
 
           // Hiddens to output
           hiddens.forEach(hid => {
-            ctx.strokeStyle = hexToRgba(pink, 0.12);
+            ctx.strokeStyle = hexToRgba(strongAccent, 0.12);
             ctx.beginPath();
             ctx.moveTo(hid.x, hid.y);
             ctx.lineTo(output.x, output.y);
@@ -1979,7 +1979,7 @@
 
             ctx.beginPath();
             ctx.arc(px, py, 2.2, 0, Math.PI * 2);
-            ctx.fillStyle = p.type === 'input-to-hidden' ? cyan : pink;
+            ctx.fillStyle = p.type === 'input-to-hidden' ? accent : strongAccent;
             ctx.shadowColor = ctx.fillStyle;
             ctx.shadowBlur = 4;
             ctx.fill();
@@ -2015,10 +2015,10 @@
             inp.pulse *= 0.9;
             ctx.beginPath();
             ctx.arc(inp.x, inp.y, 4 + inp.pulse * 2, 0, Math.PI * 2);
-            ctx.fillStyle = cyan;
+            ctx.fillStyle = accent;
             ctx.fill();
             if (inp.pulse > 0.05) {
-              ctx.strokeStyle = hexToRgba(cyan, inp.pulse);
+              ctx.strokeStyle = hexToRgba(accent, inp.pulse);
               ctx.lineWidth = 1.5;
               ctx.stroke();
             }
@@ -2030,16 +2030,16 @@
             const size = 5 + hid.pulse * 3;
             ctx.beginPath();
             ctx.arc(hid.x, hid.y, size, 0, Math.PI * 2);
-            ctx.fillStyle = hexToRgba(cyan, 0.4);
+            ctx.fillStyle = hexToRgba(accent, 0.4);
             ctx.fill();
             
             ctx.beginPath();
             ctx.arc(hid.x, hid.y, 3, 0, Math.PI * 2);
-            ctx.fillStyle = cyan;
+            ctx.fillStyle = accent;
             ctx.fill();
             
             if (hid.pulse > 0.05) {
-              ctx.strokeStyle = hexToRgba(cyan, hid.pulse);
+              ctx.strokeStyle = hexToRgba(accent, hid.pulse);
               ctx.lineWidth = 1.5;
               ctx.stroke();
             }
@@ -2050,12 +2050,12 @@
           const outSize = 6 + output.pulse * 4 + 1.2 * Math.sin(time * 3);
           ctx.beginPath();
           ctx.arc(output.x, output.y, outSize, 0, Math.PI * 2);
-          ctx.fillStyle = hexToRgba(pink, 0.3 + output.pulse * 0.3);
+            ctx.fillStyle = hexToRgba(strongAccent, 0.3 + output.pulse * 0.3);
           ctx.fill();
 
           ctx.beginPath();
           ctx.arc(output.x, output.y, 4, 0, Math.PI * 2);
-          ctx.fillStyle = pink;
+          ctx.fillStyle = strongAccent;
           ctx.fill();
           
           ctx.strokeStyle = '#ffffff';
@@ -2063,7 +2063,7 @@
           ctx.stroke();
 
           if (output.pulse > 0.05) {
-            ctx.strokeStyle = hexToRgba(pink, output.pulse);
+            ctx.strokeStyle = hexToRgba(strongAccent, output.pulse);
             ctx.lineWidth = 2;
             ctx.stroke();
           }
@@ -2092,7 +2092,7 @@
         await addLine('<span class="r-ok">?</span> <span class="r-label">Access level: </span><span class="r-value">FULL DOSSIER</span>', 700);
         await addLine('', 200);
         await addLine('<span class="r-accent">------------------------------</span>', 100);
-        await addLine('<span class="r-pink">? CANDIDATE PROFILE SCAN</span>', 400);
+        await addLine('<span class="r-strong">? CANDIDATE PROFILE SCAN</span>', 400);
         await addLine('<span class="r-accent">------------------------------</span>', 100);
         await addLine('', 150);
         
@@ -2243,7 +2243,7 @@
           company: 'Independent Practice · Remote',
           desc: 'Working through hands-on case studies in data cleaning, querying, visualization, and predictive analysis.',
           skills: ['SQL', 'Pandas', 'Scikit-Learn', 'EDA', 'Dashboards', 'Reporting'],
-          borderColor: 'var(--pink)'
+          borderColor: 'var(--accent-strong)'
         },
         3: {
           tag: '? BASE CAMP',
@@ -2401,175 +2401,7 @@
       requestAnimationFrame(draw);
     }
 
-    /* -- PANEL 2: Live Scrolling Line Chart -- */
-    function initLineChart() {
-      const canvas = document.getElementById('gpLineCanvas');
-      const valEl  = document.getElementById('gpLiveVal');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      const pts = 55;
-      const loss=[],acc=[],f1=[];
-      for(let i=0;i<pts;i++){
-        const b=(pts-i)/pts;
-        loss.push(.08+b*.72+(Math.random()-.5)*.06);
-        acc.push(.55+(1-b)*.38+(Math.random()-.5)*.04);
-        f1.push(acc[acc.length-1]-0.05+(Math.random()-.5)*.02);
-      }
-      function drawLine(data,color,dashArr){
-        ctx.beginPath();
-        ctx.setLineDash(dashArr);
-        data.forEach((v,i)=>{
-          const x=(i/(pts-1))*w, y=h*(1-v)*.88+h*.06;
-          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-        });
-        ctx.strokeStyle=color; ctx.lineWidth=1.2; ctx.stroke();
-        ctx.setLineDash([]);
-      }
-      let last=0;
-      let lastDraw=0;
-      function draw(ts){
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        if(ts-last>90){ last=ts;
-          loss.push(Math.max(.04,loss[loss.length-1]+(Math.random()-.52)*.018)); loss.shift();
-          acc.push(Math.min(.97,acc[acc.length-1]+(Math.random()-.46)*.012));   acc.shift();
-          f1.push(Math.min(.95,acc[acc.length-1]-0.03+(Math.random()-.5)*.015)); f1.shift();
-          ctx.clearRect(0,0,w,h);
-          [.25,.5,.75].forEach(v=>{
-            const y=h*(1-v)*.88+h*.06;
-            ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y);
-            ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=.5; ctx.stroke();
-          });
-          drawLine(loss,'rgba(200,17,31,0.35)',[]);
-          drawLine(acc,'rgba(59,130,246,0.28)',[4,4]);
-          drawLine(f1,'rgba(200,146,10,0.45)',[2,2]);
-          if(valEl) valEl.textContent=(acc[acc.length-1]*100).toFixed(1)+'%';
-        }
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-    /* -- PANEL 3: Hardware Telemetry (Bar Chart) -- */
-    function initHardware() {
-      const canvas = document.getElementById('gpHardwareCanvas');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      
-      const bars = [
-        { label: 'GPU-0', val: 0.8, nxt: 0.8, color: 'rgba(200,17,31,' },
-        { label: 'GPU-1', val: 0.6, nxt: 0.6, color: 'rgba(200,17,31,' },
-        { label: 'MEM-0', val: 0.4, nxt: 0.4, color: 'rgba(200,146,10,' },
-        { label: 'MEM-1', val: 0.3, nxt: 0.3, color: 'rgba(200,146,10,' },
-        { label: 'CPU',   val: 0.2, nxt: 0.2, color: 'rgba(59,130,246,' }
-      ];
-      
-      let last = 0;
-      let lastDraw = 0;
-      function draw(ts) {
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        if(ts-last>150){ 
-          last=ts;
-          bars.forEach(b => {
-            b.nxt = Math.max(0.1, Math.min(0.95, b.nxt + (Math.random() - 0.5) * 0.35));
-          });
-        }
-        
-        ctx.clearRect(0,0,w,h);
-        
-        const bw = (w - 20) / bars.length;
-        bars.forEach((b, i) => {
-          b.val += (b.nxt - b.val) * 0.15; // smooth interpolation
-          const bh = b.val * (h - 25);
-          const x = 10 + i * bw + bw*0.15;
-          const barW = bw * 0.7;
-          
-          // Background track
-          ctx.fillStyle = 'rgba(0,0,0,0.03)';
-          ctx.fillRect(x, 5, barW, h - 30);
-          
-          // Fill
-          ctx.fillStyle = b.color + '0.45)';
-          ctx.fillRect(x, h - 25 - bh, barW, bh);
-          
-          // Label
-          ctx.fillStyle = 'rgba(0,0,0,0.5)';
-          ctx.font = 'bold 7px monospace';
-          ctx.textAlign = 'center';
-          ctx.fillText(b.label, x + barW/2, h - 5);
-          
-          // Value
-          ctx.fillText(Math.floor(b.val * 100) + '%', x + barW/2, h - 25 - bh - 3);
-        });
-        
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-
-    /* -- PANEL 4: Rotating Donut -- */
-    function initDonut() {
-      const canvas = document.getElementById('gpDonutCanvas');
-      if (!canvas) return;
-      const {ctx,w,h} = setupCanvas(canvas);
-      const cx=w/2, cy=h/2-4, oR=Math.min(w,h)*.38, iR=oR*.54;
-      const slices=[
-        {label:'Train',c:'rgba(200,17,31,',cur:.70,nxt:.70},
-        {label:'Val',  c:'rgba(200,146,10,',cur:.15,nxt:.15},
-        {label:'Test', c:'rgba(59,130,246,', cur:.15,nxt:.15},
-      ];
-      let rot=-Math.PI/2, mt=0;
-      let lastDraw = 0;
-
-      function draw(ts){
-        if (ts - lastDraw < panelFrameInterval) {
-          requestAnimationFrame(draw);
-          return;
-        }
-        lastDraw = ts;
-        ctx.clearRect(0,0,w,h);
-        rot+=.002; mt=Math.min(1,mt+.004);
-        if(mt>=1){ mt=0; slices.forEach((s,i)=>s.cur=s.nxt);
-          const r1=.55+Math.random()*.20, r2=(1-r1)*(.4+Math.random()*.3);
-          slices[0].nxt=r1; slices[1].nxt=r2; slices[2].nxt=1-r1-r2;
-        }
-        const vals=slices.map(s=>lerp(s.cur,s.nxt,ease(mt)));
-        const total=vals.reduce((a,b)=>a+b,0);
-        let sa=rot;
-        slices.forEach((s,i)=>{
-          const sw=(vals[i]/total)*Math.PI*2;
-          ctx.beginPath(); ctx.moveTo(cx,cy);
-          ctx.arc(cx,cy,oR,sa,sa+sw);
-          ctx.arc(cx,cy,iR,sa+sw,sa,true); ctx.closePath();
-          ctx.fillStyle=s.c+'0.22)'; ctx.strokeStyle=s.c+'0.38)'; ctx.lineWidth=.7;
-          ctx.fill(); ctx.stroke(); sa+=sw;
-        });
-        ctx.font='bold 10px monospace'; ctx.textAlign='center';
-        ctx.fillStyle='rgba(0,0,0,0.26)'; ctx.fillText('DATA',cx,cy+2);
-        ctx.font='7px monospace'; ctx.fillStyle='rgba(0,0,0,0.16)';
-        ctx.fillText('SPLIT',cx,cy+12);
-        // legend
-        const ly=h-13;
-        slices.forEach((s,i)=>{
-          const lx=10+i*(w/3);
-          ctx.fillStyle=s.c+'0.42)'; ctx.fillRect(lx,ly,7,4);
-          ctx.font='7px monospace'; ctx.textAlign='left';
-          ctx.fillStyle='rgba(0,0,0,0.22)'; ctx.fillText(s.label,lx+9,ly+4);
-        });
-        requestAnimationFrame(draw);
-      }
-      requestAnimationFrame(draw);
-    }
-
-    /* -- PANEL 5: Data Pipeline Flow -- */
+    /* -- PANEL 2: Data Pipeline Flow -- */
     function initPipeline() {
       const canvas = document.getElementById('gpPipelineCanvas');
       if (!canvas) return;
@@ -2670,7 +2502,7 @@
     }
 
     function startAllAnimations(){
-      initNeural(); initLineChart(); initHardware(); initDonut(); initPipeline(); initCoordinateTrackers();
+      initNeural(); initPipeline(); initCoordinateTrackers();
     }
 
     /* -- Scroll Parallax -- */
@@ -2692,5 +2524,6 @@
     }
   })();
   
+
 
 

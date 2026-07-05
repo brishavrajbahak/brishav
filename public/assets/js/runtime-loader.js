@@ -2,6 +2,7 @@
   const root = document.documentElement;
   const mobile = root.classList.contains('mobile-mode');
 
+  installScrollLock();
   wireProfileImageFallback();
 
   if (mobile) {
@@ -30,6 +31,44 @@
 
   lazyLoadHighlight();
 })();
+
+function installScrollLock() {
+  if (window.__scrollLock) return;
+
+  const owners = new Set();
+  let lockedY = 0;
+
+  window.__scrollLock = {
+    lock(owner = 'default') {
+      owners.add(owner);
+      if (owners.size > 1) return;
+
+      lockedY = window.scrollY || window.pageYOffset || 0;
+      document.documentElement.classList.add('scroll-locked');
+      document.body.classList.add('scroll-locked');
+      document.body.style.top = `-${lockedY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    },
+    unlock(owner = 'default') {
+      owners.delete(owner);
+      if (owners.size) return;
+
+      document.documentElement.classList.remove('scroll-locked');
+      document.body.classList.remove('scroll-locked');
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, lockedY);
+    },
+    clear() {
+      owners.clear();
+      this.unlock('__force__');
+    },
+  };
+}
 
 function revealMobilePage() {
   document.getElementById('loading-screen')?.classList.add('hidden');

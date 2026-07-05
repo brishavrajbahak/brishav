@@ -947,17 +947,21 @@
         }
       }, stepInterval);
     }
+    const scrollLock = window.__scrollLock;
+    const closeMobileNav = () => {
+      mobileNav.classList.remove('open');
+      if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.remove('open');
+      hamburgerBtn.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      scrollLock?.unlock('mobile-nav');
+    };
     /* -- Nav Actions (Smooth Scroll & Close mobile nav) -- */
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
         const target = document.querySelector(a.getAttribute('href'));
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        mobileNav.classList.remove('open');
-        if (typeof mobileNavBackdrop !== 'undefined') mobileNavBackdrop.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        closeMobileNav();
       });
     });
     /* -- Mobile Hamburger Toggle -- */
@@ -969,14 +973,16 @@
       mobileNavBackdrop.classList.toggle('open', isOpen);
       hamburgerBtn.classList.toggle('open', isOpen);
       hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+      if (isOpen) {
+        scrollLock?.lock('mobile-nav');
+      } else {
+        scrollLock?.unlock('mobile-nav');
+      }
     });
     // Close mobile drawer on outside click
     document.addEventListener('click', e => {
       if (!hamburgerBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-        mobileNav.classList.remove('open');
-        mobileNavBackdrop.classList.remove('open');
-        hamburgerBtn.classList.remove('open');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        closeMobileNav();
       }
     });
     /* -- Syntax Highlighting Initialization (Deferred) -- */
@@ -2207,6 +2213,7 @@
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           overlay.classList.add('active');
+          scrollLock?.lock('resume-dossier');
           runSequence();
         });
       });
@@ -2214,11 +2221,13 @@
       // Close modal
       closeBtn.addEventListener('click', () => {
         overlay.classList.remove('active');
+        scrollLock?.unlock('resume-dossier');
         if (nnVisualizer && nnVisualizer.stop) nnVisualizer.stop();
       });
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
           overlay.classList.remove('active');
+          scrollLock?.unlock('resume-dossier');
           if (nnVisualizer && nnVisualizer.stop) nnVisualizer.stop();
         }
       });

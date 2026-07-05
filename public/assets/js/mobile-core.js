@@ -17,6 +17,7 @@
   const mobileNav = document.getElementById('mobileNav');
   const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
   const hamburger = document.getElementById('hamburgerBtn');
+  const scrollLock = window.__scrollLock;
   const backToTop = document.getElementById('back-to-top');
   const scrollProgress = document.getElementById('scroll-progress');
   const scrollIndicator = document.getElementById('scrollIndicator');
@@ -61,6 +62,7 @@
     mobileNavBackdrop?.classList.remove('open');
     hamburger?.classList.remove('open');
     hamburger?.setAttribute('aria-expanded', 'false');
+    scrollLock?.unlock('mobile-nav');
   }
 
   hamburger?.addEventListener('click', () => {
@@ -68,6 +70,11 @@
     mobileNavBackdrop?.classList.toggle('open', open);
     hamburger.classList.toggle('open', open);
     hamburger.setAttribute('aria-expanded', String(open));
+    if (open) {
+      scrollLock?.lock('mobile-nav');
+    } else {
+      scrollLock?.unlock('mobile-nav');
+    }
   });
   mobileNavBackdrop?.addEventListener('click', closeMobileNav);
 

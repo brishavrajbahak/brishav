@@ -20,6 +20,7 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
   const mandalaHost = document.getElementById('playgroundMandala');
   const exportBtn = document.getElementById('playgroundExportCsv');
   const modeButtons = Array.from(document.querySelectorAll('[data-analysis-mode]'));
+  const scrollLock = window.__scrollLock;
 
   let lastFocus = null;
 
@@ -202,6 +203,7 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
+    scrollLock?.lock('playground-modal');
     analytics?.trackEvent('playground_open', { source, mode: mobile ? 'mobile' : 'desktop' });
 
     if (datasetId) {
@@ -221,6 +223,7 @@ export function createPlaygroundClient({ analytics, mobile = false } = {}) {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
+    scrollLock?.unlock('playground-modal');
     lastFocus?.focus?.();
   }
 

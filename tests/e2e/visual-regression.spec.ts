@@ -21,7 +21,7 @@ const checkpoints = [
 ];
 
 for (const viewport of viewports) {
-  test(`light observatory visual baseline — ${viewport.name}`, async ({ page }, testInfo) => {
+  test(`cinematic observatory visual baseline — ${viewport.name}`, async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "desktop", "Visual baselines run once in desktop Chromium.");
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -41,7 +41,8 @@ for (const viewport of viewports) {
     await page.route("**/api/v1/analytics/event", (route) =>
       route.fulfill({ status: 202, contentType: "application/json", body: JSON.stringify({ ok: true }) })
     );
-    await page.goto("/");
+    await page.addInitScript(() => sessionStorage.setItem("br-observatory-intro-v3", "complete"));
+    await page.goto("/?experience=static");
     await page.evaluate(async () => {
       await Promise.all([
         document.fonts.load('400 16px "Manrope"'),
@@ -49,7 +50,7 @@ for (const viewport of viewports) {
       ]);
       await document.fonts.ready;
     });
-    await expect(page.locator(".site-shell")).toHaveClass(/quality-poster/);
+    await expect(page.locator(".v3-site")).toHaveClass(/experience-static/);
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = "auto";
     });
@@ -57,8 +58,8 @@ for (const viewport of viewports) {
     for (const checkpoint of checkpoints) {
       const section = page.locator(checkpoint.selector);
       await section.evaluate((element) => element.scrollIntoView({ block: "start" }));
-      if (checkpoint.name === "projects") await page.locator('[data-project-card="loan-default-analysis"]').waitFor({ state: "visible" });
-      if (checkpoint.name === "laboratory") await page.locator(".metric-grid").waitFor({ state: "visible" });
+      if (checkpoint.name === "projects") await page.locator(".v3-project-card").first().waitFor({ state: "visible" });
+      if (checkpoint.name === "laboratory") await page.locator(".v3-analysis-panel").waitFor({ state: "visible" });
       await expect(section).toBeVisible();
       await expect(page).toHaveScreenshot(`observatory-${viewport.name}-${checkpoint.name}.png`, {
         maxDiffPixelRatio: 0.015

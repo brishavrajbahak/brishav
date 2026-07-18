@@ -14,6 +14,13 @@ export function useAdaptiveQuality(): SceneQuality {
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const recalculate = () => {
+      const localOverride = /^(?:localhost|127\.0\.0\.1)$/.test(window.location.hostname)
+        ? new URLSearchParams(window.location.search).get("experience")
+        : null;
+      if (localOverride === "full" || localOverride === "balanced" || localOverride === "static") {
+        setQuality(localOverride === "balanced" ? "medium" : localOverride === "static" ? "poster" : "full");
+        return;
+      }
       const nav = navigator as NavigatorWithHints;
       const width = window.innerWidth;
       const saveData = Boolean(nav.connection?.saveData);

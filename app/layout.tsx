@@ -1,21 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { siteConfig } from "@/lib/content";
 import "./globals.css";
+import "./cinematic-v3.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
+const manrope = localFont({
+  src: "./fonts/manrope-latin.woff2",
   variable: "--font-manrope",
-  display: "swap",
-  preload: false
+  display: "optional",
+  preload: true,
+  weight: "200 800",
+  adjustFontFallback: "Arial"
 });
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
+const cormorant = localFont({
+  src: "./fonts/cormorant-garamond-latin.woff2",
   variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  preload: false
+  display: "optional",
+  preload: true,
+  weight: "400 700",
+  adjustFontFallback: "Times New Roman"
 });
 
 const isPreview = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT === "1";
@@ -35,13 +39,18 @@ export const metadata: Metadata = {
     url: siteConfig.canonicalUrl,
     siteName: siteConfig.name,
     type: "website",
-    images: [{ url: "/Brishav.jpg", width: 1200, height: 1200, alt: "Brishav Rajbahak" }]
+    images: [{
+      url: "/assets/cinematic/summit-dawn-1672.webp",
+      width: 1672,
+      height: 941,
+      alt: "Brishav Rajbahak's Himalayan Data Observatory"
+    }]
   },
   twitter: {
     card: "summary_large_image",
     title: "Brishav Rajbahak — Himalayan Data Observatory",
     description: siteConfig.headline,
-    images: ["/Brishav.jpg"]
+    images: ["/assets/cinematic/summit-dawn-1672.webp"]
   }
 };
 

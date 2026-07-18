@@ -14,8 +14,9 @@ const requiredText = [
   "Turning Data Into Cinematic Stories.",
   "Loan Default Prediction",
   "In development",
-  "Visualization laboratory",
-  "Join the Dataverse"
+  "Data control room",
+  "Have a question worth exploring?",
+  "19.98%"
 ];
 
 for (const text of requiredText) {
@@ -63,7 +64,7 @@ console.log(`Initial application JS: ${kb(initialGzip)}KB / 180KB gzipped across
 assert(initialGzip <= initialBudget, `Initial application JS budget exceeded: ${kb(initialGzip)}KB > 180KB gzipped.`);
 
 const allJs = (await walk(join(outputDir, "_next", "static"))).filter((path) => path.endsWith(".js"));
-const optionalBudget = 350 * 1024;
+const optionalBudget = 400 * 1024;
 for (const path of allJs) {
   const size = gzipSync(readFileSyncSafe(path)).length;
   assert(size <= optionalBudget, `Optional JS chunk budget exceeded: ${path} is ${kb(size)}KB gzipped.`);

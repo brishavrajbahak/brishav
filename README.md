@@ -1,206 +1,101 @@
-# Brishav Rajbahak Portfolio
+# Himalayan Data Observatory
 
-This is my portfolio site for [brishavrajbahak.com.np](https://brishavrajbahak.com.np).
+Brishav Rajbahak's production portfolio is a light-theme, cinematic data experience built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Motion, D3, Chart.js, and React Three Fiber.
 
-I built it to present myself as a `Data Analyst` and `Data Science Aspirant` without hiding behind generic portfolio templates. The desktop experience leans into an interactive terminal and a signal mandala because those two pieces communicate how I think: structured inputs, deliberate exploration, and visible relationships between tools, domains, and outcomes.
+The site is statically exported to `out/` for Cloudflare Pages. The existing Pages Functions and Durable Object worker remain responsible for the playground, contact form, analytics, Turnstile verification, email delivery, and rate limiting.
 
-I kept the mobile path intentionally lighter. On mobile I care more about clarity, speed, and a clean project/storytelling path than about preserving every desktop effect.
+## Requirements
 
-## What is in Advanced V1
+- Node.js 20.9 or newer (`.nvmrc` uses Node 22)
+- npm
 
-Advanced V1 adds three things on top of the earlier portfolio baseline:
+## Install and run
 
-- a desktop terminal driven by a command registry
-- an SVG mandala that maps skills, tools, and domains
-- a curated demo playground with fixed datasets
+Install dependencies once after cloning, or whenever `package-lock.json` changes:
 
-The playground is intentionally demo-only. I chose fixed datasets because I wanted deterministic outputs that I can explain end to end in an interview. I did not want fake "AI analysis" theater or a black-box upload flow I could not defend.
+```powershell
+npm.cmd ci
+```
 
-## Current feature set
+For frontend development with hot reload:
 
-- desktop terminal with commands like `help`, `whoami --deep`, `projects --detail`, `mandala`, and `analyze loan-risk`
-- mobile Demo Mode card that opens the same curated playground without the terminal layer
-- mandala rendering in the skills section, terminal, and playground
-- three built-in demo datasets:
-  - Tourism
-  - Loan Risk
-  - Remittance
-- contact form protected by Turnstile
-- Cloudflare Pages Functions backend
-- Resend email delivery
-- Durable Object-backed contact rate limiting
-- optional Cloudflare Web Analytics event tracking
+```powershell
+npm.cmd run dev
+```
 
-## Why the playground is fixed
+Open `http://localhost:3000`. You do not need to rebuild after every edit; the development server recompiles automatically.
 
-The datasets are fixed on purpose.
+For the production-style integrated preview, including Pages Functions and the local rate-limiter worker:
 
-- I can explain every field and every output.
-- The API surface stays narrow and easier to harden.
-- The charts and summary text stay deterministic.
-- The UI stays honest about being a curated demo rather than a live model.
+```powershell
+npm.cmd run build
+npm.cmd run start
+```
 
-That tradeoff is worth it for this version.
+Open `http://127.0.0.1:8788`. Build again only after source changes when using this production preview.
 
-## Project structure
+## Environment
+
+Copy the example files when testing integrations locally:
+
+```powershell
+Copy-Item .env.example .env.local
+Copy-Item .dev.vars.example .dev.vars
+```
+
+Public frontend values:
+
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+- `NEXT_PUBLIC_API_BASE` (optional; same-origin is the default)
+- `NEXT_PUBLIC_RESUME_URL` (optional; the resume action stays hidden when unset)
+
+Provider secrets such as `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belong in `.dev.vars` locally or Cloudflare secrets in production. Never expose them through `NEXT_PUBLIC_*` variables.
+
+## Verification
+
+```powershell
+npm.cmd run verify
+npm.cmd run test:e2e
+npm.cmd run lighthouse:mobile
+npm.cmd run lighthouse:desktop
+```
+
+`verify` runs ESLint, TypeScript, unit tests, the static production export, bundle/CSP validation, and Pages Functions compilation.
+
+## Architecture
 
 ```text
-.
-|-- public/
-|   |-- assets/
-|   |   |-- css/
-|   |   |-- data/
-|   |   |   |-- demo/
-|   |   |   `-- mandala-config.json
-|   |   `-- js/
-|   |       |-- modules/
-|   |       |-- advanced.js
-|   |       |-- mobile-advanced.js
-|   |       `-- build-meta.js
-|   |-- index.html
-|   `-- _headers
-|-- functions/
-|   |-- api/v1/
-|   |   |-- analytics/
-|   |   |-- contact.js
-|   |   `-- playground/
-|   `-- lib/
-|-- workers/
-|-- docs/
-|-- build.js
-|-- package.json
-`-- wrangler.toml
+app/                    Next.js App Router entry and design system
+components/             Accessible sections, charts, forms, and 3D views
+lib/                    Typed content, API normalization, motion, and analysis
+public/assets/data/     Curated deterministic demo datasets
+functions/api/v1/       Existing Cloudflare Pages API contracts
+workers/                Existing Durable Object rate limiter
+scripts/                CSP, bundle, and integrated-preview tooling
+tests/                  Unit, component, browser, accessibility, and visual tests
+out/                    Generated static Cloudflare Pages output
 ```
 
-## Local development
-
-### Requirements
-
-- Node.js 22+
-- `npx` for Wrangler commands
-- a Cloudflare account if I want to test Pages Functions, Turnstile, or preview deploys
-
-Install dependencies:
-
-```bash
-npm ci
-```
-
-Create local secrets:
-
-```bash
-cp .dev.vars.example .dev.vars
-```
-
-Run the Durable Object worker in one terminal:
-
-```bash
-npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
-```
-
-Run the site in another terminal:
-
-```bash
-npm run dev
-```
-
-That rebuilds the advanced bundles and serves the site locally through Wrangler Pages.
-
-## Build scripts
-
-```bash
-npm run build
-npm run lint
-npm run preview
-npm run premerge
-```
-
-- `build` bundles `advanced.js`, `mobile-advanced.js`, and regenerates `build-meta.js`
-- `postbuild` runs automatically and checks the combined advanced bundle budget
-- `lint` validates the frontend modules, Functions routes, and build files
-- `preview` builds and deploys the current branch to Cloudflare Pages
-- `premerge` runs `npm ci`, `npm run lint`, and `npm run build`
-
-## Bundle budget
-
-I enforce the advanced bundle budget during build:
-
-```bash
-npm run build
-```
-
-That runs the postbuild validator and checks the gzipped size of:
-
-- `public/assets/js/advanced.js`
-- `public/assets/js/mobile-advanced.js`
-
-The combined target stays under `250KB gzipped`.
-
-## Public config and secrets
-
-Non-secret Pages values live in [`wrangler.toml`](/D:/tr/wrangler.toml).
-
-Public frontend config lives in [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js).
-
-That file can safely contain:
-
-- `TURNSTILE_SITE_KEY`
-- `WEB_ANALYTICS_TOKEN`
-
-Secrets belong in Cloudflare Pages secrets instead:
-
-- `RESEND_API_KEY`
-- `TURNSTILE_SECRET_KEY`
-
-## API routes
-
-Advanced V1 adds:
+The public API contracts remain:
 
 - `GET /api/v1/playground/datasets`
 - `POST /api/v1/playground/analyze`
+- `POST /api/v1/contact`
 - `POST /api/v1/analytics/event`
 
-The contact API stays:
+## Deployment
 
-- `POST /api/v1/contact`
+Cloudflare Pages must use:
 
-## Interaction analytics
+- Build command: `npm run build`
+- Output directory: `out`
+- Node.js: 20.9 or newer
 
-I keep tracking narrow and explicit. These events can be sent to `/api/v1/analytics/event`:
+Preview deploys from the premium feature branch are marked `noindex`. Production cutover should happen only after the CI acceptance checks pass; the previous Pages deployment remains the rollback point.
 
-- `terminal_command`
-- `mandala_view`
-- `playground_open`
-- `analyze_run`
+## Content policy
 
-## Known limitations in this version
-
-This branch is intentionally narrow.
-
-- The playground is demo-only.
-- There are no uploads.
-- There is no R2, D1, Workers AI, or PDF export.
-- The fallback in-memory contact limiter is only isolate-local when Durable Objects are unavailable.
-
-## Screenshots
-
-Screenshots of terminal, mandala, and playground will be added to `main` after merge.
-
-## V2 ideas I deliberately deferred
-
-- uploads
-- persisted results
-- R2
-- D1
-- Workers AI summaries
-- PDF export
-
-## Security notes
-
-- Never commit `.dev.vars`, `.env`, or provider secrets.
-- Turnstile site keys are public. The matching secret key is not.
-- The contact form depends on the production hostname being allowed in Turnstile.
-- The strict CSP in `public/_headers` is part of the deployed security boundary, not a nice-to-have.
+Project claims are evidence-led. Loan Default Prediction remains labelled **In development** until published evidence exists, and the resume action stays hidden until a real PDF URL is configured.
 
 ## License
 

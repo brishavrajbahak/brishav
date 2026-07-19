@@ -4,16 +4,6 @@ import { heroCandidates, siteConfig, skills } from "@/lib/content";
 export function V5Hero() {
   return (
     <section id="home" className="v5-hero section-anchor" aria-labelledby="hero-title" data-critters-container>
-      <link
-        rel="preload"
-        as="image"
-        type="image/avif"
-        media="(min-width: 721px)"
-        href="/assets/cinematic/summit-dawn-1280.avif"
-        imageSrcSet="/assets/cinematic/summit-dawn-768.avif 768w, /assets/cinematic/summit-dawn-1280.avif 1280w"
-        imageSizes="58vw"
-        fetchPriority="high"
-      />
       <div className="v5-hero-media" aria-hidden="true">
         <span className="v5-contour v5-contour-one" />
         <span className="v5-contour v5-contour-two" />

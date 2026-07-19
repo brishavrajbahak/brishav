@@ -1,7 +1,7 @@
 {
   "name": "brishav-portfolio",
   "private": true,
-  "version": "3.0.0",
+  "version": "5.0.0",
   "type": "module",
   "engines": {
     "node": ">=20.9.0"
@@ -9,9 +9,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack && node scripts/build-security.mjs && node scripts/validate-build.mjs",
+    "build:production": "cross-env NEXT_PUBLIC_PREVIEW_DEPLOYMENT=0 next build --webpack && node scripts/build-security.mjs && node scripts/validate-build.mjs",
     "start": "node scripts/start-integrated-preview.mjs",
     "preview": "npm run build && npm run start",
-    "deploy:preview": "npm run build && wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/world-class-observatory-v4",
+    "deploy:preview": "cross-env NEXT_PUBLIC_PREVIEW_DEPLOYMENT=1 npm run build && wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/observatory-v5-authentic-proof",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -56,7 +57,6 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@types/three": "^0.183.0",
-    "critters": "^0.0.23",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.2.10",

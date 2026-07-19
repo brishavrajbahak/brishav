@@ -1,105 +1,40 @@
 import { createHash } from "node:crypto";
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { join, relative } from "node:path";
-import Critters from "critters";
 
 const root = process.cwd();
 const outputDir = join(root, "out");
 const htmlFiles = (await walk(outputDir)).filter((path) => path.endsWith(".html"));
 const hashes = new Set();
-const critters = new Critters({
-  path: outputDir,
-  publicPath: "/",
-  inlineThreshold: 0,
-  pruneSource: false,
-  fonts: false,
-  logLevel: "silent",
-  includeSelectors: [
-    /^:root$/,
-    /^\*$/,
-    /^html/,
-    /^body/,
-    /^button/,
-    /^a/,
-    /^\.site-/,
-    /^\.brand-/,
-    /^\.desktop-navigation/,
-    /^\.header-status/,
-    /^\.mobile-menu-trigger/,
-    /^\.skip-link/,
-    /^\.paper-grain/,
-    /^\.pointer-spotlight/,
-    /^\.v3-site/,
-    /^\.v3-header/,
-    /^\.v3-brand/,
-    /^\.v3-desktop-nav/,
-    /^\.v3-header-status/,
-    /^\.v3-mobile-menu/,
-    /^\.v3-pointer-light/,
-    /^\.v3-pipeline-sequence/,
-    /^\.v3-project-sequence/,
-    /^\.v3-control-anchor/,
-    /^\.v4-journey-sequence/,
-    /^\.v4-insights-sequence/,
-    /^\.v3-contact/
-  ]
-});
+const heroStabilityCss = `<style data-v5-stability>.v5-hero h1{max-width:56rem;margin:1rem 0 1.6rem;font-family:Georgia,serif;font-size:clamp(3.7rem,7.2vw,7.4rem);font-weight:500;line-height:.9;letter-spacing:-.052em;text-wrap:balance}@media(min-width:721px){.v5-hero h1{font-family:var(--font-cormorant),Georgia,serif}}@media(max-width:720px){.v5-brand>span:first-child,.v5-brand strong{font-family:Georgia,serif}.v5-hero h1{font-size:clamp(3.4rem,15vw,5.3rem)}}</style>`;
 
 for (const htmlPath of htmlFiles) {
   const sourceHtml = await readFile(htmlPath, "utf8");
-  const header = sourceHtml.match(/<header class="[^"]*(?:site-header|v3-header)[^"]*"[\s\S]*?<\/header>/i)?.[0];
-  const preparedHtml = header && sourceHtml.includes("data-critters-container")
-    ? sourceHtml.replace(
-        /(<section id="home"[^>]*data-critters-container[^>]*>)/i,
-        `$1<!--critters-manifest:start--><div class="site-shell v3-site"><a class="skip-link"></a><div class="pointer-spotlight v3-pointer-light"></div><div class="paper-grain"></div>${header}</div><!--critters-manifest:end-->`
-      )
-    : sourceHtml;
   const desktopFontPreloads = await createDesktopFontPreloads(sourceHtml);
-  const processedHtml = await critters.process(preparedHtml);
-  const html = processedHtml
-    .replace(/<!--critters-manifest:start-->[\s\S]*?<!--critters-manifest:end-->/i, "")
-    .replace("</head>", `${desktopFontPreloads}</head>`);
-  await writeFile(htmlPath, html, "utf8");
+  const html = sourceHtml
+    .replace(/<script([^>]+\bsrc="[^"]+"[^>]*)\sasync><\/script>/gi, "<script$1 defer></script>")
+    .replace("</head>", `${heroStabilityCss}${desktopFontPreloads}</head>`);
+  const pageHashes = new Set();
   for (const match of html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
     const source = match[1];
     if (!source) continue;
     const digest = createHash("sha256").update(source, "utf8").digest("base64");
-    hashes.add(`'sha256-${digest}'`);
+    const value = `'sha256-${digest}'`;
+    hashes.add(value);
+    pageHashes.add(value);
   }
+  const csp = buildCsp([...pageHashes].sort());
+  const securedHtml = html.replace("</head>", `<meta http-equiv="Content-Security-Policy" content="${csp}"></head>`);
+  await writeFile(htmlPath, securedHtml, "utf8");
 }
 
-const scriptSources = [
-  "'self'",
-  ...[...hashes].sort(),
-  "https://challenges.cloudflare.com",
-  "https://static.cloudflareinsights.com"
-];
-
-const csp = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "frame-ancestors 'none'",
-  "form-action 'self'",
-  `script-src ${scriptSources.join(" ")}`,
-  "style-src 'self' 'unsafe-inline'",
-  "font-src 'self' data:",
-  "img-src 'self' data: blob:",
-  "connect-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
-  "frame-src https://challenges.cloudflare.com",
-  "worker-src 'self' blob:",
-  "media-src 'self'",
-  "upgrade-insecure-requests"
-].join("; ");
-
-const noindex = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT === "1" ? "\n  X-Robots-Tag: noindex, nofollow" : "";
+const noindex = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT !== "0" ? "\n  X-Robots-Tag: noindex, nofollow" : "";
 const headers = `/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
-  X-Frame-Options: DENY
+  X-Frame-Options: SAMEORIGIN
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: ${csp}
   Cache-Control: no-cache${noindex}
 
 /_next/static/*
@@ -114,6 +49,15 @@ const headers = `/*
 /favicon.ico
   Cache-Control: public, max-age=0, must-revalidate
 
+/og-v5.png
+  Cache-Control: public, max-age=0, must-revalidate
+
+/icon-*.png
+  Cache-Control: public, max-age=0, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=0, must-revalidate
+
 /api/*
   Cache-Control: no-store
 `;
@@ -121,15 +65,39 @@ const headers = `/*
 const routes = {
   version: 1,
   include: ["/api/*"],
-  exclude: ["/_next/static/*", "/assets/*", "/Brishav.jpg", "/favicon.ico"]
+  exclude: ["/_next/static/*", "/assets/*", "/Brishav.jpg", "/favicon.ico", "/og-v5.png", "/icon-*.png", "/apple-touch-icon.png"]
 };
 
 await writeFile(join(outputDir, "_headers"), headers, "utf8");
 await writeFile(join(outputDir, "_routes.json"), `${JSON.stringify(routes, null, 2)}\n`, "utf8");
 
 console.log(`Generated CSP with ${hashes.size} inline script hashes across ${htmlFiles.length} HTML files.`);
-console.log("Inlined critical light-theme CSS and deferred the remaining stylesheet.");
+console.log("Kept the full stylesheet render-blocking to prevent late mobile layout shifts.");
 console.log(`Wrote ${relative(root, join(outputDir, "_headers"))} and ${relative(root, join(outputDir, "_routes.json"))}.`);
+
+function buildCsp(pageHashes) {
+  const scriptSources = [
+    "'self'",
+    ...pageHashes,
+    "https://challenges.cloudflare.com",
+    "https://static.cloudflareinsights.com"
+  ];
+  return [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "form-action 'self'",
+    `script-src ${scriptSources.join(" ")}`,
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
+    "img-src 'self' data: blob:",
+    "connect-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com",
+    "frame-src 'self' https://challenges.cloudflare.com",
+    "worker-src 'self' blob:",
+    "media-src 'self'",
+    "upgrade-insecure-requests"
+  ].join("; ");
+}
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -149,7 +117,7 @@ async function createDesktopFontPreloads(html) {
   const latinFontUrls = new Set();
   for (const match of stylesheet.matchAll(/@font-face\{([^}]+)\}/g)) {
     const rule = match[1];
-    if (!/font-family:(?:Manrope|Cormorant Garamond)(?:;|$)/.test(rule)) continue;
+    if (!/font-family:Manrope(?:;|$)/.test(rule)) continue;
     if (!/unicode-range:[^;}]*u\+00\?\?/i.test(rule)) continue;
     const url = rule.match(/src:url\(([^)]+\.woff2)\)/i)?.[1];
     if (url) latinFontUrls.add(url);

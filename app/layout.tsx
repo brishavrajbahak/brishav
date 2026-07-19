@@ -2,29 +2,16 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { siteConfig } from "@/lib/content";
 import "./globals.css";
-import "./cinematic-v3.css";
-import "./cinematic-v4.css";
 
-const experienceBootstrap = `(() => {
+const themeBootstrap = `(() => {
   try {
-    const local = /^(?:localhost|127\\.0\\.0\\.1)$/.test(location.hostname)
-      ? new URLSearchParams(location.search).get("experience")
-      : null;
-    if (local === "full" || local === "balanced" || local === "static") {
-      document.documentElement.dataset.experience = local;
-      return;
-    }
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    const saveData = Boolean(connection && connection.saveData);
-    const memory = navigator.deviceMemory;
-    const cores = navigator.hardwareConcurrency;
-    let tier = "full";
-    if (reduced || saveData || innerWidth < 768 || (memory && memory <= 2) || !("WebGLRenderingContext" in window)) tier = "static";
-    else if (innerWidth < 1180 || (memory && memory <= 4) || (cores && cores <= 4)) tier = "balanced";
-    document.documentElement.dataset.experience = tier;
+    const saved = localStorage.getItem("brishav-theme-v1");
+    const theme = saved === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
   } catch {
-    document.documentElement.dataset.experience = "static";
+    document.documentElement.dataset.theme = "light";
+    document.documentElement.style.colorScheme = "light";
   }
 })();`;
 
@@ -41,47 +28,48 @@ const cormorant = localFont({
   src: "./fonts/cormorant-garamond-latin.woff2",
   variable: "--font-cormorant",
   display: "optional",
-  preload: true,
+  preload: false,
   weight: "400 700",
   adjustFontFallback: "Times New Roman"
 });
 
-const isPreview = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT === "1";
+const isPreview = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT !== "0";
+const publicUrl = isPreview ? siteConfig.previewUrl : siteConfig.canonicalUrl;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.canonicalUrl),
-  title: "Brishav Rajbahak | Data Analyst & Data Science Aspirant",
-  description:
-    "Brishav Rajbahak's Himalayan Data Observatory: published data analysis, interactive demos, Python, SQL, Power BI, and cloud delivery.",
-  keywords: ["Brishav Rajbahak", "Data Analyst Nepal", "Python", "SQL", "Power BI", "Data Science"],
+  metadataBase: new URL(publicUrl),
+  title: "Brishav Rajbahak | Data analysis with the denominator visible",
+  description: siteConfig.description,
+  keywords: ["Brishav Rajbahak", "Data Analyst Nepal", "Python", "SQL", "Power BI", "Loan Default Analysis"],
   alternates: { canonical: "/" },
-  icons: { icon: "/favicon.ico" },
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }]
+  },
   robots: isPreview ? { index: false, follow: false } : { index: true, follow: true },
   openGraph: {
-    title: "Brishav Rajbahak — Himalayan Data Observatory",
-    description: siteConfig.headline,
-    url: siteConfig.canonicalUrl,
+    title: "Brishav Rajbahak — I need the numbers to hold up",
+    description: siteConfig.description,
+    url: publicUrl,
     siteName: siteConfig.name,
     type: "website",
-    images: [{
-      url: "/assets/cinematic/summit-dawn-1672.webp",
-      width: 1672,
-      height: 941,
-      alt: "Brishav Rajbahak's Himalayan Data Observatory"
-    }]
+    images: [{ url: "/og-v5.png", width: 1200, height: 630, alt: "Brishav Rajbahak and a published loan risk chart" }]
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brishav Rajbahak — Himalayan Data Observatory",
-    description: siteConfig.headline,
-    images: ["/assets/cinematic/summit-dawn-1672.webp"]
+    title: "Brishav Rajbahak — Data analyst in progress",
+    description: siteConfig.description,
+    images: ["/og-v5.png"]
   }
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "oklch(97.5% 0.015 82)"
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "oklch(97.6% 0.014 82)" },
+    { media: "(prefers-color-scheme: dark)", color: "oklch(18% 0.02 50)" }
+  ]
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -97,10 +85,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   };
 
   return (
-    <html lang="en" className={`${manrope.variable} ${cormorant.variable}`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: experienceBootstrap }} />
-      </head>
+    <html lang="en" className={`${manrope.variable} ${cormorant.variable}`} suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} /></head>
       <body>
         {children}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />

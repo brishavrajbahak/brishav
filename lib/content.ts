@@ -1,6 +1,36 @@
 export type Skill = "Python" | "SQL" | "Power BI" | "Cloud";
 export type ProjectStatus = "Published" | "In progress" | "In development" | "Live system";
 
+export type ProofMetric = {
+  label: string;
+  value: string;
+  note: string;
+};
+
+export type ProjectMethodology = {
+  source: string;
+  dateRange: string;
+  cohort: string;
+  rawRows?: number;
+  cleanedRows?: number;
+  finalOutcomeRows?: number;
+  badOutcomes?: number;
+  goodOutcomes?: number;
+  excludedRows?: number;
+  numerator?: number;
+  denominator?: number;
+  exclusionReason?: string;
+};
+
+export type ProjectProof = {
+  businessImpact: string[];
+  delivered: string[];
+  methodology: ProjectMethodology;
+  metrics: ProofMetric[];
+  dashboardPath?: string;
+  correctionNote?: string;
+};
+
 export type Project = {
   id: string;
   number: string;
@@ -13,29 +43,59 @@ export type Project = {
   tools: string[];
   repository: string;
   featured?: boolean;
+  proof: ProjectProof;
 };
+
+export const heroCandidates = [
+  "I build data projects, then make the next version better.",
+  "I want the work to look good. I need the numbers to hold up.",
+  "Pretty dashboards are easy. Trustworthy numbers take more work."
+] as const;
 
 export const siteConfig = {
   name: "Brishav Rajbahak",
   initials: "BR",
-  eyebrow: "Data Analyst & Data Science Aspirant",
-  headline: "Turning Data Into Cinematic Stories.",
+  eyebrow: "Data analyst in progress",
+  headline: heroCandidates[1],
   description:
-    "I clean, explore, and explain data through Python, SQL, dashboards, and practical forecasting workflows—turning raw numbers into evidence people can act on.",
+    "An undergraduate student in Nepal, learning how to make sense of real datasets and the decisions behind them.",
   location: "Kathmandu, Nepal",
   availability: "Open to internships and entry-level data or BI roles",
   email: "contact@brishavrajbahak.com.np",
   canonicalUrl: "https://brishavrajbahak.com.np",
+  previewUrl: "https://v5.brishavrajbahak.com.np",
   github: "https://github.com/brishavrajbahak",
   linkedin: "https://www.linkedin.com/in/brishav-rajbahak-854a30342",
   instagram: "https://www.instagram.com/razzbahakbrishav"
 } as const;
 
+export const personalStory = {
+  about:
+    "It's me Brishav Rajbahak. Currently an undergraduate student learning new things and tools which i feel fascinating . i relate myself to the tech-enthuiast and wanna build cool things which not only exists but resonates well to the make an earth better place",
+  rule:
+    "being better than yesterday . just iterating the level even if its a word or an entire dictionary",
+  reflection:
+    "always wanting best and supreme level of things i build . wanting to make things look preety as preety as the system works. progress is always > perfection , perfection has no limit and cant be achived",
+  approvedPhoto: process.env.NEXT_PUBLIC_PERSONAL_PHOTO?.trim() || null
+} as const;
+
+export const interfaceCopy = {
+  loadingDashboard: "The dashboard is ready when you want to load it.",
+  emptyProjects: "Nothing matches this filter yet.",
+  contact: {
+    missingName: "What should I call you?",
+    invalidEmail: "That email address does not look complete.",
+    shortMessage: "Give me a little more detail so I can reply properly.",
+    verification: "Please complete the verification before sending.",
+    failure: "I couldn't send this. Your message is still here—try again."
+  }
+} as const;
+
 export const skills: Array<{ name: Skill; note: string }> = [
-  { name: "Python", note: "Cleaning, exploration, modeling" },
-  { name: "SQL", note: "Queries, joins, analytical structure" },
-  { name: "Power BI", note: "Dashboards and decision stories" },
-  { name: "Cloud", note: "Pages, Functions, secure delivery" }
+  { name: "Python", note: "Cleaning and analysis" },
+  { name: "SQL", note: "Queries and data structure" },
+  { name: "Power BI", note: "Dashboards and reporting" },
+  { name: "Cloud", note: "Pages, Functions and delivery" }
 ];
 
 export const projects: Project[] = [
@@ -44,126 +104,168 @@ export const projects: Project[] = [
     number: "01",
     title: "Loan Default Analysis",
     status: "Published",
-    summary: "A borrower-risk analysis shaped into a reproducible reporting workflow.",
+    summary: "A Lending Club analysis where the denominator mattered as much as the chart.",
     briefing:
-      "The published project uses Python, Pandas, SQL, SQLite, and Power BI to move from borrower records to segmentation and dashboard-ready risk reporting.",
-    evidence:
-      "Published repository evidence reports a measured final-outcome default rate of 19.98%.",
+      "Python, SQL and Power BI move 2.26 million accepted-loan records into a final-outcome cohort that can be checked and reproduced.",
+    evidence: "The published final-outcome default rate is 19.98%.",
     skills: ["Python", "SQL", "Power BI"],
     tools: ["Pandas", "SQLite", "Jupyter", "Power BI"],
     repository: "https://github.com/brishavrajbahak/loan-default-analysis",
-    featured: true
+    featured: true,
+    proof: {
+      businessImpact: [
+        "Separates completed outcomes from active loans before measuring default.",
+        "Shows where grade, term and purpose carry different risk levels."
+      ],
+      delivered: [
+        "A reproducible Python and SQL cleaning workflow.",
+        "A two-page Power BI report covering the overview and risk segments."
+      ],
+      methodology: {
+        source: "Lending Club accepted loans",
+        dateRange: "2007–2018",
+        cohort: "1,348,099 loans with a final repayment or default outcome",
+        rawRows: 2260701,
+        cleanedRows: 2260668,
+        finalOutcomeRows: 1348099,
+        badOutcomes: 269360,
+        goodOutcomes: 1078739,
+        excludedRows: 912569,
+        numerator: 269360,
+        denominator: 1348099,
+        exclusionReason:
+          "912,569 loans were still current, late or in a grace period, so they did not yet have a final outcome."
+      },
+      metrics: [
+        { label: "Final-outcome default rate", value: "19.98%", note: "269,360 / 1,348,099" },
+        { label: "Grade A", value: "6.04%", note: "Published segment rate" },
+        { label: "Grade G", value: "49.67%", note: "Published segment rate" },
+        { label: "60-month term", value: "32.45%", note: "Compared with 16.02% for 36 months" }
+      ],
+      dashboardPath: "/dashboard/loan-default/",
+      correctionNote:
+        "While checking the loan-status values, I noticed Current, Late and In Grace Period sitting beside loans that had actually finished. Those loans did not have a final outcome yet. I removed them from the denominator and recalculated the rate using loans that had ended."
+    }
   },
   {
     id: "financial-inclusion-gap-analysis",
     number: "02",
     title: "Financial Inclusion Gap Analysis",
     status: "In progress",
-    summary: "An evidence-led investigation into underserved segments and access disparity.",
+    summary: "A live investigation into where access and trust separate people from formal finance.",
     briefing:
-      "The current repository frames an analytics workflow for comparing access, trust, and reporting gaps without presenting unfinished findings as final results.",
-    evidence: "Public work in progress; conclusions remain provisional until the analysis is complete.",
+      "The repository currently defines the questions and analysis direction. Findings remain provisional until the complete workflow is published.",
+    evidence: "Public work in progress; no final finding is claimed.",
     skills: ["Python", "SQL", "Power BI"],
-    tools: ["Pandas", "SQL", "Power BI", "Gap analysis"],
-    repository: "https://github.com/brishavrajbahak/financial-inclusion-gap-analysis"
+    tools: ["Pandas", "SQL", "Power BI"],
+    repository: "https://github.com/brishavrajbahak/financial-inclusion-gap-analysis",
+    proof: {
+      businessImpact: ["Not established yet."],
+      delivered: ["An in-progress repository and scoped analysis questions."],
+      methodology: {
+        source: "Public project repository",
+        dateRange: "In progress",
+        cohort: "Not finalised"
+      },
+      metrics: []
+    }
   },
   {
     id: "loan-default-prediction",
     number: "03",
     title: "Loan Default Prediction",
     status: "In development",
-    summary: "A reserved project space for future predictive risk work.",
+    summary: "A reserved project space, kept deliberately free of imaginary model results.",
     briefing:
-      "This repository is currently empty. No model, metric, feature set, or delivery claim is presented until published work exists.",
+      "The repository is currently empty. No model, metric, feature set or delivery claim appears until real work is published.",
     evidence: "In development—no results claimed.",
     skills: ["Python", "SQL"],
     tools: ["Planned: Python", "Planned: SQL"],
-    repository: "https://github.com/brishavrajbahak/loan-default-prediction"
+    repository: "https://github.com/brishavrajbahak/loan-default-prediction",
+    proof: {
+      businessImpact: ["Not established yet."],
+      delivered: ["No public deliverable yet."],
+      methodology: {
+        source: "Empty public repository",
+        dateRange: "Not started",
+        cohort: "No published dataset"
+      },
+      metrics: []
+    }
   },
   {
     id: "himalayan-observatory",
     number: "04",
-    title: "Himalayan Data Observatory",
+    title: "Portfolio Platform",
     status: "Live system",
-    summary: "The portfolio itself: static-first storytelling with protected edge endpoints.",
+    summary: "This portfolio, built as a static-first frontend with protected edge functions.",
     briefing:
-      "A Cloudflare Pages frontend connected to Pages Functions, Turnstile, email delivery, analytics events, and a Durable Object rate limiter while preserving a static deployment model.",
-    evidence: "Published source and production deployment are available through this portfolio repository.",
+      "The frontend is exported statically while contact, analysis and rate limiting remain behind Cloudflare Pages Functions and a Durable Object.",
+    evidence: "The source and deployed system are public.",
     skills: ["Cloud", "SQL", "Python"],
     tools: ["Cloudflare Pages", "Pages Functions", "Turnstile", "Durable Objects"],
-    repository: "https://github.com/brishavrajbahak/brishav"
+    repository: "https://github.com/brishavrajbahak/brishav",
+    proof: {
+      businessImpact: ["Gives reviewers one place to inspect projects, methods and working interfaces."],
+      delivered: ["A static frontend, protected contact route and interactive dataset endpoints."],
+      methodology: {
+        source: "Public portfolio repository",
+        dateRange: "Current release",
+        cohort: "Frontend and edge-function architecture"
+      },
+      metrics: []
+    }
   }
 ];
 
 export const pipeline = [
-  { step: "Ingest", note: "Bring the source into a traceable workspace." },
-  { step: "Cleanse", note: "Resolve types, gaps, duplicates, and noise." },
-  { step: "Explore", note: "Ask focused questions and test patterns." },
-  { step: "Model", note: "Use the simplest method the question needs." },
-  { step: "Visualize", note: "Make comparison and change easy to see." },
-  { step: "Impact", note: "Connect the signal to a useful decision." }
+  { step: "Raw records", label: "Ingest", note: "2,260,701 accepted-loan rows enter the workspace." },
+  { step: "Clean columns", label: "Cleanse", note: "Types are repaired and 33 footer rows are removed." },
+  { step: "Outcome cohort", label: "Explore", note: "Only loans with a finished outcome enter the rate." },
+  { step: "Risk comparison", label: "Model", note: "Grade, term and purpose are compared before adding complexity." },
+  { step: "Dashboard", label: "Visualize", note: "The result becomes a report that can be inspected." },
+  { step: "19.98%", label: "Impact", note: "The published KPI keeps its numerator and denominator visible." }
 ] as const;
 
 export const journey = [
-  {
-    year: "Foundation",
-    label: "Education",
-    copy: "Built grounding in computer science, data structures, statistics, and evidence-led reporting."
-  },
-  {
-    year: "Practice",
-    label: "Applied Projects",
-    copy: "Turned coursework and datasets into repeatable Python and SQL analysis workflows."
-  },
-  {
-    year: "Communication",
-    label: "BI Storytelling",
-    copy: "Focused on dashboard structure, decision context, and explaining findings without visual noise."
-  },
-  {
-    year: "Now",
-    label: "Dataverse Launch",
-    copy: "Connected published work, interactive demos, and a production-ready portfolio frontend."
-  }
+  { year: "Foundation", label: "Education", copy: "Computer science, statistics and the habit of checking the source." },
+  { year: "Practice", label: "Applied Projects", copy: "Python and SQL work built from real datasets rather than polished mockups." },
+  { year: "Communication", label: "BI Storytelling", copy: "Dashboards shaped around questions, definitions and the person reading them." },
+  { year: "Now", label: "Dataverse Launch", copy: "Published projects and a frontend that keeps changing as the work improves." }
 ] as const;
 
 export const insights = [
   {
     id: "tourism",
-    label: "Tourism signal",
-    title: "Stay length and occupancy tell more than arrival volume alone.",
-    challenge: "Arrival counts can look healthy while hiding whether local economic value is improving.",
-    insight:
-      "The demo becomes more useful when arrivals, stay length, visitor spend, and occupancy are read together.",
-    lesson: "The strongest KPI is often the relationship between measures, not the loudest single number."
+    label: "Tourism note",
+    title: "Arrival volume is not the whole visit.",
+    challenge: "Arrival counts can hide whether stay length and local value changed.",
+    insight: "Read arrivals beside stay length, spend and occupancy.",
+    lesson: "Related measures usually explain more than one headline number."
   },
   {
     id: "loan-risk",
-    label: "Risk signal",
-    title: "Default pressure often appears before default is formally recorded.",
-    challenge: "Outcome-only reporting can surface risk after the useful intervention window has narrowed.",
-    insight:
-      "Delinquency and segment patterns are more useful when treated as early signals, not only as explanations after default.",
-    lesson: "A decision metric earns its value by arriving before the headline result."
+    label: "Loan-risk note",
+    title: "A default rate starts with an outcome definition.",
+    challenge: "Current loans cannot be treated as completed repayments.",
+    insight: "Keep unresolved loans outside a final-outcome denominator.",
+    lesson: "The cohort definition belongs beside the result."
   },
   {
     id: "remittance",
-    label: "Resilience signal",
-    title: "Transfer strength can still hide fragile channel quality.",
-    challenge: "Higher transfer values may look positive while formal-channel reliability remains uneven.",
-    insight:
-      "Household dependence and formal-channel use need to be compared together to reveal where resilience is weakest.",
-    lesson: "System quality matters as much as the volume moving through it."
+    label: "Remittance note",
+    title: "Transfer volume can hide channel quality.",
+    challenge: "A rising total does not guarantee reliable formal access.",
+    insight: "Compare household dependence with the channel used.",
+    lesson: "The route matters as much as the amount."
   }
 ] as const;
 
 export const navigation = [
   { id: "home", label: "Home" },
-  { id: "method", label: "Method" },
-  { id: "projects", label: "Projects" },
-  { id: "laboratory", label: "Lab" },
-  { id: "journey", label: "Journey" },
-  { id: "insights", label: "Insights" },
+  { id: "work", label: "Work" },
+  { id: "process", label: "Process" },
+  { id: "about", label: "About" },
   { id: "contact", label: "Contact" }
 ] as const;
 

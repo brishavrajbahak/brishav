@@ -9,10 +9,7 @@ const nextConfig = {
     root: process.cwd()
   },
   poweredByHeader: false,
-  reactStrictMode: true,
-  experimental: {
-    optimizeCss: true
-  }
+  reactStrictMode: true
 };
 
 export default nextConfig;

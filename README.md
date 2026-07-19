@@ -1,12 +1,12 @@
-# Himalayan Data Observatory
+# Authentic Proof-First Observatory V5
 
-Brishav Rajbahak's portfolio is a light-theme, cinematic data experience built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, GSAP ScrollTrigger, Motion, D3, Chart.js, and React Three Fiber.
+Brishav Rajbahak's portfolio is a five-section, light-first portfolio built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, D3 and selective Radix components.
 
-The site is statically exported to `out/` for Cloudflare Pages. The existing Pages Functions and Durable Object worker remain responsible for the playground, contact form, analytics, Turnstile verification, email delivery, and rate limiting.
+The homepage is intentionally static-first: Hero, Work, Process, About and Contact. The D3 project mandala is the only extended sticky interaction. The terminal, contact form and loan dashboard load only when requested or approached. The static export remains compatible with the existing Cloudflare Pages Functions and Durable Object.
 
 ## Requirements
 
-- Node.js 20.9 or newer (`.nvmrc` uses Node 22)
+- Node.js 20.9 or newer
 - npm
 
 ## Install and run
@@ -17,45 +17,33 @@ Install dependencies once after cloning, or whenever `package-lock.json` changes
 npm.cmd ci
 ```
 
-For frontend development with hot reload:
+For development with hot reload:
 
 ```powershell
 npm.cmd run dev
 ```
 
-Open `http://localhost:3000`. You do not need to rebuild after every edit; the development server recompiles automatically.
+Open `http://localhost:3000`. You do not rebuild after every edit; Next.js recompiles automatically.
 
-For the production-style integrated preview, including Pages Functions and the local rate-limiter worker:
+For a production-style preview with Pages Functions and the local rate limiter:
 
 ```powershell
 npm.cmd run build
 npm.cmd run start
 ```
 
-Open `http://127.0.0.1:8788`. Build again only after source changes when using this production preview.
+Open `http://127.0.0.1:8788`. Rebuild only after source changes when using this exported preview.
 
-To force a local quality tier while reviewing the responsive fallbacks, use one of:
+## Public build variables
 
-- `http://127.0.0.1:8788/?experience=full`
-- `http://127.0.0.1:8788/?experience=balanced`
-- `http://127.0.0.1:8788/?experience=static`
+- `NEXT_PUBLIC_PREVIEW_DEPLOYMENT=1` for the noindex V5 preview.
+- `NEXT_PUBLIC_PREVIEW_DEPLOYMENT=0` for production metadata.
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` for the contact widget.
+- `NEXT_PUBLIC_API_BASE` is optional; same-origin requests are the default.
+- `NEXT_PUBLIC_PERSONAL_PHOTO` must point to Brishav's approved workspace or notebook photograph before production.
+- `NEXT_PUBLIC_HEADLINE_APPROVED=1` confirms the reader-tested hero headline before production.
 
-## Environment
-
-Copy the example files when testing integrations locally:
-
-```powershell
-Copy-Item .env.example .env.local
-Copy-Item .dev.vars.example .dev.vars
-```
-
-Public frontend values:
-
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-- `NEXT_PUBLIC_API_BASE` (optional; same-origin is the default)
-- `NEXT_PUBLIC_RESUME_URL` (optional; the resume action stays hidden when unset)
-
-Provider secrets such as `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belong in `.dev.vars` locally or Cloudflare secrets in production. Never expose them through `NEXT_PUBLIC_*` variables.
+Provider secrets such as `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belong in `.dev.vars` locally or Cloudflare secrets. Never expose them through `NEXT_PUBLIC_*` values.
 
 ## Verification
 
@@ -66,23 +54,23 @@ npm.cmd run lighthouse:mobile
 npm.cmd run lighthouse:desktop
 ```
 
-`verify` runs ESLint, TypeScript, unit tests, the static production export, bundle/CSP validation, and Pages Functions compilation.
+`verify` runs ESLint, TypeScript, unit/component tests, the static export, strict CSP and bundle validation, and Pages Functions compilation. A production build intentionally fails until the approved personal photograph and approved-headline flag are configured.
 
 ## Architecture
 
 ```text
-app/                    Next.js App Router entry and design system
-components/             Accessible sections, charts, forms, and 3D views
-lib/                    Typed content, API normalization, motion, and analysis
-public/assets/data/     Curated deterministic demo datasets
-functions/api/v1/       Existing Cloudflare Pages API contracts
-workers/                Existing Durable Object rate limiter
-scripts/                CSP, bundle, and integrated-preview tooling
-tests/                  Unit, component, browser, accessibility, and visual tests
-out/                    Generated static Cloudflare Pages output
+app/                         App Router pages, theme tokens and five-section layout
+app/dashboard/loan-default/ Published static D3 dashboard
+components/v5-*              V5 sections and progressive enhancements
+lib/content.ts               Typed identity, project proof and methodology
+functions/api/v1/            Existing public Cloudflare Pages API contracts
+workers/                     Existing Durable Object rate limiter
+scripts/                     Asset, CSP, validation and preview tooling
+tests/                       Unit, component, browser, accessibility and visual checks
+out/                         Generated Cloudflare Pages export
 ```
 
-The public API contracts remain:
+The public API contracts remain unchanged:
 
 - `GET /api/v1/playground/datasets`
 - `POST /api/v1/playground/analyze`
@@ -91,18 +79,16 @@ The public API contracts remain:
 
 ## Deployment
 
-Cloudflare Pages must use:
+Cloudflare Pages uses `npm run build`, output directory `out`, and Node 20.9 or newer.
 
-- Build command: `npm run build`
-- Output directory: `out`
-- Node.js: 20.9 or newer
+The branch `feature/observatory-v5-authentic-proof` deploys as a noindex preview. Production stays untouched until the personal photograph, headline test, real-device performance, Safari/VoiceOver, NVDA and social-preview checks pass.
 
-Preview deploys from `feature/world-class-observatory-v4` are marked `noindex`. Production cutover should happen only after the CI acceptance checks and visual acceptance pass; the previous Pages deployment remains the rollback point.
+After an accepted production cutover, keep `v5.brishavrajbahak.com.np` frozen and noindex for seven calendar days. Then tag the accepted commit, remove the Pages custom-domain association and preview branch control, delete the proxied `v5` CNAME, and verify the subdomain is unreachable or permanently redirects to production.
 
 ## Content policy
 
-Project claims are evidence-led. Loan Default Prediction remains labelled **In development** until published evidence exists, and the resume action stays hidden until a real PDF URL is configured.
+Published numbers include their cohort and denominator. Unfinished projects explicitly state that impact or deliverables are not established. Resume actions remain hidden until a real PDF is configured. No stock or generated image may substitute for the required personal workspace photograph.
 
 ## License
 
-This repository contains personal portfolio content. Reuse of the branding, writing, images, or design requires permission.
+This repository contains personal portfolio content. Reuse of the branding, writing, images or design requires permission.

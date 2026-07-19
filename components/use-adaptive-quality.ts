@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { selectAdaptiveQuality, type QualitySignals, type SceneQuality } from "@/lib/adaptive-quality";
+import { browserSupportsWebGl } from "@/lib/webgl";
 
 type NavigatorWithHints = Navigator & {
   deviceMemory?: number;
@@ -18,7 +19,7 @@ export function useAdaptiveQuality(): SceneQuality {
         ? new URLSearchParams(window.location.search).get("experience")
         : null;
       if (localOverride === "full" || localOverride === "balanced" || localOverride === "static") {
-        setQuality(localOverride === "balanced" ? "medium" : localOverride === "static" ? "poster" : "full");
+        commitQuality(localOverride === "balanced" ? "medium" : localOverride === "static" ? "poster" : "full");
         return;
       }
       const nav = navigator as NavigatorWithHints;
@@ -36,9 +37,14 @@ export function useAdaptiveQuality(): SceneQuality {
         saveData,
         deviceMemory,
         hardwareConcurrency: nav.hardwareConcurrency,
-        webglAvailable: shouldProbeWebGl ? hasWebGl() : false
+        webglAvailable: shouldProbeWebGl ? browserSupportsWebGl() : false
       };
-      setQuality(selectAdaptiveQuality(signals));
+      commitQuality(selectAdaptiveQuality(signals));
+    };
+
+    const commitQuality = (next: SceneQuality) => {
+      setQuality(next);
+      document.documentElement.dataset.experience = next === "full" ? "full" : next === "medium" ? "balanced" : "static";
     };
 
     recalculate();
@@ -51,13 +57,4 @@ export function useAdaptiveQuality(): SceneQuality {
   }, []);
 
   return quality;
-}
-
-function hasWebGl() {
-  try {
-    const canvas = document.createElement("canvas");
-    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
-  } catch {
-    return false;
-  }
 }

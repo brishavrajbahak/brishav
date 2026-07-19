@@ -2,6 +2,16 @@ import type { SceneQuality } from "./adaptive-quality";
 
 export type ExperienceTier = "full" | "balanced" | "static";
 export type IntroState = "first-session" | "returning" | "skipped" | "reduced-motion";
+export type CinematicChapterId = "home" | "method" | "projects" | "laboratory" | "journey" | "insights" | "contact";
+export type ControlInstrument = "terminal" | "mandala" | "analytics";
+
+export type MotionProfile = {
+  id: "desktop" | "tablet" | "static";
+  scrub: number | false;
+  projectCrossfade: number;
+  overlap: number;
+  fastScrollEnd: boolean | number;
+};
 
 export type SceneCue = {
   id: string;
@@ -25,7 +35,7 @@ export type CinematicAsset = {
 };
 
 export type CinematicChapter = {
-  id: "home" | "method" | "projects" | "laboratory" | "journey" | "insights" | "contact";
+  id: CinematicChapterId;
   label: string;
   scrollLengthVh: number;
   asset?: CinematicAsset;
@@ -38,30 +48,57 @@ export const CINEMATIC_TIMING = {
   introRevealMs: 520,
   introHoldMs: 560,
   hashRestoreMs: 420,
+  terrainIdleMs: 1100,
+  terrainFallbackMs: 420,
   gsap: {
-    scrub: 0.72,
-    scrubSoft: 1.1,
-    snapDurationMin: 0.16,
-    snapDurationMax: 0.42,
-    projectCrossfade: 0.17,
-    stagger: 0.065,
+    profiles: {
+      desktop: { id: "desktop", scrub: 0.32, projectCrossfade: 0.28, overlap: 0.14, fastScrollEnd: 1800 },
+      tablet: { id: "tablet", scrub: 0.22, projectCrossfade: 0.24, overlap: 0.12, fastScrollEnd: 1600 },
+      static: { id: "static", scrub: false, projectCrossfade: 0, overlap: 0, fastScrollEnd: true }
+    } satisfies Record<string, MotionProfile>,
+    scrub: 0.32,
+    scrubSoft: 0.22,
+    projectCrossfade: 0.28,
+    stagger: 0.045,
     ease: {
-      linear: "none"
+      linear: "none",
+      enter: "power3.out",
+      exit: "power2.in",
+      cinematic: "power2.inOut"
     },
     duration: {
       chapter: 1,
-      heroExit: 0.2,
-      mosaicReveal: 0.28,
-      mosaicExit: 0.22,
-      maskReveal: 0.3,
-      captionReveal: 0.16,
-      landscapeMove: 0.54,
-      terrainReveal: 0.18,
-      captionExit: 0.12,
-      pipelineStep: 0.14,
-      pipelineStepExit: 0.12,
-      controlPanel: 0.34,
-      controlTerminal: 0.28
+      signalDraw: 1,
+      heroExit: 0.16,
+      mosaicReveal: 0.22,
+      mosaicExit: 0.14,
+      maskReveal: 0.22,
+      captionReveal: 0.12,
+      landscapeMove: 0.56,
+      terrainReveal: 0.14,
+      captionExit: 0.09,
+      pipelineStep: 0.13,
+      pipelineStepExit: 0.09,
+      pipelineRailDim: 0.08,
+      pipelineRailFocus: 0.11,
+      journeyExit: 0.22,
+      journeyEnter: 0.3,
+      insightExit: 0.22,
+      insightEnter: 0.32,
+      controlPanel: 0.28,
+      controlTerminal: 0.24,
+      controlSequence: 3
+    },
+    ratio: {
+      projectExit: 0.72
+    },
+    offset: {
+      pipelineExit: 0.045,
+      pipelineEnter: 0.03,
+      pipelineRail: 0.04,
+      projectEnter: 0.18,
+      journeyEnter: 0.05,
+      insightEnter: 0.04
     },
     at: {
       heroExit: 0.12,
@@ -136,7 +173,7 @@ export const cinematicChapters: CinematicChapter[] = [
   {
     id: "home",
     label: "Summit",
-    scrollLengthVh: 320,
+    scrollLengthVh: 260,
     asset: cinematicAssets.summitDawn,
     cues: [
       { id: "poster", start: 0, end: 0.24, target: "hero-poster" },
@@ -148,7 +185,7 @@ export const cinematicChapters: CinematicChapter[] = [
   {
     id: "method",
     label: "Signal route",
-    scrollLengthVh: 240,
+    scrollLengthVh: 180,
     asset: cinematicAssets.contourRidge,
     cues: [
       { id: "ingest", start: 0, end: 0.18, target: "pipeline-0" },
@@ -162,7 +199,7 @@ export const cinematicChapters: CinematicChapter[] = [
   {
     id: "projects",
     label: "Project reel",
-    scrollLengthVh: 420,
+    scrollLengthVh: 320,
     asset: cinematicAssets.kathmanduGrid,
     cues: [
       { id: "loan-analysis", start: 0, end: 0.28, target: "project-0" },
@@ -174,7 +211,7 @@ export const cinematicChapters: CinematicChapter[] = [
   {
     id: "laboratory",
     label: "Control room",
-    scrollLengthVh: 260,
+    scrollLengthVh: 210,
     asset: cinematicAssets.observatoryWorkspace,
     cues: [
       { id: "terminal", start: 0, end: 0.34, target: "control-terminal" },
@@ -182,10 +219,45 @@ export const cinematicChapters: CinematicChapter[] = [
       { id: "analysis", start: 0.62, end: 1, target: "control-analysis" }
     ]
   },
-  { id: "journey", label: "Altitude route", scrollLengthVh: 160, asset: cinematicAssets.contourRidge, cues: [] },
-  { id: "insights", label: "Field reports", scrollLengthVh: 220, asset: cinematicAssets.kathmanduGrid, cues: [] },
-  { id: "contact", label: "Horizon", scrollLengthVh: 140, asset: cinematicAssets.dataHorizon, cues: [] }
+  {
+    id: "journey",
+    label: "Altitude route",
+    scrollLengthVh: 220,
+    asset: cinematicAssets.contourRidge,
+    cues: [
+      { id: "education", start: 0, end: 0.3, target: "journey-0" },
+      { id: "projects", start: 0.24, end: 0.56, target: "journey-1" },
+      { id: "storytelling", start: 0.5, end: 0.8, target: "journey-2" },
+      { id: "launch", start: 0.74, end: 1, target: "journey-3" }
+    ]
+  },
+  {
+    id: "insights",
+    label: "Field reports",
+    scrollLengthVh: 260,
+    asset: cinematicAssets.kathmanduGrid,
+    cues: [
+      { id: "tourism", start: 0, end: 0.38, target: "insight-0" },
+      { id: "risk", start: 0.31, end: 0.71, target: "insight-1" },
+      { id: "remittance", start: 0.64, end: 1, target: "insight-2" }
+    ]
+  },
+  { id: "contact", label: "Horizon", scrollLengthVh: 100, asset: cinematicAssets.dataHorizon, cues: [] }
 ];
+
+export function chapterById(id: CinematicChapterId) {
+  return cinematicChapters.find((chapter) => chapter.id === id);
+}
+
+export function indexFromProgress(progress: number, count: number) {
+  if (count <= 1) return 0;
+  return Math.min(count - 1, Math.floor(clampProgress(progress) * count));
+}
+
+export function scrollProgressForIndex(index: number, count: number) {
+  if (count <= 1) return 0;
+  return clampProgress((Math.max(0, Math.min(count - 1, index)) + 0.12) / count);
+}
 
 export function experienceTierFromQuality(quality: SceneQuality): ExperienceTier {
   if (quality === "full") return "full";

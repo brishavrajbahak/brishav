@@ -36,4 +36,5 @@ Object.defineProperty(window, "matchMedia", {
   }))
 });
 Element.prototype.scrollIntoView = vi.fn();
+window.scrollTo = vi.fn();
 HTMLCanvasElement.prototype.getContext = vi.fn(() => null) as typeof HTMLCanvasElement.prototype.getContext;

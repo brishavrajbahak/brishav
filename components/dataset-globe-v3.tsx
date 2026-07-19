@@ -1,10 +1,11 @@
 "use client";
 
-import { Line, OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import { Line, OrbitControls, PerformanceMonitor, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useMemo, useState } from "react";
 import * as THREE from "three";
 import type { ExperienceTier } from "@/lib/cinematic";
+import { browserSupportsWebGl } from "@/lib/webgl";
 
 const COORDINATES: Record<string, [number, number]> = {
   tourism: [28.2, 84],
@@ -23,7 +24,8 @@ export function DatasetGlobeV3({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState(() => !browserSupportsWebGl());
+  const [dpr, setDpr] = useState(tier === "full" ? 1.3 : 1);
 
   if (tier === "static" || failed) {
     return (
@@ -38,7 +40,7 @@ export function DatasetGlobeV3({
     <div className="v3-globe-canvas" aria-label="Interactive selectable dataset globe">
       <Canvas
         frameloop="demand"
-        dpr={tier === "full" ? [1, 1.45] : 1}
+        dpr={dpr}
         gl={{ alpha: true, antialias: tier === "full", powerPreference: "high-performance" }}
         onCreated={({ gl, invalidate }) => {
           gl.domElement.addEventListener("webglcontextlost", (event) => {
@@ -48,7 +50,12 @@ export function DatasetGlobeV3({
           invalidate();
         }}
       >
-        <GlobeRig datasetIds={datasetIds} selectedId={selectedId} onSelect={onSelect} />
+        <PerformanceMonitor
+          onDecline={() => setDpr(1)}
+          onIncline={() => setDpr(tier === "full" ? 1.3 : 1)}
+        >
+          <GlobeRig datasetIds={datasetIds} selectedId={selectedId} onSelect={onSelect} />
+        </PerformanceMonitor>
       </Canvas>
     </div>
   );

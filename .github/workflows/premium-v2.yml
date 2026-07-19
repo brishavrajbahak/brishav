@@ -1,10 +1,10 @@
-name: Premium Dataverse V2
+name: World-Class Observatory V4
 
 on:
   push:
     branches:
       - main
-      - feature/premium-dataverse-v2
+      - feature/world-class-observatory-v4
   pull_request:
     branches:
       - main
@@ -46,10 +46,10 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npm run test:e2e -- --project=desktop
+      - run: npm run test:e2e -- tests/e2e/portfolio.spec.ts --project=desktop --project=mobile
 
   preview:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/premium-dataverse-v2'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/world-class-observatory-v4'
     runs-on: ubuntu-latest
     needs: [quality, browser]
     permissions:
@@ -69,4 +69,4 @@ jobs:
       - run: npm run build
       - name: Deploy noindex Cloudflare preview
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
-        run: npx wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/premium-dataverse-v2
+        run: npx wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/world-class-observatory-v4

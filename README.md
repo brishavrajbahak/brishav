@@ -1,6 +1,6 @@
 # Himalayan Data Observatory
 
-Brishav Rajbahak's production portfolio is a light-theme, cinematic data experience built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Motion, D3, Chart.js, and React Three Fiber.
+Brishav Rajbahak's portfolio is a light-theme, cinematic data experience built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, GSAP ScrollTrigger, Motion, D3, Chart.js, and React Three Fiber.
 
 The site is statically exported to `out/` for Cloudflare Pages. The existing Pages Functions and Durable Object worker remain responsible for the playground, contact form, analytics, Turnstile verification, email delivery, and rate limiting.
 
@@ -33,6 +33,12 @@ npm.cmd run start
 ```
 
 Open `http://127.0.0.1:8788`. Build again only after source changes when using this production preview.
+
+To force a local quality tier while reviewing the responsive fallbacks, use one of:
+
+- `http://127.0.0.1:8788/?experience=full`
+- `http://127.0.0.1:8788/?experience=balanced`
+- `http://127.0.0.1:8788/?experience=static`
 
 ## Environment
 
@@ -91,7 +97,7 @@ Cloudflare Pages must use:
 - Output directory: `out`
 - Node.js: 20.9 or newer
 
-Preview deploys from the premium feature branch are marked `noindex`. Production cutover should happen only after the CI acceptance checks pass; the previous Pages deployment remains the rollback point.
+Preview deploys from `feature/world-class-observatory-v4` are marked `noindex`. Production cutover should happen only after the CI acceptance checks and visual acceptance pass; the previous Pages deployment remains the rollback point.
 
 ## Content policy
 

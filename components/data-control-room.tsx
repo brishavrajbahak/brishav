@@ -24,8 +24,15 @@ import {
   type AnalysisResult,
   type DatasetSummary
 } from "@/lib/api";
-import type { ExperienceTier } from "@/lib/cinematic";
+import {
+  indexFromProgress,
+  scrollProgressForIndex,
+  type ControlInstrument,
+  type ExperienceTier
+} from "@/lib/cinematic";
+import { cinematicProgress } from "@/lib/progress-bus";
 import { runTerminalCommand } from "@/lib/terminal";
+import { scrollSequenceToProgress } from "@/lib/utils";
 import { DataChart } from "./data-chart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
@@ -36,6 +43,7 @@ const DatasetGlobeV3 = dynamic(() => import("./dataset-globe-v3").then((module) 
 
 type ControlMode = AnalysisMode | "globe";
 type TerminalEntry = { id: number; command?: string; lines: string[] };
+const instruments: ControlInstrument[] = ["terminal", "mandala", "analytics"];
 
 export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
   const [datasets, setDatasets] = useState<DatasetSummary[]>([]);
@@ -51,10 +59,15 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
   const [terminalEntries, setTerminalEntries] = useState<TerminalEntry[]>([
     { id: 0, lines: ["Himalayan Observatory terminal online.", "Type help to inspect the shared data system."] }
   ]);
+  const [lastSystemMessage, setLastSystemMessage] = useState("Terminal ready. Choose an instrument or enter a command.");
+  const [activeInstrument, setActiveInstrument] = useState<ControlInstrument>("terminal");
   const terminalLogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent("observatory-control-ready"));
+    return cinematicProgress.subscribe("laboratory", (progress) => {
+      const next = instruments[indexFromProgress(progress, instruments.length)];
+      setActiveInstrument((current) => current === next ? current : next);
+    });
   }, []);
 
   const loadCatalog = useCallback(async () => {
@@ -128,15 +141,18 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
     if (!command) return;
     const response = runTerminalCommand(command);
     setTerminalEntries((current) => [...current, { id: Date.now(), command, lines: response.lines }].slice(-12));
+    setLastSystemMessage(response.lines[0] || "Command complete.");
     setTerminalInput("");
     void sendAnalyticsEvent("terminal_command", { command: command.split(/\s+/)[0] || "unknown" });
     if (response.action.type === "focus-mandala") {
       setMandalaFocus("brishav");
-      document.querySelector<HTMLElement>(".v3-mandala-panel")?.focus();
+      setActiveInstrument("mandala");
+      window.requestAnimationFrame(() => document.querySelector<HTMLElement>(".v3-mandala-panel")?.focus());
     }
     if (response.action.type === "select-dataset") {
       setSelectedId(response.action.datasetId);
       if (response.action.mode) setMode(response.action.mode);
+      setActiveInstrument("analytics");
     }
     if (response.action.type === "select-project") {
       window.dispatchEvent(new CustomEvent("observatory-project-select", { detail: response.action.projectId }));
@@ -150,8 +166,17 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
     if (soundEnabled) playInterfaceTone();
   }
 
+  function selectInstrument(instrument: ControlInstrument) {
+    setActiveInstrument(instrument);
+    scrollSequenceToProgress(
+      ".v3-control-sequence",
+      scrollProgressForIndex(instruments.indexOf(instrument), instruments.length),
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
   return (
-    <section className="v3-control-room" aria-labelledby="laboratory-title">
+    <section className="v3-control-room" aria-labelledby="laboratory-title" data-control-ready="true">
       <div className="v3-control-sequence">
         <div className="v3-control-stage">
           <div className="v3-control-backdrop" aria-hidden>
@@ -172,8 +197,21 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
             </div>
           </header>
 
-          <div className="v3-control-grid">
-            <div className="v3-terminal-panel">
+          <div className="v4-control-selector" role="tablist" aria-label="Control room instruments">
+            <button type="button" role="tab" aria-selected={activeInstrument === "terminal"} onClick={() => selectInstrument("terminal")}>
+              <Command aria-hidden size={16} /> Terminal
+            </button>
+            <button type="button" role="tab" aria-selected={activeInstrument === "mandala"} onClick={() => selectInstrument("mandala")}>
+              <Database aria-hidden size={16} /> Mandala
+            </button>
+            <button type="button" role="tab" aria-selected={activeInstrument === "analytics"} onClick={() => selectInstrument("analytics")}>
+              <Pulse aria-hidden size={16} /> Analytics
+            </button>
+          </div>
+          <p className="v4-control-system-status" role="status">{lastSystemMessage}</p>
+
+          <div className="v3-control-grid v4-control-instruments" data-focus={activeInstrument}>
+            <div className="v3-terminal-panel" data-instrument="terminal" inert={activeInstrument !== "terminal" ? true : undefined}>
               <div className="v3-panel-label"><Command aria-hidden size={17} /><span>Observatory terminal</span><i>live</i></div>
               <div className="v3-terminal-log" ref={terminalLogRef} aria-live="polite">
                 {terminalEntries.map((entry) => (
@@ -202,9 +240,9 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
               </div>
             </div>
 
-            <SignalMandala focus={mandalaFocus} onSelect={setMandalaFocus} />
+            <SignalMandala focus={mandalaFocus} onSelect={setMandalaFocus} inactive={activeInstrument !== "mandala"} />
 
-            <div className="v3-analysis-panel">
+            <div className="v3-analysis-panel" data-instrument="analytics" inert={activeInstrument !== "analytics" ? true : undefined}>
               <div className="v3-panel-label"><Pulse aria-hidden size={17} /><span>Live analytical playground</span><i>{tier}</i></div>
               <div className="v3-dataset-switcher" role="group" aria-label="Datasets">
                 {datasets.map((dataset) => (
@@ -248,17 +286,18 @@ export function DataControlRoom({ tier }: { tier: ExperienceTier }) {
               ) : null}
             </div>
           </div>
+          <div className="v4-control-progress" aria-hidden><span /></div>
         </div>
       </div>
     </section>
   );
 }
 
-function SignalMandala({ focus, onSelect }: { focus: string; onSelect: (id: string) => void }) {
+function SignalMandala({ focus, onSelect, inactive }: { focus: string; onSelect: (id: string) => void; inactive: boolean }) {
   const nodes = useMemo(() => layoutMandala(), []);
   const nodeMap = useMemo(() => new Map(nodes.map((node) => [node.id, node])), [nodes]);
   return (
-    <div className="v3-mandala-panel" tabIndex={-1}>
+    <div className="v3-mandala-panel" data-instrument="mandala" tabIndex={-1} inert={inactive ? true : undefined}>
       <div className="v3-panel-label"><Database aria-hidden size={17} /><span>Signal mandala</span><i>{focus}</i></div>
       <svg viewBox="0 0 520 520" role="group" aria-labelledby="mandala-title mandala-description">
         <title id="mandala-title">Brishav analytical signal mandala</title>

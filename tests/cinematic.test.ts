@@ -4,6 +4,7 @@ import {
   cinematicChapters,
   cueProgress,
   experienceTierFromQuality,
+  indexFromProgress,
   resolveIntroState
 } from "@/lib/cinematic";
 
@@ -36,8 +37,20 @@ describe("cinematic architecture", () => {
       expect(asset.poster).toMatch(/-768\.webp$/);
       expect(asset.alt.length).toBeGreaterThan(24);
     });
-    expect(cinematicChapters.find((chapter) => chapter.id === "home")?.scrollLengthVh).toBe(320);
-    expect(cinematicChapters.find((chapter) => chapter.id === "projects")?.scrollLengthVh).toBe(420);
-    expect(cinematicChapters.find((chapter) => chapter.id === "laboratory")?.scrollLengthVh).toBe(260);
+    expect(cinematicChapters.find((chapter) => chapter.id === "home")?.scrollLengthVh).toBe(260);
+    expect(cinematicChapters.find((chapter) => chapter.id === "method")?.scrollLengthVh).toBe(180);
+    expect(cinematicChapters.find((chapter) => chapter.id === "projects")?.scrollLengthVh).toBe(320);
+    expect(cinematicChapters.find((chapter) => chapter.id === "laboratory")?.scrollLengthVh).toBe(210);
+    expect(cinematicChapters.find((chapter) => chapter.id === "journey")?.scrollLengthVh).toBe(220);
+    expect(cinematicChapters.find((chapter) => chapter.id === "insights")?.scrollLengthVh).toBe(260);
+  });
+
+  it("resolves discrete chapter state at forward and reverse boundaries", () => {
+    expect(indexFromProgress(0, 4)).toBe(0);
+    expect(indexFromProgress(0.249, 4)).toBe(0);
+    expect(indexFromProgress(0.25, 4)).toBe(1);
+    expect(indexFromProgress(0.74, 4)).toBe(2);
+    expect(indexFromProgress(1, 4)).toBe(3);
+    expect(indexFromProgress(0.49, 4)).toBe(1);
   });
 });

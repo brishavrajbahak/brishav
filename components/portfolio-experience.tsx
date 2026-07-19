@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import {
-  ArrowDown,
   ArrowRight,
   ArrowSquareOut,
   Command,
@@ -12,15 +11,24 @@ import {
   LinkedinLogo,
   List,
   MapPin,
-  Mountains,
+  SpeakerSlash,
   Sparkle,
   SunHorizon
 } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
-import { CINEMATIC_TIMING, cinematicAssets, experienceTierFromQuality } from "@/lib/cinematic";
-import { insights, journey, navigation, pipeline, resumeUrl, siteConfig, skills } from "@/lib/content";
+import {
+  CINEMATIC_TIMING,
+  cinematicAssets,
+  experienceTierFromQuality,
+  type CinematicChapterId
+} from "@/lib/cinematic";
+import { navigation, siteConfig } from "@/lib/content";
+import { cinematicProgress } from "@/lib/progress-bus";
 import { scrollToSection } from "@/lib/utils";
+import { CinematicInsights } from "./cinematic-insights";
 import { CinematicIntro } from "./cinematic-intro";
+import { CinematicJourney } from "./cinematic-journey";
+import { CinematicPipeline } from "./cinematic-pipeline";
 import { CinematicPicture } from "./cinematic-picture";
 import { CinematicProjectReel } from "./cinematic-project-reel";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "./ui/sheet";
@@ -47,60 +55,115 @@ const ContactForm = dynamic(
   { ssr: false, loading: () => <div className="v3-contact-form-placeholder">Preparing the secure contact channel…</div> }
 );
 
-export function PortfolioExperience() {
+export function PortfolioExperience({ hero }: { hero: React.ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const quality = useAdaptiveQuality();
   const tier = experienceTierFromQuality(quality);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState<CinematicChapterId>("home");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [directorReady, setDirectorReady] = useState(false);
   const [terrainReady, setTerrainReady] = useState(false);
   const [terrainVisible, setTerrainVisible] = useState(true);
 
+  useEffect(() => cinematicProgress.subscribeActiveSection(setActiveSection), []);
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const active = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (active?.target.id) setActiveSection(active.target.id);
-      },
-      { rootMargin: "-18% 0px -70%", threshold: [0.03, 0.14, 0.4] }
-    );
-    navigation.forEach(({ id }) => {
-      const section = document.getElementById(id);
-      if (section) observer.observe(section);
-    });
-    return () => observer.disconnect();
+    const root = rootRef.current;
+    if (!root) return;
+    const handleAnchor = (event: MouseEvent) => {
+      const target = event.target as Element | null;
+      const anchor = target?.closest<HTMLAnchorElement>(".v3-hero-actions a[href^='#'], .v3-scroll-cue[href^='#']");
+      if (!anchor) return;
+      const id = decodeURIComponent(anchor.hash.slice(1));
+      if (!id || !document.getElementById(id)) return;
+      event.preventDefault();
+      scrollToSection(id, window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    };
+    root.addEventListener("click", handleAnchor);
+    return () => root.removeEventListener("click", handleAnchor);
   }, []);
+
+  useEffect(() => {
+    if (tier !== "static") return;
+    const sections = navigation
+      .map(({ id }) => document.getElementById(id))
+      .filter((section): section is HTMLElement => Boolean(section));
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
+      if (visible?.target.id) setActiveSection(visible.target.id as CinematicChapterId);
+    }, { rootMargin: "-18% 0px -64% 0px", threshold: [0, 0.15, 0.4, 0.7] });
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [tier]);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root || !window.matchMedia("(pointer: fine)").matches) return;
+    let pointerFrame = 0;
+    let pointerX = window.innerWidth / 2;
+    let pointerY = window.innerHeight / 3;
+    let previousScroll = window.scrollY;
+    let previousTime = performance.now();
+    let settleTimer = 0;
+
     const handlePointer = (event: PointerEvent) => {
-      root.style.setProperty("--pointer-x", `${event.clientX}px`);
-      root.style.setProperty("--pointer-y", `${event.clientY}px`);
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (pointerFrame) return;
+      pointerFrame = window.requestAnimationFrame(() => {
+        pointerFrame = 0;
+        if (root.classList.contains("is-fast-scrolling")) return;
+        root.style.setProperty("--pointer-x", pointerX + "px");
+        root.style.setProperty("--pointer-y", pointerY + "px");
+      });
     };
+
+    const handleScroll = () => {
+      const now = performance.now();
+      const elapsed = Math.max(1, now - previousTime);
+      const velocity = Math.abs(window.scrollY - previousScroll) / elapsed;
+      previousScroll = window.scrollY;
+      previousTime = now;
+      if (velocity > 1.2) root.classList.add("is-fast-scrolling");
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => root.classList.remove("is-fast-scrolling"), 140);
+    };
+
     window.addEventListener("pointermove", handlePointer, { passive: true });
-    return () => window.removeEventListener("pointermove", handlePointer);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointer);
+      window.removeEventListener("scroll", handleScroll);
+      window.cancelAnimationFrame(pointerFrame);
+      window.clearTimeout(settleTimer);
+    };
   }, []);
 
   useEffect(() => {
     if (tier === "static") return;
-    const activate = () => {
-      setDirectorReady(true);
-      setTerrainReady(true);
-    };
+    const directorFrame = window.requestAnimationFrame(() => setDirectorReady(true));
+    const activateTerrain = () => setTerrainReady(true);
     const idleWindow = window as typeof window & {
       requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
       cancelIdleCallback?: (handle: number) => void;
     };
+    let idleHandle: number | undefined;
+    let terrainTimer: number | undefined;
     if (idleWindow.requestIdleCallback) {
-      const handle = idleWindow.requestIdleCallback(activate, { timeout: 1100 });
-      return () => idleWindow.cancelIdleCallback?.(handle);
+      idleHandle = idleWindow.requestIdleCallback(activateTerrain, { timeout: CINEMATIC_TIMING.terrainIdleMs });
+    } else {
+      terrainTimer = window.setTimeout(activateTerrain, CINEMATIC_TIMING.terrainFallbackMs);
     }
-    const timer = window.setTimeout(activate, 420);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.cancelAnimationFrame(directorFrame);
+      if (idleHandle !== undefined) idleWindow.cancelIdleCallback?.(idleHandle);
+      if (terrainTimer !== undefined) window.clearTimeout(terrainTimer);
+    };
   }, [tier]);
 
   useEffect(() => {
@@ -133,12 +196,12 @@ export function PortfolioExperience() {
 
   return (
     <TooltipProvider>
-      <div ref={rootRef} className={`v3-site experience-${tier}`}>
+      <div ref={rootRef} className={`v3-site experience-${tier}`} data-active-section={activeSection}>
         <a className="skip-link" href="#main-content">Skip to main content</a>
         <CinematicIntro />
         <div className="v3-pointer-light" aria-hidden />
 
-        <header className="v3-header">
+        <header className={activeSection === "home" ? "v3-header" : "v3-header compact"}>
           <button type="button" className="v3-brand" onClick={() => goTo("home")}>
             <span>{siteConfig.initials}</span>
             <span><strong>{siteConfig.name}</strong><small>Himalayan Data Observatory</small></span>
@@ -168,84 +231,12 @@ export function PortfolioExperience() {
         </header>
 
         <main id="main-content">
-          <section id="home" className="v3-hero-sequence section-anchor" aria-labelledby="hero-title" data-critters-container>
-            <div className="v3-hero-stage">
-              <div className="v3-hero-landscape" aria-hidden>
-                <CinematicPicture asset={cinematicAssets.summitDawn} eager decorative />
-                <span className="v3-hero-vignette" />
-              </div>
+          {hero}
+          {tier !== "static" && terrainReady && terrainVisible ? (
+            <div className="v4-hero-terrain-portal"><CinematicHeroTerrain tier={tier} /></div>
+          ) : null}
 
-              <div className="v3-hero-editorial">
-                <div className="v3-availability"><i aria-hidden /><span>{siteConfig.availability}</span></div>
-                <span className="v3-eyebrow">{siteConfig.eyebrow} · Kathmandu 27.7172° N</span>
-                <h1 id="hero-title">Turning Data Into <em>Cinematic Stories.</em></h1>
-                <p>{siteConfig.description}</p>
-                <div className="v3-hero-actions">
-                  <button type="button" onClick={() => goTo("projects")}>Enter the Dataverse <ArrowRight aria-hidden size={18} weight="bold" /></button>
-                  <button type="button" onClick={() => goTo("laboratory")}>Open the control room</button>
-                  {resumeUrl ? <a href={resumeUrl}>Resume</a> : null}
-                </div>
-                <div className="v3-skill-line" aria-label="Core skills">
-                  {skills.map((skill) => <span key={skill.name}><strong>{skill.name}</strong><small>{skill.note}</small></span>)}
-                </div>
-              </div>
-
-              <div className="v3-hero-mosaic" aria-label="Portrait of Brishav Rajbahak framed by Himalayan data landscapes">
-                <div className="v3-mosaic-card portrait">
-                  <picture>
-                    <source
-                      type="image/webp"
-                      srcSet="/assets/images/Brishav-portrait-480.webp 480w, /assets/images/Brishav-portrait-768.webp 768w"
-                      sizes="36vw"
-                    />
-                    <img
-                      src="/assets/images/Brishav-portrait-768.webp"
-                      alt="Brishav Rajbahak"
-                      width={768}
-                      height={1040}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </picture>
-                  <span><small>Observer 01</small><strong>Brishav Rajbahak</strong></span>
-                </div>
-                <CinematicPicture asset={cinematicAssets.contourRidge} className="v3-mosaic-card ridge" decorative />
-                <CinematicPicture asset={cinematicAssets.kathmanduGrid} className="v3-mosaic-card city" decorative />
-                <div className="v3-mosaic-caption"><Mountains aria-hidden size={18} /><span>Signals rise from context.<br />Stories begin with evidence.</span></div>
-              </div>
-
-              <div className="v3-hero-mask" aria-hidden>
-                <CinematicPicture asset={cinematicAssets.summitDawn} className="v3-hero-mask-media" decorative />
-                <strong>BR</strong>
-              </div>
-              {terrainReady && terrainVisible ? <CinematicHeroTerrain tier={tier} /> : null}
-              <div className="v3-camera-caption"><span>Follow the illuminated contour</span><strong>From raw signal to useful impact.</strong></div>
-              <button type="button" className="v3-scroll-cue" onClick={() => goTo("method")}>Direct the journey <ArrowDown aria-hidden size={16} /></button>
-            </div>
-          </section>
-
-          <section id="method" className="v3-pipeline-sequence section-anchor" aria-labelledby="method-title">
-            <div className="v3-pipeline-stage">
-              <div className="v3-pipeline-media" aria-hidden><CinematicPicture asset={cinematicAssets.contourRidge} decorative /><span /></div>
-              <div className="v3-pipeline-heading">
-                <span>02 / Signal pipeline</span>
-                <h2 id="method-title">Every useful decision starts as an unshaped signal.</h2>
-                <p>Travel the same evidence through six visible transformations.</p>
-              </div>
-              <div className="v3-pipeline-route" aria-hidden />
-              <ol className="v3-pipeline-steps" aria-label="Analytical pipeline">
-                {pipeline.map(({ step, note }, index) => (
-                  <li key={step} className="v3-pipeline-step">
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <h3>{step}</h3>
-                    <p>{note}</p>
-                    <code>{pipelineEvidence[index]}</code>
-                  </li>
-                ))}
-              </ol>
-              <div className="v3-pipeline-readout"><span>Live route</span><strong>Ingest → Cleanse → Explore → Model → Visualize → Impact</strong></div>
-            </div>
-          </section>
+          <CinematicPipeline />
 
           <CinematicProjectReel />
           <div id="laboratory" className="v3-control-anchor section-anchor">
@@ -254,46 +245,8 @@ export function PortfolioExperience() {
             </DeferredRender>
           </div>
 
-          <section id="journey" className="v3-journey section-anchor" aria-labelledby="journey-title">
-            <div className="v3-journey-media" aria-hidden><CinematicPicture asset={cinematicAssets.contourRidge} decorative /></div>
-            <div className="v3-journey-content">
-              <div className="v3-section-heading light">
-                <div><span>05 / Altitude route</span><h2 id="journey-title">The path rises through practice, not invented titles.</h2></div>
-                <p>A truthful route from education to published analytical work and a live portfolio platform.</p>
-              </div>
-              <div className="v3-altitude-map">
-                <div className="v3-altitude-route" aria-hidden><span /></div>
-                {journey.map((item, index) => (
-                  <article key={item.label}>
-                    <div><span>{String(index + 1).padStart(2, "0")}</span></div>
-                    <small>{item.year}</small><h3>{item.label}</h3><p>{item.copy}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section id="insights" className="v3-insights section-anchor" aria-labelledby="insights-title">
-            <div className="v3-section-heading">
-              <div><span>06 / Field reports</span><h2 id="insights-title">Three readings from the evidence already inside the observatory.</h2></div>
-              <p>Large editorial notes replace generic cards; every number is labeled as curated demo evidence.</p>
-            </div>
-            <div className="v3-report-list">
-              {insights.map((insight, index) => (
-                <article key={insight.id} className="v3-field-report">
-                  <CinematicPicture asset={reportAssets[index]} className="v3-report-media" decorative />
-                  <div className="v3-report-copy">
-                    <span>{String(index + 1).padStart(2, "0")} / {insight.label}</span>
-                    <h3>{insight.title}</h3>
-                    <div><small>Data challenge</small><p>{insight.challenge}</p></div>
-                    <div><small>Signal worth noticing</small><p>{insight.insight}</p></div>
-                    <div><small>Analytical lesson</small><p>{insight.lesson}</p></div>
-                    <aside><strong>{reportEvidence[index].value}</strong><span>{reportEvidence[index].label}</span></aside>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <CinematicJourney />
+          <CinematicInsights />
 
           <section id="contact" className="v3-contact section-anchor" aria-labelledby="contact-title">
             <div className="v3-contact-horizon" aria-hidden><CinematicPicture asset={cinematicAssets.dataHorizon} decorative /></div>
@@ -323,7 +276,7 @@ export function PortfolioExperience() {
           <button type="button" onClick={() => goTo("home")}>Return to summit <ArrowRight aria-hidden size={15} /></button>
         </footer>
 
-        {directorReady ? <CinematicScrollDirector /> : null}
+        {directorReady && tier !== "static" ? <CinematicScrollDirector tier={tier} /> : null}
       </div>
     </TooltipProvider>
   );
@@ -353,31 +306,42 @@ function DeferredRender({
     return () => observer.disconnect();
   }, [active, rootMargin]);
 
-  return active ? <>{children}</> : <div ref={ref}>{fallback}</div>;
+  return (
+    <div ref={ref} className="v4-deferred-boundary" data-ready={active ? "true" : "false"}>
+      {active ? children : fallback}
+    </div>
+  );
 }
 
 function ControlRoomPlaceholder() {
   return (
-    <section className="v3-control-placeholder" aria-busy="true">
-      <Command aria-hidden size={24} />
-      <span>04 / Data control room</span>
-      <strong>Warming terminal, mandala, and analytical instruments.</strong>
+    <section className="v3-control-room" aria-busy="true">
+      <div className="v3-control-sequence">
+        <div className="v3-control-stage v3-control-placeholder" aria-hidden inert>
+          <header className="v3-control-header">
+            <div><span>04 / Data control room</span><h2>One signal. Every instrument in sync.</h2></div>
+            <div className="v3-control-status">
+              <span><i /> NPT --:--:--</span>
+              <button type="button" tabIndex={-1}><SpeakerSlash aria-hidden size={17} />Interface sound off</button>
+            </div>
+          </header>
+          <div className="v4-control-selector" role="tablist">
+            <button type="button" role="tab" aria-selected="true" tabIndex={-1}>Terminal</button>
+            <button type="button" role="tab" aria-selected="false" tabIndex={-1}>Mandala</button>
+            <button type="button" role="tab" aria-selected="false" tabIndex={-1}>Analytics</button>
+          </div>
+          <p className="v4-control-system-status">Terminal ready. Choose an instrument or enter a command.</p>
+          <div className="v3-control-grid v4-control-instruments v4-control-placeholder-grid" data-focus="terminal">
+            <div className="v3-terminal-panel" data-instrument="terminal">
+              <div className="v4-control-placeholder-surface">
+                <Command aria-hidden size={24} />
+                <span>Preparing synchronized instruments</span>
+                <strong>Warming terminal, mandala, and analytical controls.</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
-
-const pipelineEvidence = [
-  "SELECT * FROM borrower_records",
-  "df.drop_duplicates().fillna()",
-  "df.groupby('segment')",
-  "baseline before complexity",
-  "19.98% published outcome rate",
-  "signal → reporting decision"
-] as const;
-
-const reportAssets = [cinematicAssets.summitDawn, cinematicAssets.kathmanduGrid, cinematicAssets.dataHorizon] as const;
-const reportEvidence = [
-  { value: "13,800", label: "Bagmati Q2 arrivals in the curated tourism demo" },
-  { value: "63 days", label: "highest delinquency marker in the illustrative loan-risk sample" },
-  { value: "47% / 46%", label: "Karnali dependency / formal channel in the 2023 remittance demo" }
-] as const;

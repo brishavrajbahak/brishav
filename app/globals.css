@@ -274,7 +274,7 @@ a {
 }
 
 .section-anchor {
-  scroll-margin-top: 88px;
+  scroll-margin-top: 0;
 }
 
 .section {

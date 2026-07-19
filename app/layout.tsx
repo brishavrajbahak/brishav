@@ -3,6 +3,30 @@ import localFont from "next/font/local";
 import { siteConfig } from "@/lib/content";
 import "./globals.css";
 import "./cinematic-v3.css";
+import "./cinematic-v4.css";
+
+const experienceBootstrap = `(() => {
+  try {
+    const local = /^(?:localhost|127\\.0\\.0\\.1)$/.test(location.hostname)
+      ? new URLSearchParams(location.search).get("experience")
+      : null;
+    if (local === "full" || local === "balanced" || local === "static") {
+      document.documentElement.dataset.experience = local;
+      return;
+    }
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const saveData = Boolean(connection && connection.saveData);
+    const memory = navigator.deviceMemory;
+    const cores = navigator.hardwareConcurrency;
+    let tier = "full";
+    if (reduced || saveData || innerWidth < 768 || (memory && memory <= 2) || !("WebGLRenderingContext" in window)) tier = "static";
+    else if (innerWidth < 1180 || (memory && memory <= 4) || (cores && cores <= 4)) tier = "balanced";
+    document.documentElement.dataset.experience = tier;
+  } catch {
+    document.documentElement.dataset.experience = "static";
+  }
+})();`;
 
 const manrope = localFont({
   src: "./fonts/manrope-latin.woff2",
@@ -74,6 +98,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="en" className={`${manrope.variable} ${cormorant.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: experienceBootstrap }} />
+      </head>
       <body>
         {children}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />

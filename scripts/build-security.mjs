@@ -10,7 +10,6 @@ const hashes = new Set();
 const critters = new Critters({
   path: outputDir,
   publicPath: "/",
-  preload: "body",
   inlineThreshold: 0,
   pruneSource: false,
   fonts: false,
@@ -29,17 +28,30 @@ const critters = new Critters({
     /^\.mobile-menu-trigger/,
     /^\.skip-link/,
     /^\.paper-grain/,
-    /^\.pointer-spotlight/
+    /^\.pointer-spotlight/,
+    /^\.v3-site/,
+    /^\.v3-header/,
+    /^\.v3-brand/,
+    /^\.v3-desktop-nav/,
+    /^\.v3-header-status/,
+    /^\.v3-mobile-menu/,
+    /^\.v3-pointer-light/,
+    /^\.v3-pipeline-sequence/,
+    /^\.v3-project-sequence/,
+    /^\.v3-control-anchor/,
+    /^\.v4-journey-sequence/,
+    /^\.v4-insights-sequence/,
+    /^\.v3-contact/
   ]
 });
 
 for (const htmlPath of htmlFiles) {
   const sourceHtml = await readFile(htmlPath, "utf8");
-  const header = sourceHtml.match(/<header class="site-header"[\s\S]*?<\/header>/i)?.[0];
+  const header = sourceHtml.match(/<header class="[^"]*(?:site-header|v3-header)[^"]*"[\s\S]*?<\/header>/i)?.[0];
   const preparedHtml = header && sourceHtml.includes("data-critters-container")
     ? sourceHtml.replace(
         /(<section id="home"[^>]*data-critters-container[^>]*>)/i,
-        `$1<!--critters-manifest:start--><div class="site-shell"><a class="skip-link"></a><div class="pointer-spotlight"></div><div class="paper-grain"></div>${header}</div><!--critters-manifest:end-->`
+        `$1<!--critters-manifest:start--><div class="site-shell v3-site"><a class="skip-link"></a><div class="pointer-spotlight v3-pointer-light"></div><div class="paper-grain"></div>${header}</div><!--critters-manifest:end-->`
       )
     : sourceHtml;
   const desktopFontPreloads = await createDesktopFontPreloads(sourceHtml);

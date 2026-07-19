@@ -1,20 +1,23 @@
 "use client";
 
-import { Line, PerspectiveCamera } from "@react-three/drei";
+import { Line, PerformanceMonitor, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { ExperienceTier } from "@/lib/cinematic";
+import { cinematicProgress } from "@/lib/progress-bus";
+import { browserSupportsWebGl } from "@/lib/webgl";
 
 export function CinematicHeroTerrain({ tier }: { tier: ExperienceTier }) {
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState(() => !browserSupportsWebGl());
+  const [dpr, setDpr] = useState(tier === "full" ? 1.35 : 1);
   if (tier === "static" || failed) return null;
 
   return (
     <div className="v3-terrain-shell" aria-hidden="true">
       <Canvas
         frameloop="demand"
-        dpr={tier === "full" ? [1, 1.5] : 1}
+        dpr={dpr}
         gl={{ alpha: true, antialias: tier === "full", powerPreference: "high-performance" }}
         onCreated={({ gl, invalidate }) => {
           gl.domElement.addEventListener("webglcontextlost", (event) => {
@@ -24,7 +27,13 @@ export function CinematicHeroTerrain({ tier }: { tier: ExperienceTier }) {
           invalidate();
         }}
       >
-        <TerrainRig tier={tier} />
+        <PerformanceMonitor
+          bounds={(refreshRate) => (refreshRate > 90 ? [52, 88] : [42, 58])}
+          onDecline={() => setDpr(1)}
+          onIncline={() => setDpr(tier === "full" ? 1.35 : 1)}
+        >
+          <TerrainRig tier={tier} />
+        </PerformanceMonitor>
       </Canvas>
     </div>
   );
@@ -39,8 +48,8 @@ function TerrainRig({ tier }: { tier: ExperienceTier }) {
   const { camera, invalidate } = useThree();
 
   useEffect(() => {
-    const handleProgress = (event: Event) => {
-      const progress = Math.min(1, Math.max(0, Number((event as CustomEvent<number>).detail) || 0));
+    return cinematicProgress.subscribe("home", (progress) => {
+      if (document.hidden) return;
       camera.position.set(-0.7 + progress * 1.5, 2.6 - progress * 1.1, 6.8 - progress * 2.2);
       camera.lookAt(0.2 + progress * 0.6, -0.2, -0.35);
       if (group.current) {
@@ -49,9 +58,7 @@ function TerrainRig({ tier }: { tier: ExperienceTier }) {
       }
       if (signal.current) signal.current.rotation.y = progress * 0.5;
       invalidate();
-    };
-    window.addEventListener("observatory-terrain-progress", handleProgress);
-    return () => window.removeEventListener("observatory-terrain-progress", handleProgress);
+    });
   }, [camera, invalidate]);
 
   return (

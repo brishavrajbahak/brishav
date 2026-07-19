@@ -427,7 +427,7 @@
   backdrop-filter: blur(12px);
 }
 
-.v3-hero-actions button:first-child { border-color: var(--v3-crimson); background: var(--v3-crimson); color: var(--v3-ivory-solid); }
+.v3-hero-actions :is(button, a):first-child { border-color: var(--v3-crimson); background: var(--v3-crimson); color: var(--v3-ivory-solid); }
 .v3-hero-actions button:hover,
 .v3-hero-actions a:hover { transform: translateY(-3px); box-shadow: var(--v3-shadow-soft); }
 

@@ -58,8 +58,8 @@ for (const viewport of viewports) {
     for (const checkpoint of checkpoints) {
       const section = page.locator(checkpoint.selector);
       await section.evaluate((element) => element.scrollIntoView({ block: "start" }));
-      if (checkpoint.name === "projects") await page.locator(".v3-project-card").first().waitFor({ state: "visible" });
-      if (checkpoint.name === "laboratory") await page.locator(".v3-analysis-panel").waitFor({ state: "visible" });
+      if (checkpoint.name === "projects") await page.locator(".v4-project-chapter.active").waitFor({ state: "visible" });
+      if (checkpoint.name === "laboratory") await page.locator(".v3-terminal-panel").waitFor({ state: "visible" });
       await expect(section).toBeVisible();
       await expect(page).toHaveScreenshot(`observatory-${viewport.name}-${checkpoint.name}.png`, {
         maxDiffPixelRatio: 0.015

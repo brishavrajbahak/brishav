@@ -11,7 +11,7 @@
     "build": "next build --webpack && node scripts/build-security.mjs && node scripts/validate-build.mjs",
     "start": "node scripts/start-integrated-preview.mjs",
     "preview": "npm run build && npm run start",
-    "deploy:preview": "npm run build && wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/cinematic-observatory-v3",
+    "deploy:preview": "npm run build && wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/world-class-observatory-v4",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

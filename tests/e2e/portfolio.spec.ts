@@ -40,6 +40,23 @@ test("keeps every project claim truthful and shows the denominator", async ({ pa
   await expect(process).toContainText("269,360 ÷ 1,348,099");
 });
 
+test("changes Process phases with arrows without moving the page", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  const process = page.locator("#process");
+  const processObject = process.locator(".v5-process-object");
+  await processObject.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500);
+
+  const before = await page.evaluate(() => window.scrollY);
+  await process.getByRole("button", { name: "Next process phase" }).click();
+  await expect(process.locator(".v5-process-readout h3")).toHaveText("Clean columns");
+  await page.waitForTimeout(350);
+  const after = await page.evaluate(() => window.scrollY);
+
+  expect(Math.abs(after - before)).toBeLessThanOrEqual(1);
+});
+
 test("supports the complete mandala keyboard and focus-return workflow", async ({ page }) => {
   await page.goto("/#work");
   const first = page.getByRole("button", { name: "01 Loan Default Analysis" });

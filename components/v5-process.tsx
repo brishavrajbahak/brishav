@@ -9,10 +9,12 @@ const loanProject = projects[0];
 export function V5Process() {
   const [active, setActive] = useState(0);
   const stepRefs = useRef<Array<HTMLElement | null>>([]);
+  const pauseScrollSyncRef = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
+        if (pauseScrollSyncRef.current) return;
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
@@ -25,10 +27,18 @@ export function V5Process() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const resumeScrollSync = () => {
+      pauseScrollSyncRef.current = false;
+    };
+
+    window.addEventListener("scroll", resumeScrollSync, { passive: true });
+    return () => window.removeEventListener("scroll", resumeScrollSync);
+  }, []);
+
   function move(direction: number) {
-    const next = Math.min(pipeline.length - 1, Math.max(0, active + direction));
-    setActive(next);
-    stepRefs.current[next]?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    pauseScrollSyncRef.current = true;
+    setActive((current) => Math.min(pipeline.length - 1, Math.max(0, current + direction)));
   }
 
   return (
@@ -38,7 +48,7 @@ export function V5Process() {
         <p>One Lending Club dataset changes shape as it moves from raw rows to the published 19.98% result.</p>
       </header>
 
-      <div className="v5-process-object" data-phase={active} aria-live="polite">
+      <div id="process-phase" className="v5-process-object" data-phase={active} aria-live="polite" aria-atomic="true">
         <div className="v5-process-visual" aria-hidden>
           <span className="v5-raw-grid" />
           <span className="v5-clean-columns" />
@@ -51,7 +61,7 @@ export function V5Process() {
           <span>{pipeline[active].label}</span>
           <h3>{pipeline[active].step}</h3>
           <p>{pipeline[active].note}</p>
-          <div><button type="button" onClick={() => move(-1)} disabled={active === 0} aria-label="Previous process phase"><ArrowLeft aria-hidden size={17} /></button><span>{active + 1} / {pipeline.length}</span><button type="button" onClick={() => move(1)} disabled={active === pipeline.length - 1} aria-label="Next process phase"><ArrowRight aria-hidden size={17} /></button></div>
+          <div><button type="button" onClick={() => move(-1)} disabled={active === 0} aria-label="Previous process phase" aria-controls="process-phase"><ArrowLeft aria-hidden size={17} /></button><span>{active + 1} / {pipeline.length}</span><button type="button" onClick={() => move(1)} disabled={active === pipeline.length - 1} aria-label="Next process phase" aria-controls="process-phase"><ArrowRight aria-hidden size={17} /></button></div>
         </div>
       </div>
 

@@ -3,6 +3,7 @@
   const mobile = root.classList.contains('mobile-mode');
 
   installScrollLock();
+  installContactNavGuard();
   wireProfileImageFallback();
 
   if (mobile) {
@@ -52,8 +53,15 @@ function installScrollLock() {
       document.body.style.width = '100%';
     },
     unlock(owner = 'default') {
-      owners.delete(owner);
+      const hadOwner = owner === '__force__' ? owners.size > 0 : owners.delete(owner);
+      if (!hadOwner) return;
       if (owners.size) return;
+      if (
+        !document.documentElement.classList.contains('scroll-locked') &&
+        !document.body.classList.contains('scroll-locked')
+      ) {
+        return;
+      }
 
       document.documentElement.classList.remove('scroll-locked');
       document.body.classList.remove('scroll-locked');
@@ -64,7 +72,6 @@ function installScrollLock() {
       window.scrollTo(0, lockedY);
     },
     clear() {
-      owners.clear();
       this.unlock('__force__');
     },
   };
@@ -89,6 +96,61 @@ function wireProfileImageFallback() {
     },
     { once: true },
   );
+}
+
+function installContactNavGuard() {
+  const bottomNav = document.getElementById('mobileBottomNav');
+  const contactSection = document.getElementById('contact');
+  const contactForm = document.getElementById('contactForm');
+  if (!bottomNav || !contactSection) return;
+
+  let contactInView = false;
+  let formActive = false;
+
+  const syncState = () => {
+    const shouldHide = contactInView || formActive;
+    bottomNav.classList.toggle('is-hidden-for-contact', shouldHide);
+    bottomNav.setAttribute('aria-hidden', shouldHide ? 'true' : 'false');
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      entries => {
+        contactInView = entries.some(entry => entry.isIntersecting);
+        syncState();
+      },
+      {
+        threshold: 0.18,
+        rootMargin: '0px 0px -12% 0px',
+      },
+    );
+    observer.observe(contactSection);
+  } else {
+    const updateFromScroll = () => {
+      const rect = contactSection.getBoundingClientRect();
+      contactInView = rect.top < window.innerHeight * 0.82 && rect.bottom > window.innerHeight * 0.18;
+      syncState();
+    };
+    updateFromScroll();
+    window.addEventListener('scroll', updateFromScroll, { passive: true });
+    window.addEventListener('resize', updateFromScroll);
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('focusin', () => {
+      formActive = true;
+      syncState();
+    });
+
+    contactForm.addEventListener('focusout', () => {
+      window.setTimeout(() => {
+        formActive = contactForm.contains(document.activeElement);
+        syncState();
+      }, 0);
+    });
+  }
+
+  syncState();
 }
 
 function loadScript(source) {

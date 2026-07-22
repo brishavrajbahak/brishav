@@ -2236,6 +2236,13 @@
     }
     .mobile-bottom-nav a.active,
     .mobile-bottom-nav a:hover { color: var(--accent); background: var(--accent-dim); }
+    .mobile-bottom-nav.is-hidden-for-contact {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(18px);
+      visibility: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    }
     /* -- Projects mobile swipe track -- */
     @media (max-width: 1024px) {
       .projects-grid {

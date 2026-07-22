@@ -1,6 +1,8 @@
 import { ArrowDown, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { heroCandidates, siteConfig, skills } from "@/lib/content";
 
+const portraitVersion = "?v=6e6fb9b";
+
 export function V5Hero() {
   return (
     <section id="home" className="v5-hero section-anchor" aria-labelledby="hero-title" data-critters-container>
@@ -25,9 +27,9 @@ export function V5Hero() {
 
       <aside className="v5-portrait-card">
         <picture>
-          <source type="image/avif" srcSet="/assets/images/Brishav-portrait-480.avif 480w, /assets/images/Brishav-portrait-768.avif 768w" sizes="(max-width: 720px) 42vw, 24vw" />
-          <source type="image/webp" srcSet="/assets/images/Brishav-portrait-480.webp 480w, /assets/images/Brishav-portrait-768.webp 768w" sizes="(max-width: 720px) 42vw, 24vw" />
-          <img src="/assets/images/Brishav-portrait-480.webp" alt="Brishav Rajbahak" width="480" height="650" loading="lazy" decoding="async" />
+          <source type="image/avif" srcSet={`/assets/images/Brishav-portrait-480.avif${portraitVersion} 480w, /assets/images/Brishav-portrait-768.avif${portraitVersion} 768w`} sizes="(max-width: 720px) 42vw, 24vw" />
+          <source type="image/webp" srcSet={`/assets/images/Brishav-portrait-480.webp${portraitVersion} 480w, /assets/images/Brishav-portrait-768.webp${portraitVersion} 768w`} sizes="(max-width: 720px) 42vw, 24vw" />
+          <img src={`/assets/images/Brishav-portrait-480.webp${portraitVersion}`} alt="Brishav Rajbahak" width="480" height="650" loading="lazy" decoding="async" />
         </picture>
         <span><small>Kathmandu, Nepal</small><strong>Still learning. Still iterating.</strong></span>
       </aside>

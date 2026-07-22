@@ -13,6 +13,16 @@ describe("V5 project proof and mandala", () => {
     expect(JSON.stringify(prediction)).not.toMatch(/accuracy|precision|recall/i);
   });
 
+  it("marks the completed Financial Inclusion analysis with published proof", () => {
+    const inclusion = projects.find((project) => project.id === "financial-inclusion-gap-analysis");
+    expect(inclusion?.status).toBe("Published");
+    expect(inclusion?.proof.methodology.source).toBe("World Bank Global Findex Database");
+    expect(inclusion?.proof.delivered).toContain("Three Power BI report pages: Executive Overview, Nepal Account Gaps and 2024 Digital Access.");
+    expect(inclusion?.proof.metrics).toEqual(expect.arrayContaining([
+      expect.objectContaining({ label: "Source observations", value: "8,577" })
+    ]));
+  });
+
   it("moves through project controls with arrows and opens the selected proof", async () => {
     const user = userEvent.setup();
     render(<V5SignalMandala />);
@@ -30,7 +40,8 @@ describe("V5 project proof and mandala", () => {
     await user.keyboard("{Enter}");
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByRole("heading", { name: "Financial Inclusion Gap Analysis" })).toBeInTheDocument();
-    expect(dialog).toHaveTextContent("Not established yet.");
+    expect(dialog).toHaveTextContent("World Bank Global Findex Database");
+    expect(dialog).toHaveTextContent("Executive Overview, Nepal Account Gaps and 2024 Digital Access");
 
     await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

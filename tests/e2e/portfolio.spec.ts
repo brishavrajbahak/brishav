@@ -68,7 +68,8 @@ test("supports the complete mandala keyboard and focus-return workflow", async (
   await second.press("Enter");
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("heading", { name: "Financial Inclusion Gap Analysis" })).toBeVisible();
-  await expect(dialog).toContainText("Not established yet.");
+  await expect(dialog).toContainText("World Bank Global Findex Database");
+  await expect(dialog).toContainText("Executive Overview, Nepal Account Gaps and 2024 Digital Access");
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   await expect(second).toBeFocused();

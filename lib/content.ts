@@ -151,23 +151,33 @@ export const projects: Project[] = [
     id: "financial-inclusion-gap-analysis",
     number: "02",
     title: "Financial Inclusion Gap Analysis",
-    status: "In progress",
-    summary: "A live investigation into where access and trust separate people from formal finance.",
+    status: "Published",
+    summary: "A completed comparison of Nepal's financial access gaps across account ownership and digital finance.",
     briefing:
-      "The repository currently defines the questions and analysis direction. Findings remain provisional until the complete workflow is published.",
-    evidence: "Public work in progress; no final finding is claimed.",
+      "Python, SQL and Power BI turn Global Findex country-year observations into a finished analysis of Nepal against South Asia, lower-middle-income and global benchmarks.",
+    evidence: "The public repository includes final findings, SQL analysis and a three-page Power BI dashboard.",
     skills: ["Python", "SQL", "Power BI"],
     tools: ["Pandas", "SQL", "Power BI"],
     repository: "https://github.com/brishavrajbahak/financial-inclusion-gap-analysis",
     proof: {
-      businessImpact: ["Not established yet."],
-      delivered: ["An in-progress repository and scoped analysis questions."],
+      businessImpact: [
+        "Makes Nepal's account-ownership and digital-access gaps comparable with South Asia, lower-middle-income and world benchmarks.",
+        "Surfaces the population groups that still lag in the published comparison, including women, poorer groups and older adults in 2024 digital access."
+      ],
+      delivered: [
+        "A cleaned, analysis-ready Global Findex dataset and documented Python and SQL workflow.",
+        "Three Power BI report pages: Executive Overview, Nepal Account Gaps and 2024 Digital Access."
+      ],
       methodology: {
-        source: "Public project repository",
-        dateRange: "In progress",
-        cohort: "Not finalised"
+        source: "World Bank Global Findex Database",
+        dateRange: "2011–2024; 2022 is an off-cycle survey covering 16 countries",
+        cohort: "8,577 aggregated country-year-population-segment observations; 18 analysis-ready indicators"
       },
-      metrics: []
+      metrics: [
+        { label: "Source observations", value: "8,577", note: "World Bank Global Findex country-year-population-segment observations" },
+        { label: "Analysis-ready indicators", value: "18", note: "Account ownership, financial institution access, mobile money, digital payments and inactive accounts" },
+        { label: "Dashboard report pages", value: "3", note: "Executive Overview, Nepal Account Gaps and 2024 Digital Access" }
+      ]
     }
   },
   {

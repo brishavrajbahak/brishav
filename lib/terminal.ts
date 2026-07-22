@@ -52,7 +52,7 @@ export function runTerminalCommand(rawCommand: string): TerminalResult {
     return {
       lines: [
         "01 Loan Default Analysis — published",
-        "02 Financial Inclusion — in progress",
+        "02 Financial Inclusion — published",
         "03 Loan Prediction — in development",
         "04 Himalayan Observatory — live system"
       ],

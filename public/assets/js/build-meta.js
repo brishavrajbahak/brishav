@@ -1,9 +1,9 @@
 window.__BUILD_META__ = {
-  "branch": "feature/advanced-v1",
-  "version": "advanced-v1-2026-07-05",
-  "isPreview": true,
+  "branch": "main",
+  "version": "advanced-v1-2026-07-26",
+  "isPreview": false,
   "buildId": "5eba7d8be632",
-  "builtAt": "2026-07-05T15:51:16.906Z",
+  "builtAt": "2026-07-26T04:49:40.924Z",
   "bundles": {
     "advanced": {
       "file": "advanced.js",

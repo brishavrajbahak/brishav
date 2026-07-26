@@ -42,6 +42,8 @@ export type Project = {
   skills: Skill[];
   tools: string[];
   repository: string;
+  liveUrl?: string;
+  liveLabel?: string;
   featured?: boolean;
   proof: ProjectProof;
 };
@@ -184,23 +186,35 @@ export const projects: Project[] = [
     id: "loan-default-prediction",
     number: "03",
     title: "Loan Default Prediction",
-    status: "In development",
-    summary: "A reserved project space, kept deliberately free of imaginary model results.",
+    status: "Published",
+    summary: "An explainable loan-risk predictor that uses only information available when the loan is issued.",
     briefing:
-      "The repository is currently empty. No model, metric, feature set or delivery claim appears until real work is published.",
-    evidence: "In development—no results claimed.",
-    skills: ["Python", "SQL"],
-    tools: ["Planned: Python", "Planned: SQL"],
+      "A time-based Lending Club model is trained on completed outcomes, checked for leakage and deployed as a Streamlit interface for educational risk exploration.",
+    evidence: "The published repository documents validation, test evaluation, error analysis and a working Streamlit predictor.",
+    skills: ["Python", "SQL", "Cloud"],
+    tools: ["Python", "scikit-learn", "PostgreSQL", "Streamlit"],
     repository: "https://github.com/brishavrajbahak/loan-default-prediction",
+    liveUrl: "https://brishav-loan-default-prediction.streamlit.app/",
+    liveLabel: "Open live predictor",
     proof: {
-      businessImpact: ["Not established yet."],
-      delivered: ["No public deliverable yet."],
+      businessImpact: [
+        "Shows how origination-time loan details can be used to estimate historical bad-outcome risk without using post-loan information.",
+        "Makes the model's limits explicit: it is an educational, retrospective analysis and not a lending or credit-approval system."
+      ],
+      delivered: [
+        "A leakage-audited, time-based model comparison and 2018 holdout evaluation.",
+        "A live Streamlit predictor with dependent grade and sub-grade controls, responsible-use guidance and an estimated bad-outcome probability."
+      ],
       methodology: {
-        source: "Empty public repository",
-        dateRange: "Not started",
-        cohort: "No published dataset"
+        source: "Cleaned Lending Club completed-loan dataset",
+        dateRange: "Training 2007–2015 / validation 2016–2017 / final test 2018",
+        cohort: "1,348,099 completed-loan outcomes; unresolved loans excluded before modelling"
       },
-      metrics: []
+      metrics: [
+        { label: "2018 test ROC-AUC", value: "0.6912", note: "Random forest on the untouched 2018 test set" },
+        { label: "2018 test recall", value: "66.45%", note: "Random forest bad-outcome recall" },
+        { label: "Completed-loan rows", value: "1,348,099", note: "Loans with a known final outcome" }
+      ]
     }
   },
   {

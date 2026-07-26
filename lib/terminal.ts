@@ -53,7 +53,7 @@ export function runTerminalCommand(rawCommand: string): TerminalResult {
       lines: [
         "01 Loan Default Analysis — published",
         "02 Financial Inclusion — published",
-        "03 Loan Prediction — in development",
+        "03 Loan Prediction — published (live Streamlit app)",
         "04 Himalayan Observatory — live system"
       ],
       action: { type: "select-project", projectId: "loan-default-analysis" }

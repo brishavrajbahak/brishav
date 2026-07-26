@@ -152,7 +152,10 @@ export function V5SignalMandala() {
           <p>{activeProject.proof.methodology.source} / {activeProject.proof.methodology.dateRange}</p>
           <p>{activeProject.proof.methodology.cohort}</p>
         </div>
-        <a className="v5-button primary" href={activeProject.repository} target="_blank" rel="noreferrer">Open repository <ArrowSquareOut aria-hidden size={16} /></a>
+        <div className="v5-dialog-actions">
+          {activeProject.liveUrl ? <a className="v5-button primary" href={activeProject.liveUrl} target="_blank" rel="noreferrer">{activeProject.liveLabel ?? "Open live project"} <ArrowSquareOut aria-hidden size={16} /></a> : null}
+          <a className={activeProject.liveUrl ? "v5-button quiet" : "v5-button primary"} href={activeProject.repository} target="_blank" rel="noreferrer">Open repository <ArrowSquareOut aria-hidden size={16} /></a>
+        </div>
       </DialogContent>
     </Dialog>
   );

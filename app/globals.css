@@ -333,6 +333,7 @@ img { display: block; max-width: 100%; }
 .v5-project-metrics strong { color: var(--crimson); font-family: var(--font-cormorant), Georgia, serif; font-size: 1.7rem; }
 .v5-project-metrics small { color: var(--ink-soft); font-size: 0.62rem; line-height: 1.35; }
 .v5-project-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 1.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.68rem; }
+.v5-project-links, .v5-dialog-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.9rem; }
 .v5-project-footer a { min-height: 2.75rem; display: inline-flex; align-items: center; gap: 0.35rem; color: var(--crimson); font-weight: 800; }
 .v5-dashboard-proof { margin-top: 1rem; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; }
 .v5-dashboard-toolbar { min-height: 3.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-inline: 1.2rem; border-bottom: 1px solid var(--line); font-size: 0.72rem; font-weight: 800; }
@@ -355,6 +356,7 @@ img { display: block; max-width: 100%; }
 .v5-dialog-status { display: inline-flex; align-items: center; gap: 0.35rem; margin: 0.5rem 0 1.5rem; color: var(--crimson); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
 .v5-methodology-note { margin: 1rem 0 1.5rem; padding: 1rem; border-radius: var(--radius-sm); background: var(--paper-deep); }
 .v5-methodology-note p { margin: 0.35rem 0; color: var(--ink-soft); }
+.v5-dialog-actions { margin-top: 1.5rem; }
 @keyframes overlay-in { from { opacity: 0; } }
 @keyframes dialog-in { from { opacity: 0; transform: translate(-50%, -47%) scale(0.98); } }
 

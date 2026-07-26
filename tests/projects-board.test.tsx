@@ -5,12 +5,14 @@ import { V5SignalMandala } from "@/components/v5-signal-mandala";
 import { projects } from "@/lib/content";
 
 describe("V5 project proof and mandala", () => {
-  it("keeps unfinished work explicit and free of invented model claims", () => {
+  it("keeps the completed prediction project tied to its published model evidence", () => {
     const prediction = projects.find((project) => project.id === "loan-default-prediction");
-    expect(prediction?.status).toBe("In development");
-    expect(prediction?.proof.businessImpact).toEqual(["Not established yet."]);
-    expect(prediction?.proof.delivered).toEqual(["No public deliverable yet."]);
-    expect(JSON.stringify(prediction)).not.toMatch(/accuracy|precision|recall/i);
+    expect(prediction?.status).toBe("Published");
+    expect(prediction?.liveUrl).toBe("https://brishav-loan-default-prediction.streamlit.app/");
+    expect(prediction?.proof.methodology.cohort).toMatch(/1,348,099 completed-loan outcomes/i);
+    expect(prediction?.proof.metrics).toEqual(expect.arrayContaining([
+      expect.objectContaining({ label: "2018 test ROC-AUC", value: "0.6912" })
+    ]));
   });
 
   it("marks the completed Financial Inclusion analysis with published proof", () => {

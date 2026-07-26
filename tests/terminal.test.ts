@@ -29,7 +29,7 @@ describe("observatory terminal", () => {
 
   it("keeps truthful project statuses in terminal output", () => {
     const result = runTerminalCommand("projects");
-    expect(result.lines).toContain("03 Loan Prediction — in development");
+    expect(result.lines).toContain("03 Loan Prediction — published (live Streamlit app)");
     expect(result.lines.join(" ")).not.toContain("accuracy");
   });
 });

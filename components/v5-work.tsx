@@ -47,7 +47,10 @@ export function V5Work() {
             ) : null}
             <div className="v5-project-footer">
               <span>{project.tools.join(" / ")}</span>
-              <a href={project.repository} target="_blank" rel="noreferrer">Repository <ArrowSquareOut aria-hidden size={15} /></a>
+              <div className="v5-project-links">
+                {project.liveUrl ? <a href={project.liveUrl} target="_blank" rel="noreferrer">{project.liveLabel ?? "Open live project"} <ArrowSquareOut aria-hidden size={15} /></a> : null}
+                <a href={project.repository} target="_blank" rel="noreferrer">Repository <ArrowSquareOut aria-hidden size={15} /></a>
+              </div>
             </div>
           </article>
         ))}

@@ -13,7 +13,8 @@ const headers = await readFile(join(outputDir, "_headers"), "utf8");
 const requiredText = [
   "I want the work to look good. I need the numbers to hold up.",
   "Loan Default Prediction",
-  "In development",
+  "Open live predictor",
+  "2018 test ROC-AUC",
   "Business impact",
   "What I delivered",
   "The status check that changed the result",

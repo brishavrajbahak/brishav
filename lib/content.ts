@@ -78,7 +78,10 @@ export const personalStory = {
     "being better than yesterday . just iterating the level even if its a word or an entire dictionary",
   reflection:
     "always wanting best and supreme level of things i build . wanting to make things look preety as preety as the system works. progress is always > perfection , perfection has no limit and cant be achived",
-  approvedPhoto: process.env.NEXT_PUBLIC_PERSONAL_PHOTO?.trim() || null
+  approvedPhotos: (process.env.NEXT_PUBLIC_PERSONAL_PHOTO || "")
+    .split(",")
+    .map((photo) => photo.trim())
+    .filter(Boolean)
 } as const;
 
 export const interfaceCopy = {

@@ -12,8 +12,15 @@ export function V5About() {
         <p>{personalStory.about}</p>
       </div>
 
-      {personalStory.approvedPhoto ? (
-        <figure className="v5-personal-photo"><Image src={personalStory.approvedPhoto} alt="Brishav's real workspace" width={1200} height={900} /><figcaption>A real working space, not a generated scene.</figcaption></figure>
+      {personalStory.approvedPhotos.length ? (
+        <div className="v5-personal-photos">
+          {personalStory.approvedPhotos.map((photo, index) => (
+            <figure className="v5-personal-photo" key={photo}>
+              <Image src={photo} alt={`Brishav's real workspace, photo ${index + 1}`} width={1200} height={900} />
+              <figcaption>{index === 0 ? "Loan-default dashboard work." : "A real working space, not a generated scene."}</figcaption>
+            </figure>
+          ))}
+        </div>
       ) : null}
 
       <div className="v5-altitude-route">

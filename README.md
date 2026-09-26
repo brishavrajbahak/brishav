@@ -40,7 +40,7 @@ Open `http://127.0.0.1:8788`. Rebuild only after source changes when using this 
 - `NEXT_PUBLIC_PREVIEW_DEPLOYMENT=0` for production metadata.
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` for the contact widget.
 - `NEXT_PUBLIC_API_BASE` is optional; same-origin requests are the default.
-- `NEXT_PUBLIC_PERSONAL_PHOTO` must point to Brishav's approved workspace or notebook photograph before production.
+- `NEXT_PUBLIC_PERSONAL_PHOTO` accepts one or more comma-separated approved workspace/notebook image paths. The current production build uses `/assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg`.
 - `NEXT_PUBLIC_HEADLINE_APPROVED=1` confirms the reader-tested hero headline before production.
 
 Provider secrets such as `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belong in `.dev.vars` locally or Cloudflare secrets. Never expose them through `NEXT_PUBLIC_*` values.
@@ -54,7 +54,7 @@ npm.cmd run lighthouse:mobile
 npm.cmd run lighthouse:desktop
 ```
 
-`verify` runs ESLint, TypeScript, unit/component tests, the static export, strict CSP and bundle validation, and Pages Functions compilation. A production build intentionally fails until the approved personal photograph and approved-headline flag are configured.
+`verify` runs ESLint, TypeScript, unit/component tests, the static export, strict CSP and bundle validation, and Pages Functions compilation. A production build intentionally fails until the approved personal photography and approved-headline flag are configured.
 
 ## Architecture
 
@@ -81,13 +81,45 @@ The public API contracts remain unchanged:
 
 Cloudflare Pages uses `npm run build`, output directory `out`, and Node 20.9 or newer.
 
-The branch `feature/observatory-v5-authentic-proof` deploys as a noindex preview. Production stays untouched until the personal photograph, headline test, real-device performance, Safari/VoiceOver, NVDA and social-preview checks pass.
+Current hosting:
 
-After an accepted production cutover, keep `v5.brishavrajbahak.com.np` frozen and noindex for seven calendar days. Then tag the accepted commit, remove the Pages custom-domain association and preview branch control, delete the proxied `v5` CNAME, and verify the subdomain is unreachable or permanently redirects to production.
+- `https://brishavrajbahak.com.np` — V5 production portfolio, served by the `brishav-portfolio` Pages project.
+- `https://v5.brishavrajbahak.com.np` — frozen, noindex V5 preview/reference deployment.
+- `https://classic.brishavrajbahak.com.np` — preserved legacy portfolio, served by the separate `brishav-legacy` Pages project.
+
+The accepted V5 implementation lives on `feature/observatory-v5-authentic-proof`; production was deployed from the verified V5 export after the approved workspace photos were added. The legacy bundle is preserved under `legacy-site/` with its CSS, JavaScript, data and image assets.
+
+Preview deployment:
+
+```powershell
+$env:NEXT_PUBLIC_PREVIEW_DEPLOYMENT="1"
+npm.cmd run build
+npx wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/observatory-v5-authentic-proof
+```
+
+Production deployment requires the approved build variables:
+
+```powershell
+$env:NEXT_PUBLIC_PREVIEW_DEPLOYMENT="0"
+$env:NEXT_PUBLIC_PERSONAL_PHOTO="/assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg"
+$env:NEXT_PUBLIC_HEADLINE_APPROVED="1"
+npm.cmd run build
+npx wrangler pages deploy out --project-name=brishav-portfolio --branch=main --commit-dirty=true
+```
+
+Legacy deployment:
+
+```powershell
+npx wrangler pages deploy legacy-site --project-name=brishav-legacy --branch=main --commit-dirty=true
+```
+
+Cloudflare DNS maps `classic` to `brishav-legacy.pages.dev`. Keep the legacy domain and the V5 reference domain separate from the production root domain.
+
+After an accepted production cutover, keep `v5.brishavrajbahak.com.np` frozen and noindex for seven calendar days. Then tag the accepted commit, remove the Pages custom-domain association and preview branch control, delete the proxied `v5` CNAME, and verify the subdomain is unreachable or permanently redirects to production. Keep `classic.brishavrajbahak.com.np` available as the legacy reference site.
 
 ## Content policy
 
-Published numbers include their cohort and denominator. Unfinished projects explicitly state that impact or deliverables are not established. Resume actions remain hidden until a real PDF is configured. No stock or generated image may substitute for the required personal workspace photograph.
+Published numbers include their cohort and denominator. The completed Loan Default Analysis, Financial Inclusion Gap Analysis and Loan Default Prediction projects each expose their repository-backed proof; the prediction project also links to its live Streamlit application. Resume actions remain hidden until a real PDF is configured. No stock or generated image may substitute for the required personal workspace photographs.
 
 ## License
 

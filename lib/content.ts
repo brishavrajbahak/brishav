@@ -73,11 +73,11 @@ export const siteConfig = {
 
 export const personalStory = {
   about:
-    "It's me Brishav Rajbahak. Currently an undergraduate student learning new things and tools which i feel fascinating . i relate myself to the tech-enthuiast and wanna build cool things which not only exists but resonates well to the make an earth better place",
+    "I'm Brishav Rajbahak, an undergraduate computer science student in Nepal building toward data analyst and data science roles. I use Python, SQL and Power BI to clean real datasets, check assumptions and turn findings into clear decisions.",
   rule:
-    "being better than yesterday . just iterating the level even if its a word or an entire dictionary",
+    "I try to make each iteration easier to trust than the last.",
   reflection:
-    "always wanting best and supreme level of things i build . wanting to make things look preety as preety as the system works. progress is always > perfection , perfection has no limit and cant be achived",
+    "I care about both sides of the work: the numbers should be sound, and the result should be clear enough for someone else to use.",
   approvedPhotos: (process.env.NEXT_PUBLIC_PERSONAL_PHOTO || "")
     .split(",")
     .map((photo) => photo.trim())
@@ -258,7 +258,7 @@ export const journey = [
   { year: "Foundation", label: "Education", copy: "Computer science, statistics and the habit of checking the source." },
   { year: "Practice", label: "Applied Projects", copy: "Python and SQL work built from real datasets rather than polished mockups." },
   { year: "Communication", label: "BI Storytelling", copy: "Dashboards shaped around questions, definitions and the person reading them." },
-  { year: "Now", label: "Dataverse Launch", copy: "Published projects and a frontend that keeps changing as the work improves." }
+  { year: "Now", label: "Portfolio in progress", copy: "Published projects and a frontend that keeps changing as the work improves." }
 ] as const;
 
 export const insights = [

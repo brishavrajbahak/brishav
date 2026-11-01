@@ -29,7 +29,7 @@ export function V5Work() {
           <article key={project.id} id={`project-${project.id}`} className="v5-project-card">
             <div className="v5-project-topline">
               <span>Project {project.number}</span>
-              <span className={project.status === "Published" || project.status === "Live system" ? "published" : "progress"}>
+              <span aria-label={`Status: ${project.status}`} className={project.status === "Published" || project.status === "Live system" ? "published" : "progress"}>
                 {project.status === "Published" || project.status === "Live system" ? <CheckCircle aria-hidden size={16} /> : <CircleNotch aria-hidden size={16} />}
                 {project.status}
               </span>
@@ -49,7 +49,7 @@ export function V5Work() {
               <span>{project.tools.join(" / ")}</span>
               <div className="v5-project-links">
                 {project.liveUrl ? <a href={project.liveUrl} target="_blank" rel="noreferrer">{project.liveLabel ?? "Open live project"} <ArrowSquareOut aria-hidden size={15} /></a> : null}
-                <a href={project.repository} target="_blank" rel="noreferrer">Repository <ArrowSquareOut aria-hidden size={15} /></a>
+                <a href={project.repository} target="_blank" rel="noreferrer">GitHub repository <ArrowSquareOut aria-hidden size={15} /></a>
               </div>
             </div>
           </article>

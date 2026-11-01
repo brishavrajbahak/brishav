@@ -8,7 +8,7 @@ export function V5About() {
     <section id="about" className="v5-section v5-about section-anchor" aria-labelledby="about-title">
       <div className="v5-about-intro">
         <span className="v5-kicker">03 / About</span>
-        <h2 id="about-title">This part is not polished on purpose.</h2>
+        <h2 id="about-title">How I&apos;m building my foundation.</h2>
         <p>{personalStory.about}</p>
       </div>
 

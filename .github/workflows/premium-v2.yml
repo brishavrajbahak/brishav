@@ -16,6 +16,10 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_PREVIEW_DEPLOYMENT: "0"
+      NEXT_PUBLIC_PERSONAL_PHOTO: /assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg
+      NEXT_PUBLIC_HEADLINE_APPROVED: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,6 +41,10 @@ jobs:
   browser:
     runs-on: ubuntu-latest
     needs: quality
+    env:
+      NEXT_PUBLIC_PREVIEW_DEPLOYMENT: "0"
+      NEXT_PUBLIC_PERSONAL_PHOTO: /assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg
+      NEXT_PUBLIC_HEADLINE_APPROVED: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -59,6 +67,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       NEXT_PUBLIC_PREVIEW_DEPLOYMENT: "1"
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+      NEXT_PUBLIC_PERSONAL_PHOTO: /assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -66,7 +75,7 @@ jobs:
           node-version: 20.19.6
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run build:preview
       - name: Deploy noindex Cloudflare preview
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: npx wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/observatory-v5-authentic-proof

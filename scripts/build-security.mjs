@@ -29,12 +29,14 @@ for (const htmlPath of htmlFiles) {
 }
 
 const noindex = process.env.NEXT_PUBLIC_PREVIEW_DEPLOYMENT !== "0" ? "\n  X-Robots-Tag: noindex, nofollow" : "";
+const siteCsp = buildCsp([], { allowInline: true });
 const headers = `/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), browsing-topics=()
   X-Frame-Options: SAMEORIGIN
   Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: ${siteCsp}
   Cache-Control: no-cache${noindex}
 
 /_next/static/*
@@ -75,9 +77,10 @@ console.log(`Generated CSP with ${hashes.size} inline script hashes across ${htm
 console.log("Kept the full stylesheet render-blocking to prevent late mobile layout shifts.");
 console.log(`Wrote ${relative(root, join(outputDir, "_headers"))} and ${relative(root, join(outputDir, "_routes.json"))}.`);
 
-function buildCsp(pageHashes) {
+function buildCsp(pageHashes, options = {}) {
   const scriptSources = [
     "'self'",
+    ...(options.allowInline ? ["'unsafe-inline'"] : []),
     ...pageHashes,
     "https://challenges.cloudflare.com",
     "https://static.cloudflareinsights.com"

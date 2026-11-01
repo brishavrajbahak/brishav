@@ -2,9 +2,16 @@
 .env
 .env.*
 !.env.example
+.next/
+out/
 node_modules/
 .wrangler/
 .playwright-mcp/
+playwright-report/
+test-results/
+coverage/
+.lighthouseci/
+*.tsbuildinfo
 .DS_Store
 Thumbs.db
 *.log

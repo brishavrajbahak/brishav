@@ -1,0 +1,850 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="assets/js/bootstrap.js?v=1"></script>
+  <title>Brishav Rajbahak — Data Analyst | Data Science Aspirant</title>
+  <!-- SEO & Open Graph -->
+  <meta name="description" content="Brishav Rajbahak — data analyst and data science aspirant from Kathmandu, Nepal, with an interactive terminal, signal mandala, and curated demo analytics playground.">
+  <meta property="og:title" content="Brishav Rajbahak — Data Analyst | Data Science Aspirant">
+  <meta property="og:description" content="Data analyst and data science aspirant from Kathmandu with an interactive terminal, curated analytics demos, and a data storytelling portfolio.">
+  <meta property="og:image" content="https://classic.brishavrajbahak.com.np/Brishav.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://classic.brishavrajbahak.com.np">
+  <link rel="canonical" href="https://classic.brishavrajbahak.com.np">
+  <link rel="preload" href="assets/images/Brishav-480.webp?v=2" as="image" type="image/webp" media="(max-width: 768px)">
+  <link rel="preload" href="Brishav.jpg?v=2" as="image" media="(min-width: 769px)">
+  <!-- Connection Pooling & Prefetch -->
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@brishavrajbahak">
+  <meta name="twitter:title" content="Brishav Rajbahak — Data Analyst | Data Science Aspirant">
+  <meta name="twitter:description" content="Data analyst and data science aspirant from Kathmandu with an interactive terminal, curated analytics demos, and a data storytelling portfolio.">
+  <meta name="twitter:image" content="https://brishavrajbahak.com.np/Brishav.jpg?v=3">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="assets/css/main.css?v=5">
+</head>
+<body>
+  <!-- -- Translucent Background System -- -->
+  <!-- Node Grid (SVG lines + dots) -->
+  <div id="node-grid-layer" aria-hidden="true">
+    <!-- replaced by canvas bg system below -->
+  </div>
+  <!-- Warm Accent Glow Orb -->
+  <div id="accent-glow-orb" aria-hidden="true"></div>
+  <!-- -- ML/DATA SCIENCE BACKGROUND CANVAS -- -->
+  <canvas id="bg-canvas" aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+  
+  <!-- Glassy Panels — animated figures & diagrams -->
+  <div id="glassy-panels" aria-hidden="true">
+
+    <!-- --- PANEL 1 (top-right): Animated Neural Network --- -->
+    <div class="glass-panel glass-panel-accent" id="gpNeural" style="
+      width: clamp(190px, 21vw, 290px);
+      top: 9vh; right: clamp(3%, 5vw, 8%);
+      padding: 14px 16px 12px;
+    ">
+      <div class="gp-header">
+        <span class="gp-dot gp-dot-green"></span>
+        <span class="gp-label">neural_net</span>
+      </div>
+      <canvas id="gpNeuralCanvas" width="240" height="140" style="width:100%;height:auto;display:block;"></canvas>
+    </div>
+
+    <!-- --- PANEL 2 (right-center): Animated Data Flow Pipeline --- -->
+    <div class="glass-panel" id="gpPipeline" style="
+      width: clamp(80px, 9vw, 120px);
+      top: 32vh; right: clamp(1.5%, 2.5vw, 4%);
+      padding: 12px 10px;
+      background: rgba(255,255,255,0.025);
+    ">
+      <div class="gp-label" style="font-size:7px;margin-bottom:8px;letter-spacing:2px;text-align:center">PIPELINE</div>
+      <canvas id="gpPipelineCanvas" width="90" height="180" style="width:100%;height:auto;display:block;"></canvas>
+    </div>
+
+  </div>
+  <!-- Loading Screen -->
+  <div id="loading-screen" aria-hidden="true">
+    <div class="loading-logo">BR</div>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+    <div class="loading-status">Initializing...</div>
+    <div class="loading-console" id="loadingConsole" style="width:280px;height:90px;background:rgba(255,255,255,0.7);border:1px solid var(--border-accent);border-radius:6px;margin-top:12px;font-family:var(--font-mono);font-size:8px;color:var(--accent);overflow:hidden;padding:10px;line-height:1.5;text-align:left;box-shadow:var(--depth-1);"></div>
+  </div>
+  <!-- Cursor Spotlight -->
+  <div id="cursor-spotlight" aria-hidden="true"></div>
+  <!-- Scroll Progress -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+  <!-- Back to top -->
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">UP</button>
+  <!-- Decorative: hidden from screen readers -->
+  <div class="floating-snippets" aria-hidden="true">
+    <div class="float-snippet s1">const reality = await build();</div>
+    <div class="float-snippet s2">export default creativity;</div>
+    <div class="float-snippet s3">while(alive) { innovate(); }</div>
+  </div>
+  <div class="grid-bg" aria-hidden="true"></div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+  <!-- Floating ambient controls and theme switcher removed -->
+  <div id="cursor-dot" aria-hidden="true"></div>
+  <!-- -- NAV -- -->
+  <nav role="navigation" aria-label="Main navigation">
+    <a href="#home" class="nav-logo" aria-label="Brishav Rajbahak — Home">BR</a>
+    <div class="nav-slider-pill" id="navSliderPill" aria-hidden="true"></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <!-- <li><a href="#experience">Experience</a></li> -->
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+
+      <li><a href="#contact" class="nav-cta">Contact</a></li>
+      <li style="margin-left: 12px; display: flex; align-items: center;">
+        <div id="navClock" class="cyber-clock" aria-label="Nepal Standard Time clock">
+          <div class="clock-dot"></div>
+          NPT <span id="navTime">--:--</span>
+        </div>
+      </li>
+    </ul>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+  <!-- Mobile nav drawer -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true" inert></div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" role="navigation" aria-hidden="true" inert>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <!-- <a href="#experience">Experience</a> -->
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+
+    <a href="#contact" class="mobile-cta">Contact</a>
+  </nav>
+  <main id="main-content">
+  <!-- -- HERO -- -->
+  <section id="home" aria-label="Introduction">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-left">
+          <div class="hero-badge fade-up" aria-hidden="true">Available for work</div>
+          <h1 class="hero-title fade-up">
+            <span class="glitch" data-text="BRISHAV">BRISHAV</span><br>
+            <span class="name-highlight">RAJBAHAK</span>
+          </h1>
+          <p class="hero-subtitle fade-up">
+            <span class="role" id="role-text" aria-live="polite"></span><span class="cursor-blink" aria-hidden="true"></span>
+          </p>
+          <p class="hero-desc fade-up">
+            I am an aspiring data analyst from Kathmandu with a growing focus on data science.
+            I enjoy cleaning data, exploring patterns, building dashboards, and turning raw numbers into clear insights using SQL, Python, and practical forecasting workflows.
+          </p>
+          <div class="hero-actions fade-up">
+            <a href="#projects" class="btn-primary">See My Work -></a>
+            <a href="#contact" class="btn-ghost">Initiate Contact</a>
+            <a href="#" class="btn-ghost" title="Download Resume">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: -2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Resume
+            </a>
+          </div>
+          <div class="terminal-launchpad fade-up">
+            <button type="button" class="terminal-launchpad-btn" data-open-playground data-event="playground_open" data-event-source="hero-launchpad">
+              Explore Playground
+            </button>
+            <button type="button" class="terminal-launchpad-btn ghost" data-scroll-insights>
+              Read Insight Logs
+            </button>
+          </div>
+          <!-- Interactive Terminal -->
+          <div class="hero-terminal fade-up" id="heroTerminal" aria-hidden="false">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+              </div>
+              <div class="terminal-title">Interactive Terminal</div>
+              <div class="terminal-sound-controls" style="margin-left: auto; display: flex; align-items: center;">
+                <button type="button" class="terminal-sound-btn active" id="terminalSoundBtn" aria-label="Toggle sound" title="Toggle audio">SFX</button>
+              </div>
+            </div>
+            <div class="terminal-output" id="terminalOutput">
+              <div class="terminal-line">
+                <span class="terminal-prompt">$</span>
+                <span>type 'help' for available commands</span>
+              </div>
+            </div>
+            <div class="terminal-input-row">
+              <span class="terminal-prompt">$</span>
+              <input type="text" id="terminalInput" class="terminal-input" placeholder="whoami" autocomplete="off">
+              <span class="terminal-cursor" id="terminalCursor"></span>
+            </div>
+          </div>
+          <p class="mobile-terminal-note">Desktop mode recommended for the full terminal experience.</p>
+          <div class="mobile-demo-card fade-up" data-open-playground data-event="playground_open" data-event-source="mobile-demo-card">
+            <div class="mobile-demo-label">Demo Mode</div>
+            <strong>Open the curated analysis playground</strong>
+            <span>Skip the terminal and jump straight into three Nepal-themed data demos.</span>
+          </div>
+          <div id="mobileMandalaPreview" class="mobile-mandala-preview fade-up" aria-label="Reduced mandala preview"></div>
+          <div class="hero-stats fade-up" aria-label="Stats">
+            <div class="stat-item">
+              <span class="stat-number accent">2</span>
+              <span class="stat-label">Active Projects</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number accent-strong">15+</span>
+              <span class="stat-label">Practice Repositories</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">6+</span>
+              <span class="stat-label">Core Tools</span>
+            </div>
+          </div>
+          <div class="availability-widget fade-up" aria-label="Availability status">
+            <strong>Open to internships &amp; entry roles</strong><span>&nbsp;|&nbsp;Data analyst and BI opportunities</span>
+          </div>
+        </div>
+        <div class="hero-visual fade-up" aria-hidden="true">
+          <div class="profile-ring"></div>
+          <div class="profile-ring-2"></div>
+          <div class="profile-img-wrap">
+            <picture>
+              <img src="Brishav.jpg?v=3" alt="Brishav Rajbahak"
+                   width="280" height="280"
+                   loading="eager"
+                   decoding="async"
+                   fetchpriority="high">
+            </picture>
+            <div class="profile-img-fallback" style="display:none;" aria-hidden="true">BR</div>
+          </div>
+          <div class="hero-tag hero-tag-1">
+            <pre><code class="language-python">import torch
+import torch.nn as nn
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc = nn.Linear(128, 2)</code></pre>
+          </div>
+          <div class="hero-tag hero-tag-2">
+            <pre><code class="language-python">>>> import numpy as np
+>>> data = np.random.randn(100, 5)
+>>> np.mean(data, axis=0)</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Layered Himalayan Mountains SVG Background -->
+    <div class="hero-mountains fade-up" aria-hidden="true" style="--stagger-delay: 8;">
+      <svg viewBox="0 0 1440 200" preserveAspectRatio="none" style="width: 100%; height: 100%; display: block;">
+        <!-- Far back range: Sleeping giants in Deep Blue / Indigo -->
+        <path d="M0 200 L0 140 L120 110 L280 135 L420 85 L600 120 L780 70 L960 115 L1150 65 L1300 125 L1440 85 L1440 200 Z" fill="rgba(30, 64, 175, 0.05)" stroke="rgba(59, 130, 246, 0.12)" stroke-width="1"/>
+        <!-- Mid range: Sharp silhouettes in warm Gold/Orange sunrise glow border -->
+        <path d="M0 200 L0 160 L180 115 L380 145 L580 95 L720 125 L880 75 L1080 130 L1240 100 L1440 155 L1440 200 Z" fill="rgba(255, 195, 0, 0.03)" stroke="rgba(255, 195, 0, 0.22)" stroke-dasharray="4 2" stroke-width="1.5"/>
+        <!-- Majestic Mount Everest center silhouette in gold & neon crimson shadow -->
+        <polygon points="780,70 820,110 740,110" fill="rgba(255, 195, 0, 0.05)" />
+        <path d="M740 110 L780 70 L800 90 L790 98 L810 105 L820 110" stroke="rgba(255, 195, 0, 0.4)" stroke-width="1.5" fill="none" />
+        <!-- Foreground range: Sharp low-poly crystalline crimson outline -->
+        <path d="M0 200 L0 180 L140 150 L290 170 L460 135 L620 160 L780 115 L940 150 L1120 120 L1280 165 L1440 140 L1440 200 Z" fill="rgba(230, 57, 70, 0.05)" stroke="var(--accent)" stroke-width="2"/>
+        <!-- Faint grid mapping lines on mountains for that modern digital theme -->
+        <path d="M140 150 L140 200 M460 135 L460 200 M780 115 L780 200 M1120 120 L1120 200" stroke="rgba(230, 57, 70, 0.15)" stroke-width="1" stroke-dasharray="2 4"/>
+      </svg>
+    </div>
+    
+    <!-- Scroll Down Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator" aria-hidden="true">
+      <div class="scroll-indicator-mouse">
+        <div class="scroll-indicator-wheel"></div>
+      </div>
+      <span class="scroll-indicator-text">Scroll to Initiate</span>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <!-- -- ABOUT -- -->
+  <section id="about" aria-label="About">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">01</div>
+        <div class="section-label" data-formula="avg=sum(x)/n">System.Identity</div>
+        <h2 class="section-title">About <span style="color:var(--accent)">Me</span></h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-body fade-up">
+          <p>I'm <strong>Brishav Rajbahak</strong> — an aspiring data analyst from <span class="accent-strong">Kathmandu</span>, Nepal, building a strong foundation in analytics, reporting, and data science.</p>
+          <p>My current focus is learning how to clean data, write better SQL, explore trends with Python, and present findings clearly through dashboards, charts, and structured analysis.</p>
+          <p class="about-philosophy"><strong>Data Philosophy:</strong> clean structure before cleverness, useful signal before visual noise, and every model or chart should end with a decision someone can actually act on.</p>
+          <p>This portfolio highlights the projects and practice work I am using to grow into data analyst, BI, and data science roles.</p>
+        </div>
+        <div class="fade-up">
+          <div class="detail-grid">
+            <div class="detail-item"><div class="detail-label">Location</div><div class="detail-value">Kathmandu, Nepal</div></div>
+            <div class="detail-item"><div class="detail-label">Status</div><div class="detail-value">Open to internships and entry roles</div></div>
+            <div class="detail-item"><div class="detail-label">Focus</div><div class="detail-value">Data Analysis &amp; BI</div></div>
+            <div class="detail-item"><div class="detail-label">Education</div><div class="detail-value">Computer Science</div></div>
+            <div class="detail-item"><div class="detail-label">Interests</div><div class="detail-value">SQL · Dashboards · Forecasting</div></div>
+            <div class="detail-item"><div class="detail-label">Core Tools</div><div class="detail-value">Python · SQL · Excel</div></div>
+          </div>
+          <div style="margin-top: 32px;">
+            <a href="#" class="btn-ghost" style="width: 100%; justify-content: center; background: rgba(230,57,70,0.05);" title="Download Resume">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: -2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              Download Full Resume
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <!-- -- EXPERIENCE (COMMENTED OUT) --
+  <section id="experience" aria-label="Experience">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">02</div>
+        <div class="section-label" data-formula="P(A|B)=P(B|A)P(A)/P(B)">System.Ascent</div>
+        <h2 class="section-title">The <span style="color:var(--accent-strong)">Summit</span> So Far</h2>
+      </div>
+      <div class="peaks-showcase-wrapper fade-up">
+        <div class="peaks-controller">
+          ...
+        </div>
+        <div class="peak-details-card" id="peakDetailsCard">
+          ...
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  -- END OF EXPERIENCE COMMENTED OUT -->
+  <!-- -- SKILLS -- -->
+  <section id="skills" aria-label="Skills">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">03</div>
+        <div class="section-label" data-formula="dL/dw">System.Arsenal</div>
+        <h2 class="section-title">Core <span style="color:var(--accent)">Toolkit</span></h2>
+      </div>
+      <div class="skills-layout">
+        <div class="radar-container fade-up">
+          <div id="skillsMandala" class="skills-mandala-host" aria-label="Advanced signal mandala"></div>
+          <canvas id="skillRadar" width="400" height="400"></canvas>
+        </div>
+        <div class="skill-stack">
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- Neural Network MLP representation -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Connections -->
+                <line x1="4" y1="12" x2="11" y2="6" stroke-dasharray="1 1"/>
+                <line x1="4" y1="12" x2="11" y2="12"/>
+                <line x1="4" y1="12" x2="11" y2="18" stroke-dasharray="1 1"/>
+                <line x1="11" y1="6" x2="19" y2="12"/>
+                <line x1="11" y1="12" x2="19" y2="12"/>
+                <line x1="11" y1="18" x2="19" y2="12"/>
+                <!-- Nodes -->
+                <circle cx="4" cy="12" r="2" fill="currentColor"/>
+                <circle cx="11" cy="6" r="2" fill="currentColor"/>
+                <circle cx="11" cy="12" r="2" fill="currentColor"/>
+                <circle cx="11" cy="18" r="2" fill="currentColor"/>
+                <circle cx="19" cy="12" r="2.5" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Data Analysis &amp; Modeling</div>
+              <div class="skill-tags">Python · Pandas · NumPy · Scikit-Learn · Jupyter</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:78%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 4 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot"></div>
+            </div>
+          </div>
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- Data Engineering Pipeline representation -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Cylinder (DB) -->
+                <ellipse cx="6" cy="7" rx="3" ry="1.5"/>
+                <path d="M3 7v6c0 1 1 1.5 3 1.5s3-.5 3-1.5V7"/>
+                <!-- ETL Diamond -->
+                <path d="M14 6l3 3-3 3-3-3z"/>
+                <!-- Output Target DB -->
+                <ellipse cx="19" cy="15" rx="2.5" ry="1.2"/>
+                <path d="M16.5 15v3.5c0 .7.8 1.2 2.5 1.2s2.5-.5 2.5-1.2V15"/>
+                <!-- Connective arrows -->
+                <path d="M9.5 10h1.5"/>
+                <path d="M15.5 12.5l1.5 1.5"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Data Preparation &amp; SQL</div>
+              <div class="skill-tags">SQL · Excel · Data Cleaning · ETL · Querying · Wrangling</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:82%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 4 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot"></div>
+            </div>
+          </div>
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- MLOps & Cloud Feedback Loop with cloud -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Faint cloud outline -->
+                <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-1.8-1.4-3.2-3.2-3.5A5 5 0 0 0 8.5 11c0 .3 0 .6.1.9A4.5 4.5 0 0 0 5 16.5 3.5 3.5 0 0 0 8.5 20" stroke-opacity="0.3"/>
+                <!-- CI/CD Feedback loop arrows -->
+                <path d="M7 14.5a3 3 0 1 1 5.5 1.5"/>
+                <path d="M17 14.5a3 3 0 1 0-5.5 1.5"/>
+                <polyline points="11.5 13 12.5 16 9.5 17"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Dashboards &amp; Reporting</div>
+              <div class="skill-tags">Tableau · Power BI · KPI Tracking · Matplotlib · Seaborn</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:72%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 3.5 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot half"></div><div class="level-dot"></div>
+            </div>
+          </div>
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- Bell curve normal distribution -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- X-Axis -->
+                <line x1="2" y1="19" x2="22" y2="19"/>
+                <!-- Gaussian normal distribution bell shape -->
+                <path d="M3 19c3 0 4-1.5 6-6s2-9 3-9 1 4.5 3 9 3 6 6 6"/>
+                <!-- Mean µ dashed line -->
+                <line x1="12" y1="4" x2="12" y2="19" stroke-dasharray="1.5 1.5"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Statistics &amp; Viz</div>
+              <div class="skill-tags">Statistics · EDA · Matplotlib · Seaborn · Tableau · R</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:70%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 3.5 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot half"></div><div class="level-dot"></div>
+            </div>
+          </div>
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- Attention Alignment / NLP Connection Grid -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Matrix box borders -->
+                <path d="M4 6h2v12H4M20 6h-2v12h2" stroke-opacity="0.5"/>
+                <!-- Inner grid attention weight representation -->
+                <rect x="8" y="8" width="3" height="3" fill="currentColor" fill-opacity="0.8"/>
+                <rect x="13" y="8" width="3" height="3" fill="currentColor" fill-opacity="0.2"/>
+                <rect x="8" y="13" width="3" height="3" fill="currentColor" fill-opacity="0.1"/>
+                <rect x="13" y="13" width="3" height="3" fill="currentColor" fill-opacity="0.9"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Forecasting &amp; Predictive Analysis</div>
+              <div class="skill-tags">Regression · Classification · XGBoost · Time Series · Model Evaluation</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:72%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 3.5 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot half"></div><div class="level-dot"></div>
+            </div>
+          </div>
+          <div class="skill-row fade-up">
+            <div class="skill-icon" aria-hidden="true">
+              <!-- Object Detection / Bounding Box grid -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Image frames -->
+                <rect x="3" y="3" width="18" height="18" rx="2" stroke-opacity="0.3"/>
+                <!-- CNN layers inside or bounding box overlay -->
+                <rect x="7" y="7" width="9" height="9" stroke-dasharray="2 1"/>
+                <!-- Anchor class tag label -->
+                <rect x="7" y="5" width="4" height="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="skill-info">
+              <div class="skill-name">Data Science Exploration</div>
+              <div class="skill-tags">Feature Engineering · Experimentation · Model Tuning · Python</div>
+              <div class="skill-bar-wrap"><div class="skill-bar" style="--pct:62%"></div></div>
+            </div>
+            <div class="skill-level" aria-label="Proficiency: 3 of 5">
+              <div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot on"></div><div class="level-dot"></div><div class="level-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <!-- -- PROJECTS -- -->
+  <section id="projects" aria-label="Projects">
+    <div class="container">
+      <div class="projects-header fade-up">
+        <div class="section-header fade-up" style="margin-bottom: 0;">
+          <div class="section-number" aria-hidden="true">04</div>
+          <div class="section-label" data-formula="s(z)=1/(1+e^-z)">System.Deployments</div>
+          <h2 class="section-title">Projects &amp; <span style="color:var(--accent)">Practice Work</span></h2>
+        </div>
+        <a href="https://github.com/brishavrajbahak" class="view-all" target="_blank" rel="noopener noreferrer">All Repos ?</a>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card featured fade-up" data-project-url="https://github.com/brishavrajbahak/loan-default-analysis" role="link" tabindex="0" aria-label="Open Loan Default Analysis on GitHub">
+          <div class="project-card-inner">
+            <div class="project-banner">
+              <div class="project-banner-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 3v18h18"/>
+                  <rect x="7" y="10" width="4" height="8" rx="1" fill="rgba(230,57,70,0.15)"/>
+                  <rect x="14" y="6" width="4" height="12" rx="1" fill="rgba(230,57,70,0.15)"/>
+                </svg>
+              </div>
+            </div>
+            <div class="project-body">
+              <div class="project-featured-badge">? FEATURED</div>
+              <div class="project-status">Portfolio Project</div>
+              <div class="project-title">Loan Default Analysis</div>
+              <p class="project-desc">A loan default analysis project built with Python, Pandas, SQL, and SQLite, featuring a Power BI dashboard and a final measured default rate of 19.98% for outcome-focused risk reporting.</p>
+              <p class="project-impact" data-project-impact><strong>Business impact:</strong> clarified the top repayment-pressure signals behind a 19.98% final-outcome default rate and translated them into dashboard-ready risk reporting.</p>
+              <p class="project-delivered"><strong>What I delivered:</strong> borrower segmentation, SQL-backed preparation, and a Power BI story layer for risk communication.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">SQL</span>
+                <span class="tag">SQLite</span>
+                <span class="tag">Power BI</span>
+                <span class="tag">Risk Analysis</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/brishavrajbahak/loan-default-analysis" class="project-link primary" target="_blank" rel="noopener noreferrer">View Project</a>
+                <a href="https://github.com/brishavrajbahak/loan-default-analysis" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <button type="button" class="project-link" data-open-playground data-event="playground_open" data-event-source="loan-risk-project">Open Demo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card fade-up" data-project-url="https://github.com/brishavrajbahak/financial-inclusion-gap-analysis" role="link" tabindex="0" aria-label="Open Financial Inclusion Gap Analysis on GitHub">
+          <div class="project-card-inner">
+            <div class="project-banner">
+              <div class="project-banner-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 19h16"/>
+                  <path d="M6 16V9"/>
+                  <path d="M12 16V5"/>
+                  <path d="M18 16v-3"/>
+                  <circle cx="6" cy="7" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                  <circle cx="12" cy="3" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                  <circle cx="18" cy="11" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                </svg>
+              </div>
+            </div>
+            <div class="project-body">
+              <div class="project-status">Featured</div>
+              <div class="project-title">Financial Inclusion Gap Analysis</div>
+              <p class="project-desc">An in-progress analytics project focused on exploring access gaps in financial inclusion, identifying underserved segments, and building a reporting workflow around disparity trends and actionable insights.</p>
+              <p class="project-impact" data-project-impact><strong>Business impact:</strong> sharpens which underserved groups should be prioritized first when access, trust, and reporting quality diverge.</p>
+              <p class="project-delivered"><strong>What I delivered:</strong> a clean gap-analysis framing, reporting structure, and a clearer decision path for inclusion monitoring.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Power BI</span>
+                <span class="tag">Gap Analysis</span>
+              </div>
+              <div class="project-links">
+                <a href="https://github.com/brishavrajbahak/financial-inclusion-gap-analysis" class="project-link primary" target="_blank" rel="noopener noreferrer">View Project</a>
+                <a href="https://github.com/brishavrajbahak/financial-inclusion-gap-analysis" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="project-card fade-up" data-project-url="https://brishav-loan-default-prediction.streamlit.app/" role="link" tabindex="0" aria-label="Open Loan Default Prediction live demo">
+          <div class="project-card-inner">
+            <div class="project-banner">
+              <div class="project-banner-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 18h16"/>
+                  <path d="M7 15l3-4 3 2 4-6"/>
+                  <circle cx="7" cy="15" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                  <circle cx="10" cy="11" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                  <circle cx="13" cy="13" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                  <circle cx="17" cy="7" r="1.2" fill="rgba(230,57,70,0.15)"/>
+                </svg>
+              </div>
+            </div>
+            <div class="project-body">
+              <div class="project-status">Completed</div>
+              <div class="project-title">Loan Default Prediction</div>
+              <p class="project-desc">A deployed Streamlit application for estimating loan default likelihood and exploring borrower risk patterns through a clear, prediction-focused workflow.</p>
+              <p class="project-impact" data-project-impact><strong>Business impact:</strong> helps surface higher-risk borrower patterns earlier so lending decisions can move from reactive reporting to proactive risk screening.</p>
+              <p class="project-delivered"><strong>What I delivered:</strong> a live prediction workflow, risk-focused analysis, and a model-ready structure for translating borrower signals into clearer lending decisions.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">Scikit-learn</span>
+                <span class="tag">SQL</span>
+                <span class="tag">Prediction</span>
+              </div>
+              <div class="project-links">
+                <a href="https://brishav-loan-default-prediction.streamlit.app/" class="project-link primary" target="_blank" rel="noopener noreferrer">Live Demo</a>
+                <a href="https://github.com/brishavrajbahak/loan-default-prediction" class="project-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <section id="insight-logs" aria-label="Insight Logs">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">05</div>
+        <div class="section-label" data-formula="dsignal/dtime">System.Logs</div>
+        <h2 class="section-title">Insight <span style="color:var(--accent-strong)">Logs</span></h2>
+      </div>
+      <div class="insight-log-grid">
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Nepal tourism looks strongest when stay length and occupancy move together.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Arrival counts alone can flatter demand while hiding whether local spend is actually improving.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Gandaki-style performance becomes more attractive when longer stays and solid occupancy move with arrivals instead of lagging behind them.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>The better tourism KPI is not “who arrived”, but “who stayed, spent, and filled rooms at the same time”.</p></div>
+        </article>
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Default pressure usually appears before default is formally recorded.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Risk teams often review default outcomes too late, after delinquency has already stretched across a segment.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Microbusiness and informal borrower patterns become more useful when delinquency is treated as an early signal rather than a lagging result.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>The best intervention metric is the one that rises before the headline risk number does.</p></div>
+        </article>
+        <article class="insight-log-card fade-up">
+          <span class="insight-log-kicker">Hook</span>
+          <h3>Remittance strength can still hide fragile channel quality.</h3>
+          <div class="insight-log-block"><strong>Data Challenge</strong><p>Higher transfer values can look healthy while the reliability of formal transfer channels quietly weakens.</p></div>
+          <div class="insight-log-block"><strong>Insight</strong><p>Provinces with high household dependence but low formal-channel use deserve more attention than provinces with similar transfer volume but stronger systems.</p></div>
+          <div class="insight-log-block"><strong>Lesson</strong><p>Resilience is not just about how much money arrives. It is also about how safely and consistently it arrives.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  <!-- -- TESTIMONIALS (COMMENTED OUT) --
+  <section id="testimonials" aria-label="Testimonials">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">05</div>
+        <div class="section-label" data-formula="H=-sum(p*log(p))">System.Logs</div>
+        <h2 class="section-title">Word on the <span style="color:var(--accent-strong)">Grid</span></h2>
+      </div>
+      <div class="testimonials-carousel fade-up">
+        <div class="testimonial-slide">
+          <div class="testimonial-quote">"</div>
+          <div class="testimonial-text">Brishav doesn't just write code; he architects experiences...</div>
+          <div class="testimonial-author">Alex Mercer</div>
+          <div class="testimonial-role">CTO at Cybernetics Corp</div>
+        </div>
+        <div class="testimonial-slide">
+          <div class="testimonial-quote">"</div>
+          <div class="testimonial-text">We brought him in to optimize our legacy backend...</div>
+          <div class="testimonial-author">Sarah Jenkins</div>
+          <div class="testimonial-role">Lead Engineer, Quantum Studios</div>
+        </div>
+        <div class="testimonial-slide">
+          <div class="testimonial-quote">"</div>
+          <div class="testimonial-text">Finding someone who understands both complex distributed systems...</div>
+          <div class="testimonial-author">David Chen</div>
+          <div class="testimonial-role">Product Manager, DataFlow</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section-divider" aria-hidden="true"></div>
+  -- END TESTIMONIALS COMMENTED OUT -->
+  <!-- -- CONTACT -- -->
+  <section id="contact" aria-label="Contact">
+    <div class="container">
+      <div class="section-header fade-up">
+        <div class="section-number" aria-hidden="true">06</div>
+        <div class="section-label" data-formula="RMSE=sqrt(sum((yhat-y)^2)/n)">System.Comms</div>
+        <h2 class="section-title">Let's Talk About <span style="color:var(--accent)">Opportunities.</span></h2>
+      </div>
+      <div class="contact-wrapper">
+        <div class="contact-info fade-up">
+          <p>If you are hiring for an internship, trainee role, or entry-level position in data analysis, BI, or data science, I would be glad to connect.
+          You can use the form below or reach out directly through email or LinkedIn.</p>
+          <div class="contact-links">
+            <a href="mailto:contact@brishavrajbahak.com.np" class="contact-link-item">
+              <div class="contact-link-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M4 5h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M22 7l-10 7L2 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="contact-link-body">
+                <div class="link-label">Email</div>
+                <div class="link-value">contact@brishavrajbahak.com.np</div>
+              </div>
+            </a>
+            <a href="https://github.com/brishavrajbahak" class="contact-link-item" target="_blank" rel="noopener noreferrer">
+              <div class="contact-link-icon">
+                <!-- GitHub SVG icon -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="contact-link-body">
+                <div class="link-label">GitHub</div>
+                <div class="link-value">@brishavrajbahak</div>
+              </div>
+            </a>
+            <a href="https://www.linkedin.com/in/brishav-rajbahak-854a30342" class="contact-link-item" target="_blank" rel="noopener noreferrer">
+              <div class="contact-link-icon">
+                <!-- LinkedIn SVG icon -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="contact-link-body">
+                <div class="link-label">LinkedIn</div>
+                <div class="link-value">Brishav Rajbahak</div>
+              </div>
+            </a>
+            <a href="https://www.instagram.com/razzbahakbrishav" class="contact-link-item" target="_blank" rel="noopener noreferrer">
+              <div class="contact-link-icon">
+                <!-- Instagram SVG icon -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div class="contact-link-body">
+                <div class="link-label">Instagram</div>
+                <div class="link-value">@razzbahakbrishav</div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <form class="contact-form fade-up" id="contactForm" novalidate data-contact-endpoint="/api/v1/contact">
+          <div class="form-field visually-hidden-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="from_name">Your Name</label>
+              <input type="text" id="from_name" name="from_name" placeholder="What do they call you?" required minlength="2" maxlength="120" autocomplete="name">
+              <div class="form-error-message">Name must be 2–120 characters</div>
+            </div>
+            <div class="form-field">
+              <label for="from_email">Your Email</label>
+              <input type="email" id="from_email" name="from_email" placeholder="Where should I reply?" required maxlength="254" autocomplete="email">
+              <div class="form-error-message">Please enter a valid email address</div>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Sum it up in a line..." maxlength="160">
+          </div>
+          <div class="form-field">
+            <label for="message">Message</label>
+            <textarea rows="5" id="message" name="message" placeholder="Tell me everything. The weirder the idea, the better." required minlength="10" maxlength="4000"></textarea>
+            <div class="form-error-message">Message must be 10–4000 characters</div>
+          </div>
+          <div class="turnstile-wrap" id="contactTurnstile" aria-label="Contact form verification"></div>
+          <button type="submit" class="form-submit" id="submitBtn">
+            Transmit Message
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+  <div class="playground-modal" id="playgroundModal" aria-hidden="true">
+    <div class="playground-dialog" role="dialog" aria-modal="true" aria-labelledby="playgroundTitle">
+      <button type="button" class="playground-close" id="playgroundClose" aria-label="Close playground">×</button>
+      <div class="playground-layout">
+        <aside class="playground-sidebar">
+          <span class="playground-label">Demo Playground</span>
+          <h3 id="playgroundTitle">Curated Nepal Data Scenarios</h3>
+          <p>Three small, deterministic demos designed to show how Brishav frames signal, risk, and reporting value without hiding behind AI-generated filler.</p>
+          <div class="playground-dataset-list" id="playgroundDatasetList"></div>
+          <label class="playground-select-wrap">
+            <span>Dataset</span>
+            <select id="playgroundDatasetSelect" aria-label="Select playground dataset"></select>
+          </label>
+          <div class="playground-mode-strip">
+            <button type="button" class="playground-mode-btn active" data-analysis-mode="overview">Overview</button>
+            <button type="button" class="playground-mode-btn" data-analysis-mode="distribution">Distribution</button>
+            <button type="button" class="playground-mode-btn" data-analysis-mode="trend">Trend</button>
+          </div>
+          <div class="playground-actions">
+            <button type="button" class="terminal-launchpad-btn" id="playgroundRunBtn">Run Analysis</button>
+            <button type="button" class="terminal-launchpad-btn ghost" id="playgroundExportCsv">Export CSV</button>
+          </div>
+        </aside>
+        <section class="playground-results">
+          <div class="playground-summary" id="playgroundSummary">
+            <div class="playground-summary-theme">Awaiting signal</div>
+            <h3>Pick a dataset to begin.</h3>
+            <p>The playground will return metrics, chart-ready breakdowns, and a premium rule-based insight line.</p>
+          </div>
+          <div class="playground-metrics" id="playgroundMetrics"></div>
+          <div id="playgroundMandala" class="playground-mandala" aria-label="Playground mandala view"></div>
+          <div class="playground-charts" id="playgroundCharts"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <!-- Marquee removed to eliminate meaningless words and screen clutter -->
+  </main>
+  <!-- -- FOOTER -- -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo" aria-label="Brishav Rajbahak">BR</div>
+        <p class="footer-copy">© <span id="year"></span> Brishav Rajbahak — aspiring data analyst from Kathmandu, Nepal. <span class="footer-preview-badge" id="footerPreviewBadge" hidden>v1-advanced-preview</span></p>
+        <div class="footer-socials">
+          <a href="https://github.com/brishavrajbahak" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" data-tooltip="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/brishav-rajbahak-854a30342" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" data-tooltip="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="currentColor"/></svg>
+          </a>
+          <a href="https://www.instagram.com/razzbahakbrishav" class="social-btn" target="_blank" rel="noopener noreferrer" aria-label="Instagram profile" data-tooltip="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="currentColor"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Quick navigation">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#projects">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <audio id="ambientAudio" loop preload="none" aria-hidden="true">
+    <!-- Subtle ambient pad — silent until user enables -->
+  </audio>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon" aria-hidden="true">OK</span>
+    <span id="toastMsg">Message transmitted!</span>
+  </div>
+  
+  <!-- -- Himalayan Peaks Experience Controller -- -->
+  
+  <!-- -- Translucent Panel System: Canvas Animations + Parallax -- -->
+  
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <script src="assets/js/config.public.js?v=3" defer></script>
+  <script src="assets/js/runtime-loader.js?v=2" defer></script>
+  <script src="assets/js/contact-client.js?v=2" defer></script>
+</body>
+</html>
+
+
+
+
+

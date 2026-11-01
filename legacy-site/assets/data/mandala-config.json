@@ -1,0 +1,42 @@
+{
+  "title": "Brishav Signal Map",
+  "groups": [
+    { "id": "core", "label": "Core", "radius": 0 },
+    { "id": "skills", "label": "Skills", "radius": 1 },
+    { "id": "tools", "label": "Tools", "radius": 2 },
+    { "id": "domains", "label": "Domains", "radius": 3 }
+  ],
+  "nodes": [
+    { "id": "brishav", "group": "core", "label": "Brishav", "summary": "Aspiring data analyst focused on structured insight delivery." },
+    { "id": "analytics", "group": "skills", "label": "Analytics", "summary": "Exploratory analysis, metrics, and trend discovery." },
+    { "id": "reporting", "group": "skills", "label": "Reporting", "summary": "Decision-ready dashboards and KPI narratives." },
+    { "id": "modeling", "group": "skills", "label": "Modeling", "summary": "Practical classification and risk exploration." },
+    { "id": "storytelling", "group": "skills", "label": "Storytelling", "summary": "Turning raw numbers into a clear business story." },
+    { "id": "python", "group": "tools", "label": "Python", "summary": "Core analysis scripting and automation." },
+    { "id": "sql", "group": "tools", "label": "SQL", "summary": "Filtering, grouping, and shaping clean datasets." },
+    { "id": "pandas", "group": "tools", "label": "Pandas", "summary": "Wrangling and feature preparation for analysis." },
+    { "id": "powerbi", "group": "tools", "label": "Power BI", "summary": "Dashboard delivery and stakeholder-ready visuals." },
+    { "id": "tourism", "group": "domains", "label": "Tourism", "summary": "Regional demand, stay length, and revenue movement." },
+    { "id": "loan-risk", "group": "domains", "label": "Loan Risk", "summary": "Default outcomes, repayment pressure, and segment risk." },
+    { "id": "remittance", "group": "domains", "label": "Remittance", "summary": "Household dependency and formal channel usage." },
+    { "id": "inclusion", "group": "domains", "label": "Inclusion", "summary": "Access gaps and underserved segments." }
+  ],
+  "relationships": [
+    { "from": "brishav", "to": "analytics" },
+    { "from": "brishav", "to": "reporting" },
+    { "from": "brishav", "to": "modeling" },
+    { "from": "brishav", "to": "storytelling" },
+    { "from": "analytics", "to": "python" },
+    { "from": "analytics", "to": "sql" },
+    { "from": "reporting", "to": "powerbi" },
+    { "from": "modeling", "to": "pandas" },
+    { "from": "storytelling", "to": "powerbi" },
+    { "from": "analytics", "to": "tourism" },
+    { "from": "reporting", "to": "tourism" },
+    { "from": "modeling", "to": "loan-risk" },
+    { "from": "analytics", "to": "loan-risk" },
+    { "from": "reporting", "to": "remittance" },
+    { "from": "storytelling", "to": "remittance" },
+    { "from": "analytics", "to": "inclusion" }
+  ]
+}

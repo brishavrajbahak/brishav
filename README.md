@@ -1,207 +1,126 @@
-# Brishav Rajbahak Portfolio
+# Authentic Proof-First Observatory V5
 
-This is my portfolio site for [brishavrajbahak.com.np](https://brishavrajbahak.com.np).
+Brishav Rajbahak's portfolio is a five-section, light-first portfolio built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, D3 and selective Radix components.
 
-I built it to present myself as a `Data Analyst` and `Data Science Aspirant` without hiding behind generic portfolio templates. The desktop experience leans into an interactive terminal and a signal mandala because those two pieces communicate how I think: structured inputs, deliberate exploration, and visible relationships between tools, domains, and outcomes.
+The homepage is intentionally static-first: Hero, Work, Process, About and Contact. The D3 project mandala is the only extended sticky interaction. The terminal, contact form and loan dashboard load only when requested or approached. The static export remains compatible with the existing Cloudflare Pages Functions and Durable Object.
 
-I kept the mobile path intentionally lighter. On mobile I care more about clarity, speed, and a clean project/storytelling path than about preserving every desktop effect.
+## Requirements
 
-## What is in Advanced V1
+- Node.js 20.9 or newer
+- npm
 
-Advanced V1 adds three things on top of the earlier portfolio baseline:
+## Install and run
 
-- a desktop terminal driven by a command registry
-- an SVG mandala that maps skills, tools, and domains
-- a curated demo playground with fixed datasets
+Install dependencies once after cloning, or whenever `package-lock.json` changes:
 
-The playground is intentionally demo-only. I chose fixed datasets because I wanted deterministic outputs that I can explain end to end in an interview. I did not want fake "AI analysis" theater or a black-box upload flow I could not defend.
+```powershell
+npm.cmd ci
+```
 
-## Current feature set
+For development with hot reload:
 
-- desktop terminal with commands like `help`, `whoami --deep`, `projects --detail`, `mandala`, and `analyze loan-risk`
-- mobile Demo Mode card that opens the same curated playground without the terminal layer
-- mandala rendering in the skills section, terminal, and playground
-- three built-in demo datasets:
-  - Tourism
-  - Loan Risk
-  - Remittance
-- contact form protected by Turnstile
-- Cloudflare Pages Functions backend
-- Resend email delivery
-- Durable Object-backed contact rate limiting
-- optional Cloudflare Web Analytics event tracking
+```powershell
+npm.cmd run dev
+```
 
-## Why the playground is fixed
+Open `http://localhost:3000`. You do not rebuild after every edit; Next.js recompiles automatically.
 
-The datasets are fixed on purpose.
+For a production-style preview with Pages Functions and the local rate limiter:
 
-- I can explain every field and every output.
-- The API surface stays narrow and easier to harden.
-- The charts and summary text stay deterministic.
-- The UI stays honest about being a curated demo rather than a live model.
+```powershell
+npm.cmd run build
+npm.cmd run start
+```
 
-That tradeoff is worth it for this version.
+Open `http://127.0.0.1:8788`. Rebuild only after source changes when using this exported preview.
 
-## Project structure
+## Public build variables
+
+- `NEXT_PUBLIC_PREVIEW_DEPLOYMENT=1` for the noindex V5 preview.
+- `NEXT_PUBLIC_PREVIEW_DEPLOYMENT=0` for production metadata.
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` for the contact widget.
+- `NEXT_PUBLIC_API_BASE` is optional; same-origin requests are the default.
+- `NEXT_PUBLIC_PERSONAL_PHOTO` accepts one or more comma-separated approved workspace/notebook image paths. The current production build uses `/assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg`.
+- `NEXT_PUBLIC_HEADLINE_APPROVED=1` confirms the reader-tested hero headline before production.
+
+Provider secrets such as `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belong in `.dev.vars` locally or Cloudflare secrets. Never expose them through `NEXT_PUBLIC_*` values.
+
+## Verification
+
+```powershell
+npm.cmd run verify
+npm.cmd run test:e2e
+npm.cmd run lighthouse:mobile
+npm.cmd run lighthouse:desktop
+```
+
+`verify` runs ESLint, TypeScript, unit/component tests, the static export, strict CSP and bundle validation, and Pages Functions compilation. A production build intentionally fails until the approved personal photography and approved-headline flag are configured.
+
+## Architecture
 
 ```text
-.
-|-- public/
-|   |-- assets/
-|   |   |-- css/
-|   |   |-- data/
-|   |   |   |-- demo/
-|   |   |   `-- mandala-config.json
-|   |   `-- js/
-|   |       |-- modules/
-|   |       |-- advanced.js
-|   |       |-- mobile-advanced.js
-|   |       `-- build-meta.js
-|   |-- index.html
-|   `-- _headers
-|-- functions/
-|   |-- api/v1/
-|   |   |-- analytics/
-|   |   |-- contact.js
-|   |   `-- playground/
-|   `-- lib/
-|-- workers/
-|-- docs/
-|-- build.js
-|-- package.json
-`-- wrangler.toml
+app/                         App Router pages, theme tokens and five-section layout
+app/dashboard/loan-default/ Published static D3 dashboard
+components/v5-*              V5 sections and progressive enhancements
+lib/content.ts               Typed identity, project proof and methodology
+functions/api/v1/            Existing public Cloudflare Pages API contracts
+workers/                     Existing Durable Object rate limiter
+scripts/                     Asset, CSP, validation and preview tooling
+tests/                       Unit, component, browser, accessibility and visual checks
+out/                         Generated Cloudflare Pages export
 ```
 
-## Local development
-
-### Requirements
-
-- Node.js 22+
-- `npx` for Wrangler commands
-- a Cloudflare account if I want to test Pages Functions, Turnstile, or preview deploys
-
-Install dependencies:
-
-```bash
-npm ci
-```
-
-Create local secrets:
-
-```bash
-cp .dev.vars.example .dev.vars
-```
-
-Run the Durable Object worker in one terminal:
-
-```bash
-npx wrangler dev --config workers/contact-rate-limiter/wrangler.toml
-```
-
-Run the site in another terminal:
-
-```bash
-npm run dev
-```
-
-That rebuilds the advanced bundles and serves the site locally through Wrangler Pages.
-
-## Build scripts
-
-```bash
-npm run build
-npm run lint
-npm run preview
-npm run premerge
-```
-
-- `build` bundles `advanced.js`, `mobile-advanced.js`, and regenerates `build-meta.js`
-- `postbuild` runs automatically and checks the combined advanced bundle budget
-- `lint` validates the frontend modules, Functions routes, and build files
-- `preview` builds and deploys the current branch to Cloudflare Pages
-- `premerge` runs `npm ci`, `npm run lint`, and `npm run build`
-
-## Bundle budget
-
-I enforce the advanced bundle budget during build:
-
-```bash
-npm run build
-```
-
-That runs the postbuild validator and checks the gzipped size of:
-
-- `public/assets/js/advanced.js`
-- `public/assets/js/mobile-advanced.js`
-
-The combined target stays under `250KB gzipped`.
-
-## Public config and secrets
-
-Non-secret Pages values live in [`wrangler.toml`](/D:/tr/wrangler.toml).
-
-Public frontend config lives in [`public/assets/js/config.public.js`](/D:/tr/public/assets/js/config.public.js).
-
-That file can safely contain:
-
-- `TURNSTILE_SITE_KEY`
-- `WEB_ANALYTICS_TOKEN`
-
-Secrets belong in Cloudflare Pages secrets instead:
-
-- `RESEND_API_KEY`
-- `TURNSTILE_SECRET_KEY`
-
-## API routes
-
-Advanced V1 adds:
+The public API contracts remain unchanged:
 
 - `GET /api/v1/playground/datasets`
 - `POST /api/v1/playground/analyze`
+- `POST /api/v1/contact`
 - `POST /api/v1/analytics/event`
 
-The contact API stays:
+## Deployment
 
-- `POST /api/v1/contact`
+Cloudflare Pages uses `npm run build`, output directory `out`, and Node 20.9 or newer.
 
-## Interaction analytics
+Current hosting:
 
-I keep tracking narrow and explicit. These events can be sent to `/api/v1/analytics/event`:
+- `https://brishavrajbahak.com.np` — V5 production portfolio, served by the `brishav-portfolio` Pages project.
+- `https://v5.brishavrajbahak.com.np` — frozen, noindex V5 preview/reference deployment.
+- `https://classic.brishavrajbahak.com.np` — preserved legacy portfolio, served by the separate `brishav-legacy` Pages project.
 
-- `terminal_command`
-- `mandala_view`
-- `playground_open`
-- `analyze_run`
+The accepted V5 implementation lives on `feature/observatory-v5-authentic-proof`; production was deployed from the verified V5 export after the approved workspace photos were added. The legacy bundle is preserved under `legacy-site/` with its CSS, JavaScript, data and image assets.
 
-## Known limitations in this version
+Preview deployment:
 
-This branch is intentionally narrow.
+```powershell
+$env:NEXT_PUBLIC_PREVIEW_DEPLOYMENT="1"
+npm.cmd run build
+npx wrangler pages deploy out --project-name=brishav-portfolio --branch=feature/observatory-v5-authentic-proof
+```
 
-- The playground is demo-only.
-- There are no uploads.
-- There is no R2, D1, Workers AI, or PDF export.
-- The fallback in-memory contact limiter is only isolate-local when Durable Objects are unavailable.
+Production deployment requires the approved build variables:
 
-## Screenshots
+```powershell
+$env:NEXT_PUBLIC_PREVIEW_DEPLOYMENT="0"
+$env:NEXT_PUBLIC_PERSONAL_PHOTO="/assets/images/brishav-workspace-code.jpg,/assets/images/brishav-workspace-desk.jpg"
+$env:NEXT_PUBLIC_HEADLINE_APPROVED="1"
+npm.cmd run build
+npx wrangler pages deploy out --project-name=brishav-portfolio --branch=main --commit-dirty=true
+```
 
-Screenshots of terminal, mandala, and playground will be added to `main` after merge.
+Legacy deployment:
 
-## V2 ideas I deliberately deferred
+```powershell
+npx wrangler pages deploy legacy-site --project-name=brishav-legacy --branch=main --commit-dirty=true
+```
 
-- uploads
-- persisted results
-- R2
-- D1
-- Workers AI summaries
-- PDF export
+Cloudflare DNS maps `classic` to `brishav-legacy.pages.dev`. Keep the legacy domain and the V5 reference domain separate from the production root domain.
 
-## Security notes
+After an accepted production cutover, keep `v5.brishavrajbahak.com.np` frozen and noindex for seven calendar days. Then tag the accepted commit, remove the Pages custom-domain association and preview branch control, delete the proxied `v5` CNAME, and verify the subdomain is unreachable or permanently redirects to production. Keep `classic.brishavrajbahak.com.np` available as the legacy reference site.
 
-- Never commit `.dev.vars`, `.env`, or provider secrets.
-- Turnstile site keys are public. The matching secret key is not.
-- The contact form depends on the production hostname being allowed in Turnstile.
-- The strict CSP in `public/_headers` is part of the deployed security boundary, not a nice-to-have.
+## Content policy
+
+Published numbers include their cohort and denominator. The completed Loan Default Analysis, Financial Inclusion Gap Analysis and Loan Default Prediction projects each expose their repository-backed proof; the prediction project also links to its live Streamlit application. Resume actions remain hidden until a real PDF is configured. No stock or generated image may substitute for the required personal workspace photographs.
 
 ## License
 
-This repository contains personal portfolio content. Reuse of the branding, writing, images, or design requires permission.
+This repository contains personal portfolio content. Reuse of the branding, writing, images or design requires permission.
